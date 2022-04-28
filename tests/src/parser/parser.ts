@@ -40,6 +40,9 @@ describe("Check for AST.", () => {
             })
             if (meetRequirements("scope"))
                 it("most to generate the expected scope.", () => {
+                    if (!result.scopeManager) {
+                        return
+                    }
                     let json: any = scopeToJSON(result.scopeManager)
                     let output: any = fs.readFileSync(scopeFileName, "utf8")
 
