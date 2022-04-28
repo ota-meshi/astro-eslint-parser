@@ -21,9 +21,9 @@
 	}
 
 	const DEFAULT_CODE = `---
-    let a = 1;
-    let b = 2;
-    // let c = 2;
+let a = 1;
+let b = 2;
+// let c = 2;
 ---
 
 <p>{a} + {b} + {c} = {a + b + c}</p>`;

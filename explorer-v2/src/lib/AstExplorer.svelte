@@ -10,8 +10,8 @@
 		showLocations: false
 	};
 	let astroValue = `---
-    let a = 1;
-    let b = 2;
+let a = 1;
+let b = 2;
 ---
 
 <p>{a} + {b} = {a + b}</p>`;
