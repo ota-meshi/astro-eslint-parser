@@ -135,7 +135,7 @@ Example **.vscode/settings.json**:
 
 ## Usage for Custom Rules / Plugins
 
-- TBD
+- TBA
 
 <!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
 <!-- - I have already [implemented some rules] in the [`@ota-meshi/eslint-plugin-astro`]. The source code for these rules will be helpful to you. -->
