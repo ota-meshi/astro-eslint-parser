@@ -6,8 +6,20 @@ import { traverseNodes } from "../traverse"
 import { AST_TOKEN_TYPES, AST_NODE_TYPES } from "@typescript-eslint/types"
 import type { TSESTree } from "@typescript-eslint/types"
 import { ParseError } from "../errors"
-import type { AstroDoctype, AstroHTMLComment, AstroRootFragment } from "../ast"
-import { isTag, walkElements } from "../astro"
+import type {
+    AstroDoctype,
+    AstroHTMLComment,
+    AstroRootFragment,
+    AstroShorthandAttribute,
+    AstroTemplateLiteralAttribute,
+} from "../ast"
+import {
+    getAttributeEndOffset,
+    getAttributeValueStartOffset,
+    getStartTagEndOffset,
+    isTag,
+    walkElements,
+} from "../astro"
 
 /**
  * Process the template to generate a ScriptContext.
@@ -58,9 +70,56 @@ export function processTemplate(
             ])
             script.addToken(AST_TOKEN_TYPES.Punctuator, [end - 3, end])
         } else if (isTag(node)) {
+            for (const attr of node.attributes) {
+                if (attr.kind === "shorthand") {
+                    const start = attr.position!.start.offset
+                    script.appendOriginal(start)
+                    script.appendScript(`${attr.name}=`)
+
+                    script.addRestoreNodeProcess((scriptNode) => {
+                        if (
+                            scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                            scriptNode.range[0] === start
+                        ) {
+                            const attrNode =
+                                scriptNode as unknown as AstroShorthandAttribute
+                            attrNode.type = "AstroShorthandAttribute"
+
+                            const locs = ctx.getLocations(
+                                ...attrNode.value.expression.range,
+                            )
+                            attrNode.name.range = locs.range
+                            attrNode.name.loc = locs.loc
+                            return true
+                        }
+                        return false
+                    })
+                } else if (attr.kind === "template-literal") {
+                    const start = getAttributeValueStartOffset(attr, ctx.code)
+                    const end = getAttributeEndOffset(attr, ctx.code)
+                    script.appendOriginal(start)
+                    script.appendScript("{")
+                    script.appendOriginal(end)
+                    script.appendScript("}")
+
+                    script.addRestoreNodeProcess((scriptNode) => {
+                        if (
+                            scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                            scriptNode.range[0] === start
+                        ) {
+                            const attrNode =
+                                scriptNode as unknown as AstroTemplateLiteralAttribute
+                            attrNode.type = "AstroTemplateLiteralAttribute"
+                            return true
+                        }
+                        return false
+                    })
+                }
+            }
+
             const end = getVoidSelfClosingTag(node, parent, ctx)
-            if (end && end.match === ">") {
-                script.appendOriginal(end.index)
+            if (end && end.end === ">") {
+                script.appendOriginal(end.offset - 1)
                 script.appendScript("/")
             }
             if (node.name === "script" || node.name === "style") {
@@ -196,122 +255,14 @@ function getVoidSelfClosingTag(
         const next = parent.children[childIndex + 1]
         nextElementIndex = next.position!.start.offset
     }
-    const lastAttr = node.attributes[node.attributes.length - 1]
-    let searchStartIndex: number, tokens: (string | string[])[]
-    if (lastAttr) {
-        searchStartIndex = lastAttr.position!.start.offset
-        if (lastAttr.kind === "empty") {
-            tokens = [lastAttr.name]
-        } else if (lastAttr.kind === "quoted") {
-            tokens = [
-                lastAttr.name,
-                "=",
-                [`"${lastAttr.value}"`, `'${lastAttr.value}'`, lastAttr.value],
-            ]
-        } else if (lastAttr.kind === "expression") {
-            tokens = [lastAttr.name, "=", "{", lastAttr.value, "}"]
-        } else if (lastAttr.kind === "shorthand") {
-            tokens = ["{", lastAttr.name, "}"]
-        } else if (lastAttr.kind === "spread") {
-            tokens = ["{", "...", lastAttr.value, "}"]
-        } else if (lastAttr.kind === "template-literal") {
-            tokens = [lastAttr.name, "=", `\`${lastAttr.value}\``]
-        } else {
-            throw new Error(`Unknown attr kind: ${lastAttr.kind}`)
-        }
-    } else {
-        searchStartIndex = node.position!.start.offset
-        tokens = [`<${node.name}`]
-    }
-
-    tokens.push([">", "/>"])
-    const match = getEndTokenInfo(code, tokens, searchStartIndex)
-    if (match == null) {
-        throw new Error(
-            `Unknown state on <${node.name}>@${node.position!.start.line}:${
-                node.position!.start.column
-            }`,
-        )
-    }
-    if (code.slice(match.index + match.match.length, nextElementIndex).trim()) {
+    const endOffset = getStartTagEndOffset(node, code)
+    if (code.slice(endOffset, nextElementIndex).trim()) {
         // has end tag
         return null
     }
-    return match
-}
-
-/**
- * Returns the information of the first occurrence of the matching substring.
- */
-function getEndTokenInfo(
-    string: string,
-    tokens: (string | string[])[],
-    position: number,
-): {
-    match: string
-    index: number
-} | null {
-    let lastMatch:
-        | {
-              match: string
-              index: number
-          }
-        | undefined
-    for (const t of tokens) {
-        const index = skipSpaces(
-            lastMatch ? lastMatch.index + lastMatch.match.length : position,
-        )
-        const m =
-            typeof t === "string"
-                ? matchOfStr(t, index)
-                : matchOfForMulti(t, index)
-        if (m == null) {
-            return null
-        }
-        lastMatch = m
-    }
-    if (lastMatch) {
-        return lastMatch
-    }
-    return null
-
-    /**
-     * For string
-     */
-    function matchOfStr(search: string, position: number) {
-        if (string.startsWith(search, position)) {
-            return {
-                match: search,
-                index: position,
-            }
-        }
-        return null
-    }
-
-    /**
-     * For multi
-     */
-    function matchOfForMulti(search: string[], position: number) {
-        for (const s of search) {
-            const m = matchOfStr(s, position)
-            if (m) {
-                return m
-            }
-        }
-        return null
-    }
-
-    /**
-     * Skip spaces
-     */
-    function skipSpaces(position: number) {
-        const re = /\s*/g
-        re.lastIndex = position
-        const match = re.exec(string)
-        if (match) {
-            return match.index + match[0].length
-        }
-        return position
+    return {
+        offset: endOffset,
+        end: code.slice(endOffset - 2, endOffset) === "/>" ? "/>" : ">",
     }
 }
 

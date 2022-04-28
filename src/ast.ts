@@ -5,6 +5,8 @@ export type AstroNode =
     | AstroRootFragment
     | AstroHTMLComment
     | AstroDoctype
+    | AstroShorthandAttribute
+    | AstroTemplateLiteralAttribute
 
 /** Node of Astro program root */
 export interface AstroProgram extends Omit<TSESTree.Program, "type" | "body"> {
@@ -40,4 +42,20 @@ export interface AstroDoctype
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroDoctype"
     parent: AstroRootFragment
+}
+/** Node of Astro shorthand attribute */
+export interface AstroShorthandAttribute
+    extends Omit<TSESTree.JSXAttribute, "type" | "parent"> {
+    type: "AstroShorthandAttribute"
+    value: TSESTree.JSXExpressionContainer
+    parent: TSESTree.JSXElement | TSESTree.JSXFragment
+}
+/** Node of Astro template-literal attribute */
+export interface AstroTemplateLiteralAttribute
+    extends Omit<TSESTree.JSXAttribute, "type" | "parent"> {
+    type: "AstroTemplateLiteralAttribute"
+    value: TSESTree.JSXExpressionContainer & {
+        expression: TSESTree.TemplateLiteral
+    }
+    parent: TSESTree.JSXElement | TSESTree.JSXFragment
 }

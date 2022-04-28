@@ -243,6 +243,8 @@ const nodeToKeys: AstroKeysType = {
     AstroRootFragment: ["children"],
     AstroHTMLComment: ["value"],
     AstroDoctype: [],
+    AstroShorthandAttribute: ["name", "value"],
+    AstroTemplateLiteralAttribute: ["name", "value"],
 }
 
 function normalizeObject(value: any) {
