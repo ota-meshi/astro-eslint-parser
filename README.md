@@ -11,7 +11,8 @@ You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parse
 [![NPM downloads](https://img.shields.io/npm/dy/astro-eslint-parser.svg)](http://www.npmtrends.com/astro-eslint-parser)
 [![NPM downloads](https://img.shields.io/npm/dt/astro-eslint-parser.svg)](http://www.npmtrends.com/astro-eslint-parser)
 [![Build Status](https://github.com/ota-meshi/astro-eslint-parser/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/astro-eslint-parser/actions?query=workflow%3ACI)
-[![Coverage Status](https://coveralls.io/repos/github/ota-meshi/astro-eslint-parser/badge.svg?branch=main)](https://coveralls.io/github/ota-meshi/astro-eslint-parser?branch=main)
+
+This parser is in the ***experimental stages*** of development.
 
 <!--
 ### ESLint Plugins Using astro-eslint-parser
@@ -112,23 +113,6 @@ module.exports = {
 }
 ```
 
-#### Multiple parsers
-
-If you want to switch the parser for each lang, specify the object.
-
-```json
-{
-    "parser": "astro-eslint-parser",
-    "parserOptions": {
-        "parser": {
-            "ts": "@typescript-eslint/parser",
-            "js": "espree",
-            "typescript": "@typescript-eslint/parser"
-        }
-    }
-}
-```
-
 ## :computer: Editor Integrations
 
 ### Visual Studio Code
@@ -151,8 +135,9 @@ Example **.vscode/settings.json**:
 
 ## Usage for Custom Rules / Plugins
 
-- [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/).
-- The parser will generate its own [ScopeManager](https://eslint.org/docs/developer-guide/scope-manager-interface). You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/scope).
+- TBD
+
+<!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
 <!-- - I have already [implemented some rules] in the [`@ota-meshi/eslint-plugin-astro`]. The source code for these rules will be helpful to you. -->
 
 ## :beers: Contributing

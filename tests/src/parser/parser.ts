@@ -6,7 +6,7 @@ import semver from "semver"
 import { traverseNodes } from "../../../src/traverse"
 import { parseForESLint } from "../../../src"
 import {
-    BASIC_PARSER_OPTIONS,
+    getBasicParserOptions,
     listupFixtures,
     nodeReplacer,
     scopeToJSON,
@@ -16,7 +16,7 @@ import type { TSESTree } from "@typescript-eslint/types"
 
 function parse(code: string, filePath: string) {
     return parseForESLint(code, {
-        ...BASIC_PARSER_OPTIONS!,
+        ...getBasicParserOptions(filePath),
         filePath,
     })
 }
@@ -40,6 +40,9 @@ describe("Check for AST.", () => {
             })
             if (meetRequirements("scope"))
                 it("most to generate the expected scope.", () => {
+                    if (!result.scopeManager) {
+                        return
+                    }
                     let json: any = scopeToJSON(result.scopeManager)
                     let output: any = fs.readFileSync(scopeFileName, "utf8")
 

@@ -1,0 +1,14 @@
+[
+  {
+    "ruleId": "prefer-const",
+    "code": "src",
+    "line": 2,
+    "column": 5
+  },
+  {
+    "ruleId": "prefer-const",
+    "code": "name",
+    "line": 3,
+    "column": 5
+  }
+]

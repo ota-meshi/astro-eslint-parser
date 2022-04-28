@@ -1,0 +1,8 @@
+[
+  {
+    "ruleId": "no-undef",
+    "code": "Astro",
+    "line": 4,
+    "column": 28
+  }
+]

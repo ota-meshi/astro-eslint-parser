@@ -1,0 +1,16 @@
+---
+import Header from './Header.astro';
+import Logo from './Logo.astro';
+import Footer from './Footer.astro';
+
+const { name } = Astro.props
+---
+<div id="content-wrapper">
+  <Header />
+  <slot name="after-header"/>  <!--  children with the `slot="after-header"` attribute will go here -->
+  <Logo />
+  <h1>{name}</h1>
+  <slot />  <!--  children without a `slot`, or with `slot="default"` attribute will go here -->
+  <Footer />
+  <slot name="after-footer"/>  <!--  children with the `slot="after-footer"` attribute will go here -->
+</div>

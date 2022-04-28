@@ -1,0 +1,32 @@
+[
+  {
+    "ruleId": "no-unused-vars",
+    "code": "SomeAstroComponent",
+    "line": 3,
+    "column": 8
+  },
+  {
+    "ruleId": "no-unused-vars",
+    "code": "SomeReactComponent",
+    "line": 4,
+    "column": 8
+  },
+  {
+    "ruleId": "no-unused-vars",
+    "code": "someData",
+    "line": 5,
+    "column": 8
+  },
+  {
+    "ruleId": "no-unused-vars",
+    "code": "title",
+    "line": 8,
+    "column": 8
+  },
+  {
+    "ruleId": "no-unused-vars",
+    "code": "data",
+    "line": 10,
+    "column": 7
+  }
+]

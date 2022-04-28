@@ -2,6 +2,7 @@ import type { ESLintExtendedProgram } from "."
 import type { Context } from "../context"
 import { getParser } from "./resolve-parser"
 import fs from "fs"
+import { debug } from "../debug"
 
 /**
  * Parse for script
@@ -31,8 +32,12 @@ export function parseScript(code: string, ctx: Context): ESLintExtendedProgram {
             return result
         }
         return { ast: result } as ESLintExtendedProgram
-        // eslint-disable-next-line no-useless-catch -- for debug
     } catch (e) {
+        debug(
+            "[script] parsing error:",
+            (e as any).message,
+            `@ ${JSON.stringify(code)}`,
+        )
         throw e
     } finally {
         if (removeFile) fs.unlinkSync(removeFile)
