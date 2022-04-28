@@ -1,0 +1,12 @@
+/.nyc_output
+/coverage
+/lib
+/node_modules
+/tests/fixtures/**/*.json
+/explorer/dist
+/explorer/node_modules
+/explorer-v2/build
+/explorer-v2/build
+/explorer-v2/build-system/shim/astro-eslint-parser.*
+/explorer-v2/build-system/shim/eslint-scope.*
+/explorer-v2/build-system/shim/eslint.*
