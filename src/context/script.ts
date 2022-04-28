@@ -63,9 +63,9 @@ export function processTemplate(
                 script.appendOriginal(end.index)
                 script.appendScript("/")
             }
-            if (node.name === "style") {
+            if (node.name === "script" || node.name === "style") {
                 const text = node.children[0]
-                if (text.type === "text") {
+                if (text && text.type === "text") {
                     const styleNodeStart = node.position!.start.offset
                     const start = text.position!.start.offset
                     script.appendOriginal(start)

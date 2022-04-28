@@ -2,7 +2,7 @@ import assert from "assert"
 import fs from "fs"
 import { parseForESLint } from "../../../src"
 import {
-    BASIC_PARSER_OPTIONS,
+    getBasicParserOptions,
     listupFixtures,
     nodeReplacer,
     normalizeError,
@@ -16,7 +16,7 @@ const ERROR_FIXTURE_ROOT = path.resolve(
 
 function parse(code: string, filePath: string) {
     return parseForESLint(code, {
-        ...BASIC_PARSER_OPTIONS!,
+        ...getBasicParserOptions(filePath),
         filePath,
     })
 }

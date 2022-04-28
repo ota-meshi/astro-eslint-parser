@@ -3,7 +3,7 @@ import assert from "assert"
 import fs from "fs"
 import * as parser from "../../../src/index"
 import {
-    BASIC_PARSER_OPTIONS,
+    getBasicParserOptions,
     getMessageData,
     listupFixtures,
 } from "./test-utils"
@@ -50,7 +50,7 @@ describe("astro-eslint-parser with ESLint rules", () => {
                         input,
                         {
                             parser: "astro-eslint-parser",
-                            parserOptions: BASIC_PARSER_OPTIONS,
+                            parserOptions: getBasicParserOptions(inputFileName),
                             rules: {
                                 [rule]: "error",
                             },

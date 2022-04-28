@@ -4,7 +4,7 @@ import { Linter } from "eslint"
 import * as parser from "../src/index"
 import { parseForESLint } from "../src/parser"
 import {
-    BASIC_PARSER_OPTIONS,
+    getBasicParserOptions,
     getMessageData,
     listupFixtures,
     nodeReplacer,
@@ -40,7 +40,7 @@ const RULES = [
  */
 function parse(code: string, filePath: string) {
     return parseForESLint(code, {
-        ...BASIC_PARSER_OPTIONS!,
+        ...getBasicParserOptions(filePath)!,
         filePath,
     })
 }
@@ -93,7 +93,7 @@ for (const {
             input,
             {
                 parser: "astro-eslint-parser",
-                parserOptions: BASIC_PARSER_OPTIONS,
+                parserOptions: getBasicParserOptions(inputFileName),
                 rules: {
                     [rule]: "error",
                 },

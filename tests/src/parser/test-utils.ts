@@ -8,12 +8,24 @@ import type { Reference, Scope, ScopeManager, Variable } from "eslint-scope"
 import type { AstroNode } from "../../../src/ast"
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast")
-export const BASIC_PARSER_OPTIONS: Linter.BaseConfig["parserOptions"] = {
-    ecmaVersion: 2020,
-    parser: "@typescript-eslint/parser",
-    project: require.resolve("../../fixtures/parser/tsconfig.test.json"),
-    extraFileExtensions: [".astro"],
+export function getBasicParserOptions(
+    filePath = "<input>",
+): Linter.BaseConfig["parserOptions"] {
+    let parser = "@typescript-eslint/parser"
+
+    if (filePath.endsWith("03-the-component-template-01-input.astro")) {
+        // typescript-eslint cannot parse JSXNamespacedName attributes.
+        parser = "espree"
+    }
+    return {
+        ecmaVersion: 2020,
+        parser,
+        project: require.resolve("../../fixtures/parser/tsconfig.test.json"),
+        extraFileExtensions: [".astro"],
+        sourceType: "module",
+    }
 }
+
 export function* listupFixtures(dir?: string): IterableIterator<{
     input: string
     inputFileName: string

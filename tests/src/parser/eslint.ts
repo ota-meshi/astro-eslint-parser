@@ -1,7 +1,7 @@
 import { Linter } from "eslint"
 import assert from "assert"
 import * as parser from "../../../src/index"
-import { BASIC_PARSER_OPTIONS } from "./test-utils"
+import { getBasicParserOptions } from "./test-utils"
 
 function createLinter() {
     const linter = new Linter()
@@ -90,7 +90,7 @@ describe("eslint custom parser", () => {
                 const result = linter.verifyAndFix(code, {
                     parser: "astro-eslint-parser",
                     parserOptions: {
-                        ...BASIC_PARSER_OPTIONS,
+                        ...getBasicParserOptions(),
                         parser: "espree",
                     },
                     rules: {
