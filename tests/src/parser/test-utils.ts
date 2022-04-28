@@ -3,20 +3,21 @@ import path from "path"
 import fs from "fs"
 import semver from "semver"
 import type { Linter, Scope as ESLintScope } from "eslint"
+import type { TSESTree } from "@typescript-eslint/types"
 import { LinesAndColumns } from "../../../src/context"
 import type { Reference, Scope, ScopeManager, Variable } from "eslint-scope"
 import type { AstroNode } from "../../../src/ast"
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast")
 export function getBasicParserOptions(
-    filePath = "<input>",
+    _filePath = "<input>",
 ): Linter.BaseConfig["parserOptions"] {
-    let parser = "@typescript-eslint/parser"
+    const parser = "@typescript-eslint/parser"
 
-    if (filePath.endsWith("03-the-component-template-01-input.astro")) {
-        // typescript-eslint cannot parse JSXNamespacedName attributes.
-        parser = "espree"
-    }
+    // if (filePath.endsWith("03-the-component-template-01-input.astro")) {
+    //     // typescript-eslint cannot parse JSXNamespacedName attributes.
+    //     parser = "espree"
+    // }
     return {
         ecmaVersion: 2020,
         parser,
@@ -232,8 +233,9 @@ export function nodeReplacer(key: string, value: any): any {
     return normalizeObject(value)
 }
 
-type AstroKeysType<T extends AstroNode = AstroNode> = {
-    [key in AstroNode["type"]]: T extends { type: key }
+type TargetNode = AstroNode | TSESTree.JSXNamespacedName
+type AstroKeysType<T extends TargetNode = TargetNode> = {
+    [key in TargetNode["type"]]: T extends { type: key }
         ? KeyofObject<T>[]
         : never
 }
@@ -245,6 +247,8 @@ const nodeToKeys: AstroKeysType = {
     AstroDoctype: [],
     AstroShorthandAttribute: ["name", "value"],
     AstroTemplateLiteralAttribute: ["name", "value"],
+
+    JSXNamespacedName: ["namespace", "name"],
 }
 
 function normalizeObject(value: any) {
@@ -260,6 +264,7 @@ function normalizeObject(value: any) {
         const o = [
             "type",
             "kind",
+            "namespace",
             "name",
             ...((nodeType != null &&
                 nodeToKeys[nodeType as keyof AstroKeysType]) ||

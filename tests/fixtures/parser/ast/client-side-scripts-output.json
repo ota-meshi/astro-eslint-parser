@@ -218,24 +218,6 @@
                   "type": "JSXAttribute",
                   "name": {
                     "type": "JSXNamespacedName",
-                    "name": {
-                      "type": "JSXIdentifier",
-                      "name": "inline",
-                      "range": [
-                        69,
-                        75
-                      ],
-                      "loc": {
-                        "start": {
-                          "line": 5,
-                          "column": 11
-                        },
-                        "end": {
-                          "line": 5,
-                          "column": 17
-                        }
-                      }
-                    },
                     "namespace": {
                       "type": "JSXIdentifier",
                       "name": "is",
@@ -251,6 +233,24 @@
                         "end": {
                           "line": 5,
                           "column": 10
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "JSXIdentifier",
+                      "name": "inline",
+                      "range": [
+                        69,
+                        75
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 5,
+                          "column": 11
+                        },
+                        "end": {
+                          "line": 5,
+                          "column": 17
                         }
                       }
                     },

@@ -36,6 +36,7 @@ export function processTemplate(
         fragmentOpened = true
     }
 
+    // eslint-disable-next-line complexity -- X(
     walkElements(resultTemplate.ast, (node, parent) => {
         if (node.type === "frontmatter") {
             const start = node.position!.start.offset
@@ -68,6 +69,87 @@ export function processTemplate(
             script.addToken(AST_TOKEN_TYPES.Punctuator, [end - 3, end])
         } else if (isTag(node)) {
             for (const attr of node.attributes) {
+                if (
+                    (node.type === "component" || node.type === "fragment") &&
+                    (attr.kind === "quoted" ||
+                        attr.kind === "empty" ||
+                        attr.kind === "expression" ||
+                        attr.kind === "template-literal")
+                ) {
+                    const colonIndex = attr.name.indexOf(":")
+                    if (colonIndex >= 0) {
+                        const start = attr.position!.start.offset
+                        script.appendOriginal(start + colonIndex)
+                        script.skipOriginalOffset(1)
+                        script.appendScript(`_`)
+
+                        script.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+                            start,
+                            start + colonIndex,
+                        ])
+                        script.addToken(AST_TOKEN_TYPES.Punctuator, [
+                            start + colonIndex,
+                            start + colonIndex + 1,
+                        ])
+                        script.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+                            start + colonIndex + 1,
+                            start + attr.name.length,
+                        ])
+                        script.addRestoreNodeProcess((scriptNode, result) => {
+                            if (
+                                scriptNode.type ===
+                                    AST_NODE_TYPES.JSXAttribute &&
+                                scriptNode.range[0] === start
+                            ) {
+                                const baseNameNode = scriptNode.name
+                                const nsn: TSESTree.JSXNamespacedName = {
+                                    ...baseNameNode,
+                                    type: AST_NODE_TYPES.JSXNamespacedName,
+                                    namespace: {
+                                        type: AST_NODE_TYPES.JSXIdentifier,
+                                        name: attr.name.slice(0, colonIndex),
+                                        ...ctx.getLocations(
+                                            baseNameNode.range[0],
+                                            baseNameNode.range[0] + colonIndex,
+                                        ),
+                                    },
+                                    name: {
+                                        type: AST_NODE_TYPES.JSXIdentifier,
+                                        name: attr.name.slice(colonIndex + 1),
+                                        ...ctx.getLocations(
+                                            baseNameNode.range[0] +
+                                                colonIndex +
+                                                1,
+                                            baseNameNode.range[1],
+                                        ),
+                                    },
+                                }
+                                scriptNode.name = nsn
+                                nsn.namespace.parent = nsn
+                                nsn.name.parent = nsn
+
+                                const tokens = result.ast.tokens || []
+                                for (
+                                    let index = 0;
+                                    index < tokens.length;
+                                    index++
+                                ) {
+                                    const token = tokens[index]
+                                    if (
+                                        token.range[0] ===
+                                            baseNameNode.range[0] &&
+                                        token.range[1] === baseNameNode.range[1]
+                                    ) {
+                                        tokens.splice(index, 1)
+                                        break
+                                    }
+                                }
+                                return true
+                            }
+                            return false
+                        })
+                    }
+                }
                 if (attr.kind === "shorthand") {
                     const start = attr.position!.start.offset
                     script.appendOriginal(start)
@@ -236,10 +318,10 @@ function getVoidSelfClosingTag(
     parent: ParentNode,
     ctx: Context,
 ) {
-    if (node.type === "fragment") {
-        return false
-    }
-    if (node.children.length > 0) {
+    const children = node.children.filter(
+        (c) => c.type !== "text" || c.value.trim(),
+    )
+    if (children.length > 0) {
         return false
     }
     const code = ctx.code
@@ -247,8 +329,10 @@ function getVoidSelfClosingTag(
     const childIndex = parent.children.indexOf(node)
     if (childIndex === parent.children.length - 1) {
         // last
-        nextElementIndex = parent.position!.end!.offset
-        nextElementIndex = code.lastIndexOf("</", nextElementIndex)
+        if (parent.position?.end) {
+            nextElementIndex = parent.position.end.offset
+            nextElementIndex = code.lastIndexOf("</", nextElementIndex)
+        }
     } else {
         const next = parent.children[childIndex + 1]
         nextElementIndex = next.position!.start.offset

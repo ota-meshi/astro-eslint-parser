@@ -30,7 +30,6 @@ function fixLocations(node: ParentNode, code: string): void {
     let start = 0
     walk(
         node,
-        // eslint-disable-next-line complexity -- ignore
         (node) => {
             if (node.type === "frontmatter") {
                 start = node.position!.start.offset = tokenIndex(
@@ -55,13 +54,7 @@ function fixLocations(node: ParentNode, code: string): void {
                     start,
                 )
                 start += 1
-                if (
-                    node.type === "element" ||
-                    node.type === "component" ||
-                    node.type === "custom-element"
-                ) {
-                    start += node.name.length
-                }
+                start += node.name.length
                 if (!node.attributes.length) {
                     start = getStartTagEndOffset(node, code)
                 }
@@ -111,9 +104,8 @@ function fixLocations(node: ParentNode, code: string): void {
             }
             if (node.type === "expression") {
                 start = tokenIndex(code, "}", start) + 1
-            } else if (node.type === "fragment") {
-                start = tokenIndex(code, "</>", start) + 3
             } else if (
+                node.type === "fragment" ||
                 node.type === "element" ||
                 node.type === "component" ||
                 node.type === "custom-element"
@@ -121,11 +113,15 @@ function fixLocations(node: ParentNode, code: string): void {
                 if (!node.position!.end) {
                     return
                 }
-                start =
-                    tokenIndex(code, `</${node.name}`, start) +
-                    2 +
-                    node.name.length
-                start = tokenIndex(code, ">", start) + 1
+                const closeTagStart = tokenIndexSafe(
+                    code,
+                    `</${node.name}`,
+                    start,
+                )
+                if (closeTagStart != null) {
+                    start = closeTagStart + 2 + node.name.length
+                    start = tokenIndex(code, ">", start) + 1
+                }
             } else {
                 return
             }
@@ -161,14 +157,31 @@ function fixLocationForAttr(node: AttributeNode, code: string, start: number) {
  * Get token index
  */
 function tokenIndex(string: string, token: string, position: number): number {
+    const index = tokenIndexSafe(string, token, position)
+    if (index == null) {
+        const start =
+            token.trim() === token ? skipSpaces(string, position) : position
+        throw new Error(
+            `Unknown token at ${start}, expected: ${JSON.stringify(
+                token,
+            )}, actual: ${JSON.stringify(string.slice(start, start + 10))}`,
+        )
+    }
+    return index
+}
+
+/**
+ * Get token index
+ */
+function tokenIndexSafe(
+    string: string,
+    token: string,
+    position: number,
+): number | null {
     const index =
         token.trim() === token ? skipSpaces(string, position) : position
     if (string.startsWith(token, index)) {
         return index
     }
-    throw new Error(
-        `Unknown token at ${index}, expected: ${JSON.stringify(
-            token,
-        )}, actual: ${JSON.stringify(string.slice(index, index + 10))}`,
-    )
+    return null
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "ruleId": "no-undef",
+    "code": "fetchHTMLFromMyCMS",
+    "line": 2,
+    "column": 26
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 4,
+    "column": 2
+  }
+]

@@ -1295,24 +1295,6 @@
                           "type": "JSXAttribute",
                           "name": {
                             "type": "JSXNamespacedName",
-                            "name": {
-                              "type": "JSXIdentifier",
-                              "name": "global",
-                              "range": [
-                                1132,
-                                1138
-                              ],
-                              "loc": {
-                                "start": {
-                                  "line": 49,
-                                  "column": 11
-                                },
-                                "end": {
-                                  "line": 49,
-                                  "column": 17
-                                }
-                              }
-                            },
                             "namespace": {
                               "type": "JSXIdentifier",
                               "name": "is",
@@ -1328,6 +1310,24 @@
                                 "end": {
                                   "line": 49,
                                   "column": 10
+                                }
+                              }
+                            },
+                            "name": {
+                              "type": "JSXIdentifier",
+                              "name": "global",
+                              "range": [
+                                1132,
+                                1138
+                              ],
+                              "loc": {
+                                "start": {
+                                  "line": 49,
+                                  "column": 11
+                                },
+                                "end": {
+                                  "line": 49,
+                                  "column": 17
                                 }
                               }
                             },

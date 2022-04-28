@@ -3,6 +3,7 @@
   "body": [
     {
       "type": "ImportDeclaration",
+      "importKind": "value",
       "source": {
         "type": "Literal",
         "raw": "'../components/ReactPokemonComponent.jsx'",
@@ -678,24 +679,6 @@
                   "type": "JSXAttribute",
                   "name": {
                     "type": "JSXNamespacedName",
-                    "name": {
-                      "type": "JSXIdentifier",
-                      "name": "visible",
-                      "range": [
-                        435,
-                        442
-                      ],
-                      "loc": {
-                        "start": {
-                          "line": 14,
-                          "column": 30
-                        },
-                        "end": {
-                          "line": 14,
-                          "column": 37
-                        }
-                      }
-                    },
                     "namespace": {
                       "type": "JSXIdentifier",
                       "name": "client",
@@ -711,6 +694,24 @@
                         "end": {
                           "line": 14,
                           "column": 29
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "JSXIdentifier",
+                      "name": "visible",
+                      "range": [
+                        435,
+                        442
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 14,
+                          "column": 30
+                        },
+                        "end": {
+                          "line": 14,
+                          "column": 37
                         }
                       }
                     },
@@ -1926,7 +1927,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "Astro",
       "range": [
         308,
@@ -1962,7 +1963,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "props",
       "range": [
         314,
@@ -1998,7 +1999,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "title",
       "range": [
         320,
@@ -2430,7 +2431,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "myFavoritePokemon",
       "range": [
         518,
@@ -2466,7 +2467,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "map",
       "range": [
         536,
@@ -2646,7 +2647,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "data",
       "range": [
         555,
@@ -2682,7 +2683,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "name",
       "range": [
         560,
