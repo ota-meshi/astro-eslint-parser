@@ -269,7 +269,7 @@
                   }
                 },
                 {
-                  "type": "JSXAttribute",
+                  "type": "AstroTemplateLiteralAttribute",
                   "name": {
                     "type": "JSXIdentifier",
                     "name": "alt",

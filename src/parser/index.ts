@@ -9,7 +9,7 @@ import { sort } from "./sort"
 import { ParseError } from "../errors"
 import type { ParseResult } from "@astrojs/compiler"
 import { parse as parseAstro } from "./astro-parser/parse"
-import { processTemplate } from "../context/script"
+import { processTemplate } from "./process-template"
 
 /**
  * The parsing result of ESLint custom parsers.
