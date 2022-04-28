@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 14
+        node-version: 18
     - name: Install Packages
       run: npm install --legacy-peer-deps
     - name: Lint
@@ -22,32 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x, 17.x]
+        node-version: [14.x, 16.x, 18.x]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install Packages
-      run: npm install --legacy-peer-deps
-    - name: Test
-      run: npm test
-  test-for-ts-eslint-v4:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install @typescript-eslint v4
-      run: |+
-        npm i -D @typescript-eslint/parser@4 @typescript-eslint/eslint-plugin@4 --legacy-peer-deps
-        npx rimraf node_modules
     - name: Install Packages
       run: npm install --legacy-peer-deps
     - name: Test
