@@ -75,7 +75,7 @@ For example:
 
 ### parserOptions.parser
 
-You can use `parserOptions.parser` property to specify a custom parser to parse `<script>` tags.
+You can use `parserOptions.parser` property to specify a custom parser to parse scripts.
 Other properties than parser would be given to the specified parser.
 For example:
 
@@ -88,7 +88,7 @@ For example:
 }
 ```
 
-For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `<script>` of `.astro`, you need to add more `parserOptions` configuration.
+For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `.astro`, you need to add more `parserOptions` configuration.
 
 ```js
 module.exports = {
@@ -97,13 +97,13 @@ module.exports = {
   parserOptions: {
     // ...
     project: "path/to/your/tsconfig.json",
-    extraFileExtensions: [".astro"], // This is a required setting in `@typescript-eslint/parser` v4.24.0.
+    extraFileExtensions: [".astro"], // This is a required setting in `@typescript-eslint/parser` v5.
   },
   overrides: [
     {
       files: ["*.astro"],
       parser: "astro-eslint-parser",
-      // Parse the `<script>` in `.astro` as TypeScript by adding the following configuration.
+      // Parse the script in `.astro` as TypeScript by adding the following configuration.
       parserOptions: {
         parser: "@typescript-eslint/parser",
       },
