@@ -151,7 +151,7 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 ## Usage for Custom Rules / Plugins
 
 - TBA
-- You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
+- You can check the AST in the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
 
 <!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
 <!-- - I have already [implemented some rules] in the [`@ota-meshi/eslint-plugin-astro`]. The source code for these rules will be helpful to you. -->
