@@ -2,6 +2,6 @@
 static/**
 build/**
 node_modules/**
-/build-system/shim/astro-eslint-parser.*
-/build-system/shim/eslint-scope.*
-/build-system/shim/eslint.*
+/build-system/shim/astro-eslint-parser/*.*
+/build-system/shim/eslint-scope/*.*
+/build-system/shim/eslint/*.*

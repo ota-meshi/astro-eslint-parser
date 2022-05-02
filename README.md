@@ -11,6 +11,7 @@ You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parse
 [![NPM downloads](https://img.shields.io/npm/dy/astro-eslint-parser.svg)](http://www.npmtrends.com/astro-eslint-parser)
 [![NPM downloads](https://img.shields.io/npm/dt/astro-eslint-parser.svg)](http://www.npmtrends.com/astro-eslint-parser)
 [![Build Status](https://github.com/ota-meshi/astro-eslint-parser/workflows/CI/badge.svg?branch=main)](https://github.com/ota-meshi/astro-eslint-parser/actions?query=workflow%3ACI)
+[![Coverage Status](https://coveralls.io/repos/github/ota-meshi/astro-eslint-parser/badge.svg?branch=main)](https://coveralls.io/github/ota-meshi/astro-eslint-parser?branch=main)
 
 This parser is in the ***experimental stages*** of development.
 
@@ -132,6 +133,17 @@ Example **.vscode/settings.json**:
     ]
 }
 ```
+
+## Compatibility With Existing ESLint Rules
+
+Most of the rules in the ESLint core work for the script part, but some rules are incompatible.
+For example, the [semi] rule doesn't work.  
+This parser will generate a JSX compatible AST for most of the HTML part of the Astro component. Therefore, some rules of [eslint-plugin-react] may work.
+For example, the [react/jsx-no-target-blank] rule works fine.  
+
+[semi]: https://eslint.org/docs/rules/semi
+[eslint-plugin-react]: https://github.com/jsx-eslint/eslint-plugin-react/
+[react/jsx-no-target-blank]: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
 
 ## Usage for Custom Rules / Plugins
 

@@ -1,6 +1,7 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
 	import { Linter } from 'eslint';
+	import pluginReact from 'eslint-plugin-react';
 	import * as astroEslintParser from 'astro-eslint-parser';
 	import ESLintEditor from './ESLintEditor.svelte';
 	import RulesSettings from './RulesSettings.svelte';
@@ -9,15 +10,19 @@
 
 	let linter = null;
 
-	if (typeof window !== 'undefined') {
-		linter = window.waitSetupForAstroCompilerWasm.then(() => {
-			const linter = new Linter();
-			linter.defineParser('astro-eslint-parser', astroEslintParser);
-			return linter;
-		});
-	} else {
-		linter = new Linter();
+	function setupLinter() {
+		const linter = new Linter();
 		linter.defineParser('astro-eslint-parser', astroEslintParser);
+		for (const [id, rule] of Object.entries(pluginReact.rules)) {
+			linter.defineRule('react/' + id, rule);
+		}
+		return linter;
+	}
+
+	if (typeof window !== 'undefined') {
+		linter = window.waitSetupForAstroCompilerWasm.then(() => setupLinter());
+	} else {
+		setupLinter();
 	}
 
 	const DEFAULT_CODE = `---
@@ -115,6 +120,11 @@ let b = 2;
 					env: {
 						browser: true,
 						es2021: true
+					},
+					settings: {
+						react: {
+							version: '999.999.999'
+						}
 					}
 				}}
 				{options}

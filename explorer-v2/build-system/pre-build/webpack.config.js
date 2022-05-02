@@ -4,7 +4,7 @@ import webpack from 'webpack';
 
 const output = {
 	path: resolve('../shim'),
-	filename: '[name].js',
+	filename: '[name]/index.js',
 	library: {
 		type: 'module'
 	}
@@ -49,7 +49,7 @@ export default [
 		},
 		plugins: [
 			new WrapperPlugin({
-				test: /eslint\.js/,
+				test: /eslint\/index\.js/,
 				header: `
 				if (typeof window !== "undefined") {
 					if (typeof window.global === "undefined") {
@@ -91,7 +91,7 @@ export default [
 			),
 			new webpack.NormalModuleReplacementPlugin(/wasm_exec\.js/, resolve('./wasm_exec4b.js')),
 			new WrapperPlugin({
-				test: /astro-eslint-parser\.js/,
+				test: /astro-eslint-parser\/index\.js/,
 				header: `
 				import * as $$inject_espree$$ from 'espree';
 				if (!globalThis.process) {

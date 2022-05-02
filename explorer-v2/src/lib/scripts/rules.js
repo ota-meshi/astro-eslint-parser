@@ -1,21 +1,27 @@
 import { Linter } from 'eslint';
+import pluginReact from 'eslint-plugin-react';
 
 const linter = new Linter();
 
 export const categories = [
 	{
-		type: 'problem',
+		test: ({ rule }) => rule.meta.type === 'problem',
 		title: 'Possible Errors',
 		rules: []
 	},
 	{
-		type: 'suggestion',
+		test: ({ rule }) => rule.meta.type === 'suggestion',
 		title: 'Suggestions',
 		rules: []
 	},
 	{
-		type: 'layout',
+		test: ({ rule }) => rule.meta.type === 'layout',
 		title: 'Layout & Formatting',
+		rules: []
+	},
+	{
+		test: ({ ruleId }) => ruleId.startsWith('react/'),
+		title: 'eslint-plugin-react',
 		rules: []
 	}
 ];
@@ -32,14 +38,29 @@ for (const [ruleId, rule] of linter.getRules()) {
 		url: rule.meta.docs.url
 	};
 	rules.push(data);
-	const type = rule.meta.type;
-	categories.find((c) => c.type === type).rules.push(data);
+	categories.find((c) => c.test(data)).rules.push(data);
 
 	if (rule.meta.docs.recommended) {
 		DEFAULT_RULES_CONFIG[ruleId] = 'error';
 	}
 }
+for (const [ruleId, rule] of Object.entries(pluginReact.rules)) {
+	if (rule.meta.deprecated) {
+		continue;
+	}
+	const data = {
+		ruleId: `react/${ruleId}`,
+		rule,
+		url: rule.meta.docs.url
+	};
+	rules.push(data);
+	categories.find((c) => c.test(data)).rules.push(data);
+
+	// if (rule.meta.docs.recommended) {
+	// 	DEFAULT_RULES_CONFIG[ruleId] = 'error';
+	// }
+}
 /** get url */
 export function getURL(ruleId) {
-	return linter.getRules().get(ruleId)?.meta.docs.url ?? '';
+	return rules.find((data) => data.ruleId === ruleId)?.rule?.meta.docs.url ?? '';
 }
