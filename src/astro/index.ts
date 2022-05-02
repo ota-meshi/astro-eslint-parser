@@ -28,19 +28,14 @@ export function isParent(node: Node): node is ParentNode {
 /** walk element nodes */
 export function walkElements(
     parent: ParentNode,
+    code: string,
     cb: (n: Node, parent: ParentNode) => void,
 ): void {
-    let children = parent.children
-    if (parent.type === "root" && children.every((n) => n.position)) {
-        // The order of comments and frontmatter may be changed.
-        children = [...children].sort(
-            (a, b) => a.position!.start.offset - b.position!.start.offset,
-        )
-    }
+    const children = getSortedChildren(parent, code)
     for (const node of children) {
         cb(node, parent)
         if (isParent(node)) {
-            walkElements(node, cb)
+            walkElements(node, code, cb)
         }
     }
 }
@@ -48,16 +43,11 @@ export function walkElements(
 /** walk nodes */
 export function walk(
     parent: ParentNode,
+    code: string,
     enter: (n: Node | AttributeNode, parent: ParentNode) => void,
     leave?: (n: Node | AttributeNode, parent: ParentNode) => void,
 ): void {
-    let children = parent.children
-    if (parent.type === "root" && children.every((n) => n.position)) {
-        // The order of comments and frontmatter may be changed.
-        children = [...children].sort(
-            (a, b) => a.position!.start.offset - b.position!.start.offset,
-        )
-    }
+    const children = getSortedChildren(parent, code)
     for (const node of children) {
         enter(node, parent)
         if (isTag(node)) {
@@ -67,7 +57,7 @@ export function walk(
             }
         }
         if (isParent(node)) {
-            walk(node, enter, leave)
+            walk(node, code, enter, leave)
         }
         leave?.(node, parent)
     }
@@ -260,4 +250,58 @@ export function skipSpaces(string: string, position: number): number {
         return match.index + match[0].length
     }
     return position
+}
+
+/**
+ * Get children
+ */
+function getSortedChildren(parent: ParentNode, code: string) {
+    if (
+        parent.type === "root" &&
+        parent.children.findIndex((c) => c.type === "frontmatter") === 0
+    ) {
+        // The order of comments and frontmatter may be changed.
+        let children = [...parent.children]
+        if (!children.every((n) => n.position)) {
+            let start = skipSpaces(code, 0)
+            if (code.startsWith("<!", start)) {
+                const frontmatter = children.shift()!
+                const before = []
+                let first = children[0]
+                while (
+                    first &&
+                    (first.type === "doctype" || first.type === "comment")
+                ) {
+                    start = skipSpaces(code, start)
+                    if (
+                        first.type === "comment" &&
+                        code.startsWith("<!--", start)
+                    ) {
+                        first.position!.start.offset = start
+                        start = getCommentEndOffset(first, code)
+                        before.push(children.shift()!)
+                    } else if (first.type === "doctype") {
+                        if (!first.position) {
+                            first.position = { start: {}, end: {} } as any
+                        }
+                        first.position!.start.offset = start
+                        start += 2
+                        start = first.position!.end!.offset =
+                            code.indexOf(">", start) + 1
+                        before.push(children.shift()!)
+                    } else {
+                        break
+                    }
+                    first = children[0]
+                }
+                children = [...before, frontmatter, ...children]
+            }
+        }
+        if (children.every((n) => n.position)) {
+            return children.sort(
+                (a, b) => a.position!.start.offset - b.position!.start.offset,
+            )
+        }
+    }
+    return parent.children
 }

@@ -30,6 +30,7 @@ function fixLocations(node: ParentNode, code: string): void {
     let start = 0
     walk(
         node,
+        code,
         (node) => {
             if (node.type === "frontmatter") {
                 start = node.position!.start.offset = tokenIndex(
@@ -81,6 +82,9 @@ function fixLocations(node: ParentNode, code: string): void {
             } else if (node.type === "doctype") {
                 if (!node.position) {
                     node.position = { start: {}, end: {} } as any
+                }
+                if (!node.position!.end) {
+                    node.position!.end = {} as any
                 }
                 start = node.position!.start.offset = tokenIndex(
                     code,
