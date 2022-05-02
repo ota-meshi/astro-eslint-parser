@@ -15,7 +15,7 @@ You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parse
 
 This parser is in the ***experimental stages*** of development.
 
-Currently this parser relies heavily on the internal API of [@astrojs/compiler]. It may stop working in a future update of [@astrojs/compiler].
+⚠ Currently this parser relies heavily on the internal API of [@astrojs/compiler]. It may stop working in a future update of [@astrojs/compiler]. ⚠
 
 [@astrojs/compiler]: https://github.com/withastro/compiler
 
