@@ -3,7 +3,7 @@ import type { ESLintExtendedProgram } from "../parser"
 import { traverseNodes } from "../traverse"
 import type { TSESTree } from "@typescript-eslint/types"
 import { ParseError } from "../errors"
-import type { AstroRootFragment } from "../ast"
+import type { AstroProgram, AstroRootFragment } from "../ast"
 
 export class ScriptContext {
     private readonly ctx: Context
@@ -79,6 +79,14 @@ export class ScriptContext {
             )
         }
 
+        // Process for Astro
+        const rootFragment = ((result.ast as AstroProgram).body[
+            result.ast.body.length - 1
+        ] = last.expression as unknown as AstroRootFragment)
+        delete (rootFragment as any).closingFragment
+        delete (rootFragment as any).openingFragment
+        rootFragment.type = "AstroRootFragment"
+
         // remap locations
 
         const traversed = new Set<TSESTree.Node>()
@@ -111,12 +119,6 @@ export class ScriptContext {
         for (const token of result.ast.comments || []) {
             this.remapLocation(token)
         }
-
-        // Process for Astro
-        delete (last.expression as any).closingFragment
-        delete (last.expression as any).openingFragment
-        ;(last.expression as unknown as AstroRootFragment).type =
-            "AstroRootFragment"
 
         let restoreNodeProcesses = this.restoreNodeProcesses
         for (const node of traversed) {

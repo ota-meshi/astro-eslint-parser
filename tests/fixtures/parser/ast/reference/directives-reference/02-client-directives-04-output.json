@@ -2,78 +2,43 @@
   "type": "Program",
   "body": [
     {
-      "type": "ExpressionStatement",
-      "expression": {
-        "type": "AstroRootFragment",
-        "children": [
-          {
-            "type": "JSXElement",
-            "children": [],
-            "closingElement": null,
-            "openingElement": {
-              "type": "JSXOpeningElement",
-              "name": {
-                "type": "JSXIdentifier",
-                "name": "SidebarToggle",
-                "range": [
-                  1,
-                  14
-                ],
-                "loc": {
-                  "start": {
-                    "line": 1,
-                    "column": 1
-                  },
-                  "end": {
-                    "line": 1,
-                    "column": 14
-                  }
+      "type": "AstroRootFragment",
+      "children": [
+        {
+          "type": "JSXElement",
+          "children": [],
+          "closingElement": null,
+          "openingElement": {
+            "type": "JSXOpeningElement",
+            "name": {
+              "type": "JSXIdentifier",
+              "name": "SidebarToggle",
+              "range": [
+                1,
+                14
+              ],
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "line": 1,
+                  "column": 14
                 }
-              },
-              "attributes": [
-                {
-                  "type": "JSXAttribute",
-                  "name": {
-                    "type": "JSXNamespacedName",
-                    "namespace": {
-                      "type": "JSXIdentifier",
-                      "name": "client",
-                      "range": [
-                        15,
-                        21
-                      ],
-                      "loc": {
-                        "start": {
-                          "line": 1,
-                          "column": 15
-                        },
-                        "end": {
-                          "line": 1,
-                          "column": 21
-                        }
-                      }
-                    },
-                    "name": {
-                      "type": "JSXIdentifier",
-                      "name": "media",
-                      "range": [
-                        22,
-                        27
-                      ],
-                      "loc": {
-                        "start": {
-                          "line": 1,
-                          "column": 22
-                        },
-                        "end": {
-                          "line": 1,
-                          "column": 27
-                        }
-                      }
-                    },
+              }
+            },
+            "attributes": [
+              {
+                "type": "JSXAttribute",
+                "name": {
+                  "type": "JSXNamespacedName",
+                  "namespace": {
+                    "type": "JSXIdentifier",
+                    "name": "client",
                     "range": [
                       15,
-                      27
+                      21
                     ],
                     "loc": {
                       "start": {
@@ -82,32 +47,31 @@
                       },
                       "end": {
                         "line": 1,
-                        "column": 27
+                        "column": 21
                       }
                     }
                   },
-                  "value": {
-                    "type": "Literal",
-                    "raw": "\"(max-width: 50em)\"",
-                    "value": "(max-width: 50em)",
+                  "name": {
+                    "type": "JSXIdentifier",
+                    "name": "media",
                     "range": [
-                      28,
-                      47
+                      22,
+                      27
                     ],
                     "loc": {
                       "start": {
                         "line": 1,
-                        "column": 28
+                        "column": 22
                       },
                       "end": {
                         "line": 1,
-                        "column": 47
+                        "column": 27
                       }
                     }
                   },
                   "range": [
                     15,
-                    47
+                    27
                   ],
                   "loc": {
                     "start": {
@@ -116,27 +80,46 @@
                     },
                     "end": {
                       "line": 1,
+                      "column": 27
+                    }
+                  }
+                },
+                "value": {
+                  "type": "Literal",
+                  "raw": "\"(max-width: 50em)\"",
+                  "value": "(max-width: 50em)",
+                  "range": [
+                    28,
+                    47
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 1,
+                      "column": 28
+                    },
+                    "end": {
+                      "line": 1,
                       "column": 47
                     }
                   }
-                }
-              ],
-              "selfClosing": true,
-              "range": [
-                0,
-                50
-              ],
-              "loc": {
-                "start": {
-                  "line": 1,
-                  "column": 0
                 },
-                "end": {
-                  "line": 1,
-                  "column": 50
+                "range": [
+                  15,
+                  47
+                ],
+                "loc": {
+                  "start": {
+                    "line": 1,
+                    "column": 15
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 47
+                  }
                 }
               }
-            },
+            ],
+            "selfClosing": true,
             "range": [
               0,
               50
@@ -152,41 +135,41 @@
               }
             }
           },
-          {
-            "type": "JSXText",
-            "raw": "\n",
-            "value": "\n",
-            "range": [
-              50,
-              51
-            ],
-            "loc": {
-              "start": {
-                "line": 1,
-                "column": 50
-              },
-              "end": {
-                "line": 2,
-                "column": 0
-              }
+          "range": [
+            0,
+            50
+          ],
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 50
             }
           }
-        ],
-        "range": [
-          0,
-          51
-        ],
-        "loc": {
-          "start": {
-            "line": 1,
-            "column": 0
-          },
-          "end": {
-            "line": 2,
-            "column": 0
+        },
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            50,
+            51
+          ],
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 50
+            },
+            "end": {
+              "line": 2,
+              "column": 0
+            }
           }
         }
-      },
+      ],
       "range": [
         0,
         51

@@ -2,127 +2,110 @@
   "type": "Program",
   "body": [
     {
-      "type": "ExpressionStatement",
-      "expression": {
-        "type": "AstroRootFragment",
-        "children": [
-          {
-            "type": "JSXText",
-            "raw": "\n",
-            "value": "\n",
-            "range": [
-              38,
-              39
-            ],
-            "loc": {
-              "start": {
-                "line": 3,
-                "column": 3
-              },
-              "end": {
-                "line": 4,
-                "column": 0
+      "type": "AstroRootFragment",
+      "children": [
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            38,
+            39
+          ],
+          "loc": {
+            "start": {
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "line": 4,
+              "column": 0
+            }
+          }
+        },
+        {
+          "type": "JSXElement",
+          "children": [
+            {
+              "type": "JSXText",
+              "raw": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
+              "value": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
+              "range": [
+                46,
+                138
+              ],
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 7
+                },
+                "end": {
+                  "line": 7,
+                  "column": 0
+                }
               }
             }
-          },
-          {
-            "type": "JSXElement",
-            "children": [
-              {
-                "type": "JSXText",
-                "raw": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
-                "value": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
-                "range": [
-                  46,
-                  138
-                ],
-                "loc": {
-                  "start": {
-                    "line": 4,
-                    "column": 7
-                  },
-                  "end": {
-                    "line": 7,
-                    "column": 0
-                  }
-                }
-              }
-            ],
-            "closingElement": {
-              "type": "JSXClosingElement",
-              "name": {
-                "type": "JSXIdentifier",
-                "name": "style",
-                "range": [
-                  140,
-                  145
-                ],
-                "loc": {
-                  "start": {
-                    "line": 7,
-                    "column": 2
-                  },
-                  "end": {
-                    "line": 7,
-                    "column": 7
-                  }
-                }
-              },
+          ],
+          "closingElement": {
+            "type": "JSXClosingElement",
+            "name": {
+              "type": "JSXIdentifier",
+              "name": "style",
               "range": [
-                138,
-                146
+                140,
+                145
               ],
               "loc": {
                 "start": {
                   "line": 7,
-                  "column": 0
+                  "column": 2
                 },
                 "end": {
                   "line": 7,
-                  "column": 8
-                }
-              }
-            },
-            "openingElement": {
-              "type": "JSXOpeningElement",
-              "name": {
-                "type": "JSXIdentifier",
-                "name": "style",
-                "range": [
-                  40,
-                  45
-                ],
-                "loc": {
-                  "start": {
-                    "line": 4,
-                    "column": 1
-                  },
-                  "end": {
-                    "line": 4,
-                    "column": 6
-                  }
-                }
-              },
-              "attributes": [],
-              "selfClosing": false,
-              "range": [
-                39,
-                46
-              ],
-              "loc": {
-                "start": {
-                  "line": 4,
-                  "column": 0
-                },
-                "end": {
-                  "line": 4,
                   "column": 7
                 }
               }
             },
             "range": [
-              39,
+              138,
               146
+            ],
+            "loc": {
+              "start": {
+                "line": 7,
+                "column": 0
+              },
+              "end": {
+                "line": 7,
+                "column": 8
+              }
+            }
+          },
+          "openingElement": {
+            "type": "JSXOpeningElement",
+            "name": {
+              "type": "JSXIdentifier",
+              "name": "style",
+              "range": [
+                40,
+                45
+              ],
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 1
+                },
+                "end": {
+                  "line": 4,
+                  "column": 6
+                }
+              }
+            },
+            "attributes": [],
+            "selfClosing": false,
+            "range": [
+              39,
+              46
             ],
             "loc": {
               "start": {
@@ -130,133 +113,96 @@
                 "column": 0
               },
               "end": {
-                "line": 7,
-                "column": 8
+                "line": 4,
+                "column": 7
               }
             }
           },
-          {
-            "type": "JSXText",
-            "raw": "\n\n",
-            "value": "\n\n",
-            "range": [
-              146,
-              148
-            ],
-            "loc": {
-              "start": {
-                "line": 7,
-                "column": 8
-              },
-              "end": {
-                "line": 9,
-                "column": 0
-              }
-            }
-          },
-          {
-            "type": "JSXElement",
-            "children": [
-              {
-                "type": "JSXText",
-                "raw": "Hello, world!",
-                "value": "Hello, world!",
-                "range": [
-                  152,
-                  165
-                ],
-                "loc": {
-                  "start": {
-                    "line": 9,
-                    "column": 4
-                  },
-                  "end": {
-                    "line": 9,
-                    "column": 17
-                  }
-                }
-              }
-            ],
-            "closingElement": {
-              "type": "JSXClosingElement",
-              "name": {
-                "type": "JSXIdentifier",
-                "name": "h1",
-                "range": [
-                  167,
-                  169
-                ],
-                "loc": {
-                  "start": {
-                    "line": 9,
-                    "column": 19
-                  },
-                  "end": {
-                    "line": 9,
-                    "column": 21
-                  }
-                }
-              },
-              "range": [
-                165,
-                170
-              ],
-              "loc": {
-                "start": {
-                  "line": 9,
-                  "column": 17
-                },
-                "end": {
-                  "line": 9,
-                  "column": 22
-                }
-              }
+          "range": [
+            39,
+            146
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
             },
-            "openingElement": {
-              "type": "JSXOpeningElement",
-              "name": {
-                "type": "JSXIdentifier",
-                "name": "h1",
-                "range": [
-                  149,
-                  151
-                ],
-                "loc": {
-                  "start": {
-                    "line": 9,
-                    "column": 1
-                  },
-                  "end": {
-                    "line": 9,
-                    "column": 3
-                  }
-                }
-              },
-              "attributes": [],
-              "selfClosing": false,
+            "end": {
+              "line": 7,
+              "column": 8
+            }
+          }
+        },
+        {
+          "type": "JSXText",
+          "raw": "\n\n",
+          "value": "\n\n",
+          "range": [
+            146,
+            148
+          ],
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 8
+            },
+            "end": {
+              "line": 9,
+              "column": 0
+            }
+          }
+        },
+        {
+          "type": "JSXElement",
+          "children": [
+            {
+              "type": "JSXText",
+              "raw": "Hello, world!",
+              "value": "Hello, world!",
               "range": [
-                148,
-                152
+                152,
+                165
               ],
               "loc": {
                 "start": {
-                  "line": 9,
-                  "column": 0
-                },
-                "end": {
                   "line": 9,
                   "column": 4
+                },
+                "end": {
+                  "line": 9,
+                  "column": 17
+                }
+              }
+            }
+          ],
+          "closingElement": {
+            "type": "JSXClosingElement",
+            "name": {
+              "type": "JSXIdentifier",
+              "name": "h1",
+              "range": [
+                167,
+                169
+              ],
+              "loc": {
+                "start": {
+                  "line": 9,
+                  "column": 19
+                },
+                "end": {
+                  "line": 9,
+                  "column": 21
                 }
               }
             },
             "range": [
-              148,
+              165,
               170
             ],
             "loc": {
               "start": {
                 "line": 9,
-                "column": 0
+                "column": 17
               },
               "end": {
                 "line": 9,
@@ -264,41 +210,78 @@
               }
             }
           },
-          {
-            "type": "JSXText",
-            "raw": "\n",
-            "value": "\n",
+          "openingElement": {
+            "type": "JSXOpeningElement",
+            "name": {
+              "type": "JSXIdentifier",
+              "name": "h1",
+              "range": [
+                149,
+                151
+              ],
+              "loc": {
+                "start": {
+                  "line": 9,
+                  "column": 1
+                },
+                "end": {
+                  "line": 9,
+                  "column": 3
+                }
+              }
+            },
+            "attributes": [],
+            "selfClosing": false,
             "range": [
-              170,
-              171
+              148,
+              152
             ],
             "loc": {
               "start": {
                 "line": 9,
-                "column": 22
+                "column": 0
               },
               "end": {
-                "line": 10,
-                "column": 0
+                "line": 9,
+                "column": 4
               }
             }
-          }
-        ],
-        "range": [
-          38,
-          171
-        ],
-        "loc": {
-          "start": {
-            "line": 3,
-            "column": 3
           },
-          "end": {
-            "line": 10,
-            "column": 0
+          "range": [
+            148,
+            170
+          ],
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 0
+            },
+            "end": {
+              "line": 9,
+              "column": 22
+            }
+          }
+        },
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            170,
+            171
+          ],
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 22
+            },
+            "end": {
+              "line": 10,
+              "column": 0
+            }
           }
         }
-      },
+      ],
       "range": [
         38,
         171

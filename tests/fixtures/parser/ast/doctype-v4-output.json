@@ -2,43 +2,26 @@
   "type": "Program",
   "body": [
     {
-      "type": "ExpressionStatement",
-      "expression": {
-        "type": "AstroRootFragment",
-        "children": [
-          {
-            "type": "AstroDoctype",
-            "range": [
-              0,
-              94
-            ],
-            "loc": {
-              "start": {
-                "line": 1,
-                "column": 0
-              },
-              "end": {
-                "line": 2,
-                "column": 44
-              }
+      "type": "AstroRootFragment",
+      "children": [
+        {
+          "type": "AstroDoctype",
+          "range": [
+            0,
+            94
+          ],
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 2,
+              "column": 44
             }
           }
-        ],
-        "range": [
-          0,
-          94
-        ],
-        "loc": {
-          "start": {
-            "line": 1,
-            "column": 0
-          },
-          "end": {
-            "line": 2,
-            "column": 44
-          }
         }
-      },
+      ],
       "range": [
         0,
         94
