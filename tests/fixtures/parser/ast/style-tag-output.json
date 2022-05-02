@@ -8,9 +8,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  /* CSS */\n",
+              "type": "AstroRawText",
               "value": "\n  /* CSS */\n",
+              "raw": "\n  /* CSS */\n",
               "range": [
                 7,
                 20

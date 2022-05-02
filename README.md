@@ -15,6 +15,10 @@ You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parse
 
 This parser is in the ***experimental stages*** of development.
 
+Currently this parser relies heavily on the internal API of [@astrojs/compiler]. It may stop working in a future update of [@astrojs/compiler].
+
+[@astrojs/compiler]: https://github.com/withastro/compiler
+
 <!--
 ### ESLint Plugins Using astro-eslint-parser
 
@@ -147,6 +151,7 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 ## Usage for Custom Rules / Plugins
 
 - TBA
+- You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
 
 <!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
 <!-- - I have already [implemented some rules] in the [`@ota-meshi/eslint-plugin-astro`]. The source code for these rules will be helpful to you. -->

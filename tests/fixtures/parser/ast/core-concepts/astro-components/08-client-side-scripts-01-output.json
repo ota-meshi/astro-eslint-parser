@@ -8,9 +8,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  // Processed! Bundled! ESM imports work, even to npm packages.\n",
+              "type": "AstroRawText",
               "value": "\n  // Processed! Bundled! ESM imports work, even to npm packages.\n",
+              "raw": "\n  // Processed! Bundled! ESM imports work, even to npm packages.\n",
               "range": [
                 8,
                 74
@@ -137,9 +137,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  // Will be rendered into the HTML exactly as written!\n  // ESM imports will not be resolved relative to the file.\n",
+              "type": "AstroRawText",
               "value": "\n  // Will be rendered into the HTML exactly as written!\n  // ESM imports will not be resolved relative to the file.\n",
+              "raw": "\n  // Will be rendered into the HTML exactly as written!\n  // ESM imports will not be resolved relative to the file.\n",
               "range": [
                 103,
                 220

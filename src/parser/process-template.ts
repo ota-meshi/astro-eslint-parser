@@ -14,6 +14,7 @@ import { ScriptContext } from "../context/script"
 import type {
     AstroDoctype,
     AstroHTMLComment,
+    AstroRawText,
     AstroShorthandAttribute,
     AstroTemplateLiteralAttribute,
 } from "../ast"
@@ -215,8 +216,8 @@ export function processTemplate(
                             scriptNode.type === AST_NODE_TYPES.JSXElement &&
                             scriptNode.range[0] === styleNodeStart
                         ) {
-                            const textNode: TSESTree.JSXText = {
-                                type: AST_NODE_TYPES.JSXText,
+                            const textNode: AstroRawText = {
+                                type: "AstroRawText",
                                 value: text.value,
                                 raw: text.value,
                                 parent: scriptNode,
@@ -225,7 +226,9 @@ export function processTemplate(
                                     start + text.value.length,
                                 ),
                             }
-                            scriptNode.children = [textNode]
+                            scriptNode.children = [
+                                textNode as unknown as TSESTree.JSXText,
+                            ]
                             return true
                         }
                         return false
