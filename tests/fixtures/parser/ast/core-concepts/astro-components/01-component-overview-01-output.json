@@ -2,82 +2,65 @@
   "type": "Program",
   "body": [
     {
-      "type": "ExpressionStatement",
-      "expression": {
-        "type": "AstroRootFragment",
-        "children": [
-          {
-            "type": "JSXText",
-            "raw": "\n",
-            "value": "\n",
-            "range": [
-              40,
-              41
-            ],
-            "loc": {
-              "start": {
-                "line": 3,
-                "column": 3
-              },
-              "end": {
-                "line": 4,
-                "column": 0
-              }
-            }
-          },
-          {
-            "type": "AstroHTMLComment",
-            "value": " Component Template (HTML + JS Expressions) ",
-            "range": [
-              41,
-              92
-            ],
-            "loc": {
-              "start": {
-                "line": 4,
-                "column": 0
-              },
-              "end": {
-                "line": 4,
-                "column": 51
-              }
-            }
-          },
-          {
-            "type": "JSXText",
-            "raw": "\n",
-            "value": "\n",
-            "range": [
-              92,
-              93
-            ],
-            "loc": {
-              "start": {
-                "line": 4,
-                "column": 51
-              },
-              "end": {
-                "line": 5,
-                "column": 0
-              }
+      "type": "AstroRootFragment",
+      "children": [
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            40,
+            41
+          ],
+          "loc": {
+            "start": {
+              "line": 3,
+              "column": 3
+            },
+            "end": {
+              "line": 4,
+              "column": 0
             }
           }
-        ],
-        "range": [
-          40,
-          93
-        ],
-        "loc": {
-          "start": {
-            "line": 3,
-            "column": 3
-          },
-          "end": {
-            "line": 5,
-            "column": 0
+        },
+        {
+          "type": "AstroHTMLComment",
+          "value": " Component Template (HTML + JS Expressions) ",
+          "range": [
+            41,
+            92
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 4,
+              "column": 51
+            }
+          }
+        },
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            92,
+            93
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 51
+            },
+            "end": {
+              "line": 5,
+              "column": 0
+            }
           }
         }
-      },
+      ],
       "range": [
         40,
         93
