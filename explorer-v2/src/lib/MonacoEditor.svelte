@@ -79,11 +79,8 @@
 		await loading;
 		const monaco = await loadingMonaco;
 
-        monaco.languages.register({ id: "astro" })
-        monaco.languages.setMonarchTokensProvider(
-            "astro",
-            astroLanguage,
-        )
+		monaco.languages.register({ id: 'astro' });
+		monaco.languages.setMonarchTokensProvider('astro', astroLanguage);
 
 		const options = {
 			value: code,

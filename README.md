@@ -133,6 +133,17 @@ Example **.vscode/settings.json**:
 }
 ```
 
+## Compatibility With Existing ESLint Rules
+
+Most of the rules in the ESLint core work for the script part, but some rules are incompatible.
+For example, the [semi] rule doesn't work.  
+This parser will generate a JSX compatible AST for most of the HTML part of the Astro component. Therefore, some rules of [eslint-plugin-react] may work.
+For example, the [react/jsx-no-target-blank] rule works fine.  
+
+[semi]: https://eslint.org/docs/rules/semi
+[eslint-plugin-react]: https://github.com/jsx-eslint/eslint-plugin-react/
+[react/jsx-no-target-blank]: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
+
 ## Usage for Custom Rules / Plugins
 
 - TBA

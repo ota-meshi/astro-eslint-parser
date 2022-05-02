@@ -8,7 +8,7 @@
 		"preview": "svelte-kit preview",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --write --plugin-search-dir=. .",
-		"pre-build": "cd build-system/pre-build && webpack && cd .."
+		"pre-build": "cd build-system/pre-build && webpack && cd ../.. && cp ./node_modules/eslint/package.json ./build-system/shim/eslint/package.json"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^1.0.0-next.13",
@@ -23,10 +23,11 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.2.2",
-		"eslint": "^8.0.0",
+		"astro-eslint-parser": "file:..",
+		"eslint": "^8.14.0",
+		"eslint-plugin-react": "^7.29.4",
 		"eslint-scope": "^7.0.0",
 		"pako": "^2.0.3",
-		"svelte": "^3.41.0",
-		"astro-eslint-parser": "file:.."
+		"svelte": "^3.41.0"
 	}
 }

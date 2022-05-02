@@ -5,7 +5,8 @@
     "vue",
     "typescript",
     "json",
-    "jsonc"
+    "jsonc",
+    "astro"
   ],
   "typescript.validate.enable": true,
   "javascript.validate.enable": false,
