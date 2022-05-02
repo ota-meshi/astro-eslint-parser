@@ -27,9 +27,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
+              "type": "AstroRawText",
               "value": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
+              "raw": "\n  /* scoped to the component, other H1s on the page remain the same */\n  h1 { color: red }\n",
               "range": [
                 46,
                 138

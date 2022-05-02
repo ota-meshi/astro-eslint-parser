@@ -1085,9 +1085,9 @@
                   "type": "JSXElement",
                   "children": [
                     {
-                      "type": "JSXText",
-                      "raw": "\n\t\theader {\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: min(100%, 68ch);\n\t\t}\n\t\tarticle {\n\t\t\tpadding-top: 2em;\n\t\t\tline-height: 1.5;\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: 70ch;\n\t\t}\n\t\t.banner {\n\t\t\ttext-align: center;\n\t\t\tfont-size: 1.2rem;\n\t\t\tbackground: var(--color-light);\n\t\t\tpadding: 1em 1.5em;\n\t\t\tpadding-left: 0.75em;\n\t\t\tborder-radius: 4px;\n\t\t}\n\t",
+                      "type": "AstroRawText",
                       "value": "\n\t\theader {\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: min(100%, 68ch);\n\t\t}\n\t\tarticle {\n\t\t\tpadding-top: 2em;\n\t\t\tline-height: 1.5;\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: 70ch;\n\t\t}\n\t\t.banner {\n\t\t\ttext-align: center;\n\t\t\tfont-size: 1.2rem;\n\t\t\tbackground: var(--color-light);\n\t\t\tpadding: 1em 1.5em;\n\t\t\tpadding-left: 0.75em;\n\t\t\tborder-radius: 4px;\n\t\t}\n\t",
+                      "raw": "\n\t\theader {\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: min(100%, 68ch);\n\t\t}\n\t\tarticle {\n\t\t\tpadding-top: 2em;\n\t\t\tline-height: 1.5;\n\t\t\tdisplay: flex;\n\t\t\tflex-direction: column;\n\t\t\tgap: 1em;\n\t\t\tmax-width: 70ch;\n\t\t}\n\t\t.banner {\n\t\t\ttext-align: center;\n\t\t\tfont-size: 1.2rem;\n\t\t\tbackground: var(--color-light);\n\t\t\tpadding: 1em 1.5em;\n\t\t\tpadding-left: 0.75em;\n\t\t\tborder-radius: 4px;\n\t\t}\n\t",
                       "range": [
                         703,
                         1112
@@ -1214,9 +1214,9 @@
                   "type": "JSXElement",
                   "children": [
                     {
-                      "type": "JSXText",
-                      "raw": "\n\t\tpre {\n\t\t\tpadding: 1rem;\n\t\t}\n\t",
+                      "type": "AstroRawText",
                       "value": "\n\t\tpre {\n\t\t\tpadding: 1rem;\n\t\t}\n\t",
+                      "raw": "\n\t\tpre {\n\t\t\tpadding: 1rem;\n\t\t}\n\t",
                       "range": [
                         1139,
                         1171

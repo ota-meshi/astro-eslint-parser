@@ -8,9 +8,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  const obj = {a:1}\n  console.log(obj)\n",
+              "type": "AstroRawText",
               "value": "\n  const obj = {a:1}\n  console.log(obj)\n",
+              "raw": "\n  const obj = {a:1}\n  console.log(obj)\n",
               "range": [
                 8,
                 48
@@ -137,9 +137,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  const obj = {b:2}\n  console.log(obj)\n",
+              "type": "AstroRawText",
               "value": "\n  const obj = {b:2}\n  console.log(obj)\n",
+              "raw": "\n  const obj = {b:2}\n  console.log(obj)\n",
               "range": [
                 76,
                 116

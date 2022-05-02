@@ -696,9 +696,9 @@
                   "type": "JSXElement",
                   "children": [
                     {
-                      "type": "JSXText",
-                      "raw": "\n      header {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        text-align: center;\n        margin-top: 15vh;\n        font-family: Arial;\n      }\n      .note {\n        margin: 0;\n        padding: 1rem;\n        border-radius: 8px;\n        background: #E4E5E6;\n        border: 1px solid #BBB;\n      }\n    ",
+                      "type": "AstroRawText",
                       "value": "\n      header {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        text-align: center;\n        margin-top: 15vh;\n        font-family: Arial;\n      }\n      .note {\n        margin: 0;\n        padding: 1rem;\n        border-radius: 8px;\n        background: #E4E5E6;\n        border: 1px solid #BBB;\n      }\n    ",
+                      "raw": "\n      header {\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        text-align: center;\n        margin-top: 15vh;\n        font-family: Arial;\n      }\n      .note {\n        margin: 0;\n        padding: 1rem;\n        border-radius: 8px;\n        background: #E4E5E6;\n        border: 1px solid #BBB;\n      }\n    ",
                       "range": [
                         535,
                         882

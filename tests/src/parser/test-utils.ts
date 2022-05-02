@@ -247,6 +247,7 @@ const nodeToKeys: AstroKeysType = {
     AstroDoctype: [],
     AstroShorthandAttribute: ["name", "value"],
     AstroTemplateLiteralAttribute: ["name", "value"],
+    AstroRawText: ["value", "raw"],
 
     JSXNamespacedName: ["namespace", "name"],
 }

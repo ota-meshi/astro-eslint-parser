@@ -249,9 +249,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  h1 {\n    background-color: var(--backgroundColor);\n    color: var(--textColor);\n  }\n",
+              "type": "AstroRawText",
               "value": "\n  h1 {\n    background-color: var(--backgroundColor);\n    color: var(--textColor);\n  }\n",
+              "raw": "\n  h1 {\n    background-color: var(--backgroundColor);\n    color: var(--textColor);\n  }\n",
               "range": [
                 199,
                 286
@@ -599,9 +599,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  alert(message);\n",
+              "type": "AstroRawText",
               "value": "\n  alert(message);\n",
+              "raw": "\n  alert(message);\n",
               "range": [
                 330,
                 349

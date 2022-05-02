@@ -8,9 +8,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  import './some-external-script.js';\n",
+              "type": "AstroRawText",
               "value": "\n  import './some-external-script.js';\n",
+              "raw": "\n  import './some-external-script.js';\n",
               "range": [
                 8,
                 47

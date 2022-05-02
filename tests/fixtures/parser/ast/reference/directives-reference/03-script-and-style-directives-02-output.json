@@ -8,9 +8,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  /* inline: relative & npm package imports are not supported. */\n  @import '/assets/some-public-styles.css';\n  span { color: green; }\n",
+              "type": "AstroRawText",
               "value": "\n  /* inline: relative & npm package imports are not supported. */\n  @import '/assets/some-public-styles.css';\n  span { color: green; }\n",
+              "raw": "\n  /* inline: relative & npm package imports are not supported. */\n  @import '/assets/some-public-styles.css';\n  span { color: green; }\n",
               "range": [
                 17,
                 153
@@ -209,9 +209,9 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "\n  /* inline: relative & npm package imports are not supported. */\n  console.log('I am inlined right here in the final output HTML.');\n",
+              "type": "AstroRawText",
               "value": "\n  /* inline: relative & npm package imports are not supported. */\n  console.log('I am inlined right here in the final output HTML.');\n",
+              "raw": "\n  /* inline: relative & npm package imports are not supported. */\n  console.log('I am inlined right here in the final output HTML.');\n",
               "range": [
                 181,
                 316
