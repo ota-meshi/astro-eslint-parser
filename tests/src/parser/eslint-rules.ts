@@ -33,6 +33,7 @@ const RULES = [
     "spaced-comment",
     "no-redeclare",
     "template-curly-spacing",
+    "semi",
 ]
 
 describe("astro-eslint-parser with ESLint rules", () => {
