@@ -17,6 +17,9 @@ module.exports = {
             rules: {
                 "prettier/prettier": "off",
                 "react/jsx-equals-spacing": "error",
+
+                // Incompatible rules
+                "react/no-unknown-property": "off",
             },
         },
     ],

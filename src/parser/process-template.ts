@@ -38,7 +38,7 @@ export function processTemplate(
     }
 
     // eslint-disable-next-line complexity -- X(
-    walkElements(resultTemplate.ast, (node, parent) => {
+    walkElements(resultTemplate.ast, ctx.code, (node, parent) => {
         if (node.type === "frontmatter") {
             const start = node.position!.start.offset
             script.appendOriginal(start)
