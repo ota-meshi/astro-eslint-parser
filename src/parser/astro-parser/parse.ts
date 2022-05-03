@@ -12,34 +12,36 @@ import {
     skipSpaces,
     walk,
 } from "../../astro"
+import type { Context } from "../../context"
+import { ParseError } from "../../errors"
 
 /**
  * Parse code by `@astrojs/compiler`
  */
-export function parse(code: string): ParseResult {
+export function parse(code: string, ctx: Context): ParseResult {
     const ast = service.parse(code, { position: true }).ast
-    fixLocations(ast, code)
+    fixLocations(ast, ctx)
     return { ast }
 }
 
 /**
  * Fix locations
  */
-function fixLocations(node: ParentNode, code: string): void {
+function fixLocations(node: ParentNode, ctx: Context): void {
     // FIXME: Adjust because the parser does not return the correct location.
     let start = 0
     walk(
         node,
-        code,
+        ctx.code,
         (node) => {
             if (node.type === "frontmatter") {
                 start = node.position!.start.offset = tokenIndex(
-                    code,
+                    ctx,
                     "---",
                     start,
                 )
                 start = node.position!.end!.offset =
-                    tokenIndex(code, "---", start + 3 + node.value.length) + 3
+                    tokenIndex(ctx, "---", start + 3 + node.value.length) + 3
             } else if (
                 node.type === "fragment" ||
                 node.type === "element" ||
@@ -50,31 +52,31 @@ function fixLocations(node: ParentNode, code: string): void {
                     node.position = { start: {}, end: {} } as any
                 }
                 start = node.position!.start.offset = tokenIndex(
-                    code,
+                    ctx,
                     "<",
                     start,
                 )
                 start += 1
                 start += node.name.length
                 if (!node.attributes.length) {
-                    start = getStartTagEndOffset(node, code)
+                    start = getStartTagEndOffset(node, ctx)
                 }
             } else if (node.type === "attribute") {
-                fixLocationForAttr(node, code, start)
-                start = getAttributeEndOffset(node, code)
+                fixLocationForAttr(node, ctx, start)
+                start = getAttributeEndOffset(node, ctx)
             } else if (node.type === "comment") {
-                node.position!.start.offset = tokenIndex(code, "<!--", start)
-                start = getCommentEndOffset(node, code)
+                node.position!.start.offset = tokenIndex(ctx, "<!--", start)
+                start = getCommentEndOffset(node, ctx)
             } else if (node.type === "text") {
                 start = node.position!.start.offset = tokenIndex(
-                    code,
+                    ctx,
                     node.value,
                     start,
                 )
                 start += node.value.length
             } else if (node.type === "expression") {
                 start = node.position!.start.offset = tokenIndex(
-                    code,
+                    ctx,
                     "{",
                     start,
                 )
@@ -87,13 +89,13 @@ function fixLocations(node: ParentNode, code: string): void {
                     node.position!.end = {} as any
                 }
                 start = node.position!.start.offset = tokenIndex(
-                    code,
+                    ctx,
                     "<!",
                     start,
                 )
                 start += 2
                 start = node.position!.end!.offset =
-                    code.indexOf(">", start) + 1
+                    ctx.code.indexOf(">", start) + 1
             } else if (node.type === "root") {
                 // noop
             }
@@ -102,12 +104,12 @@ function fixLocations(node: ParentNode, code: string): void {
             if (node.type === "attribute") {
                 const attributes = (parent as TagLikeNode).attributes
                 if (attributes[attributes.length - 1] === node) {
-                    start = getStartTagEndOffset(parent as TagLikeNode, code)
+                    start = getStartTagEndOffset(parent as TagLikeNode, ctx)
                 }
                 return
             }
             if (node.type === "expression") {
-                start = tokenIndex(code, "}", start) + 1
+                start = tokenIndex(ctx, "}", start) + 1
             } else if (
                 node.type === "fragment" ||
                 node.type === "element" ||
@@ -115,13 +117,13 @@ function fixLocations(node: ParentNode, code: string): void {
                 node.type === "custom-element"
             ) {
                 const closeTagStart = tokenIndexSafe(
-                    code,
+                    ctx.code,
                     `</${node.name}`,
                     start,
                 )
                 if (closeTagStart != null) {
                     start = closeTagStart + 2 + node.name.length
-                    start = tokenIndex(code, ">", start) + 1
+                    start = tokenIndex(ctx, ">", start) + 1
                 }
             } else {
                 return
@@ -136,36 +138,42 @@ function fixLocations(node: ParentNode, code: string): void {
 /**
  * Fix locations
  */
-function fixLocationForAttr(node: AttributeNode, code: string, start: number) {
+function fixLocationForAttr(node: AttributeNode, ctx: Context, start: number) {
     if (node.kind === "empty") {
-        node.position!.start.offset = tokenIndex(code, node.name, start)
+        node.position!.start.offset = tokenIndex(ctx, node.name, start)
     } else if (node.kind === "quoted") {
-        node.position!.start.offset = tokenIndex(code, node.name, start)
+        node.position!.start.offset = tokenIndex(ctx, node.name, start)
     } else if (node.kind === "expression") {
-        node.position!.start.offset = tokenIndex(code, node.name, start)
+        node.position!.start.offset = tokenIndex(ctx, node.name, start)
     } else if (node.kind === "shorthand") {
-        node.position!.start.offset = tokenIndex(code, "{", start)
+        node.position!.start.offset = tokenIndex(ctx, "{", start)
     } else if (node.kind === "spread") {
-        node.position!.start.offset = tokenIndex(code, "{", start)
+        node.position!.start.offset = tokenIndex(ctx, "{", start)
     } else if (node.kind === "template-literal") {
-        node.position!.start.offset = tokenIndex(code, node.name, start)
+        node.position!.start.offset = tokenIndex(ctx, node.name, start)
     } else {
-        throw new Error(`Unknown attr kind: ${node.kind}`)
+        throw new ParseError(
+            `Unknown attr kind: ${node.kind}`,
+            node.position!.start.offset,
+            ctx,
+        )
     }
 }
 
 /**
  * Get token index
  */
-function tokenIndex(string: string, token: string, position: number): number {
-    const index = tokenIndexSafe(string, token, position)
+function tokenIndex(ctx: Context, token: string, position: number): number {
+    const index = tokenIndexSafe(ctx.code, token, position)
     if (index == null) {
         const start =
-            token.trim() === token ? skipSpaces(string, position) : position
-        throw new Error(
+            token.trim() === token ? skipSpaces(ctx.code, position) : position
+        throw new ParseError(
             `Unknown token at ${start}, expected: ${JSON.stringify(
                 token,
-            )}, actual: ${JSON.stringify(string.slice(start, start + 10))}`,
+            )}, actual: ${JSON.stringify(ctx.code.slice(start, start + 10))}`,
+            start,
+            ctx,
         )
     }
     return index

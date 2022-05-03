@@ -128,7 +128,7 @@ function extractTokens(ast: ESLintExtendedProgram, ctx: Context) {
  */
 export function parseTemplate(code: string, ctx: Context): ParseResult {
     try {
-        return parseAstro(code)
+        return parseAstro(code, ctx)
     } catch (e: any) {
         if (typeof e.pos === "number") {
             const err = new ParseError(e.message, e.pos, ctx)

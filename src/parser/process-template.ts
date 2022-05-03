@@ -176,8 +176,8 @@ export function processTemplate(
                     })
                 } else if (attr.kind === "template-literal") {
                     const attrStart = attr.position!.start.offset
-                    const start = getAttributeValueStartOffset(attr, ctx.code)
-                    const end = getAttributeEndOffset(attr, ctx.code)
+                    const start = getAttributeValueStartOffset(attr, ctx)
+                    const end = getAttributeEndOffset(attr, ctx)
                     script.appendOriginal(start)
                     script.appendScript("{")
                     script.appendOriginal(end)
@@ -340,7 +340,7 @@ function getVoidSelfClosingTag(
         const next = parent.children[childIndex + 1]
         nextElementIndex = next.position!.start.offset
     }
-    const endOffset = getStartTagEndOffset(node, code)
+    const endOffset = getStartTagEndOffset(node, ctx)
     if (code.slice(endOffset, nextElementIndex).trim()) {
         // has end tag
         return null

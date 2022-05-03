@@ -6,6 +6,8 @@ import type {
     ParentNode,
     TagLikeNode,
 } from "@astrojs/compiler/types"
+import type { Context } from "../context"
+import { ParseError } from "../errors"
 
 /**
  * Checks if the given node is TagLikeNode
@@ -67,20 +69,20 @@ export function walk(
 /**
  * Get end offset of start tag
  */
-export function getStartTagEndOffset(node: TagLikeNode, code: string): number {
+export function getStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
     const lastAttr = node.attributes[node.attributes.length - 1]
     let beforeCloseIndex: number
     if (lastAttr) {
-        beforeCloseIndex = getAttributeEndOffset(lastAttr, code)
+        beforeCloseIndex = getAttributeEndOffset(lastAttr, ctx)
     } else {
         const info = getTokenInfo(
-            code,
+            ctx,
             [`<${node.name}`],
             node.position!.start.offset,
         )
         beforeCloseIndex = info.index + info.match.length
     }
-    const info = getTokenInfo(code, [[">", "/>"]], beforeCloseIndex)
+    const info = getTokenInfo(ctx, [[">", "/>"]], beforeCloseIndex)
     return info.index + info.match.length
 }
 
@@ -89,43 +91,47 @@ export function getStartTagEndOffset(node: TagLikeNode, code: string): number {
  */
 export function getAttributeEndOffset(
     node: AttributeNode,
-    code: string,
+    ctx: Context,
 ): number {
     let info
     if (node.kind === "empty") {
-        info = getTokenInfo(code, [node.name], node.position!.start.offset)
+        info = getTokenInfo(ctx, [node.name], node.position!.start.offset)
     } else if (node.kind === "quoted") {
         info = getTokenInfo(
-            code,
+            ctx,
             [[`"${node.value}"`, `'${node.value}'`, node.value]],
-            getAttributeValueStartOffset(node, code),
+            getAttributeValueStartOffset(node, ctx),
         )
     } else if (node.kind === "expression") {
         info = getTokenInfo(
-            code,
+            ctx,
             ["{", node.value, "}"],
-            getAttributeValueStartOffset(node, code),
+            getAttributeValueStartOffset(node, ctx),
         )
     } else if (node.kind === "shorthand") {
         info = getTokenInfo(
-            code,
+            ctx,
             ["{", node.name, "}"],
             node.position!.start.offset,
         )
     } else if (node.kind === "spread") {
         info = getTokenInfo(
-            code,
+            ctx,
             ["{", "...", node.name, "}"],
             node.position!.start.offset,
         )
     } else if (node.kind === "template-literal") {
         info = getTokenInfo(
-            code,
+            ctx,
             [`\`${node.value}\``],
-            getAttributeValueStartOffset(node, code),
+            getAttributeValueStartOffset(node, ctx),
         )
     } else {
-        throw new Error(`Unknown attr kind: ${node.kind}`)
+        throw new ParseError(
+            `Unknown attr kind: ${node.kind}`,
+            node.position!.start.offset,
+            ctx,
+        )
     }
     return info.index + info.match.length
 }
@@ -135,29 +141,33 @@ export function getAttributeEndOffset(
  */
 export function getAttributeValueStartOffset(
     node: AttributeNode,
-    code: string,
+    ctx: Context,
 ): number {
     let info
     if (node.kind === "quoted") {
         info = getTokenInfo(
-            code,
+            ctx,
             [node.name, "=", [`"`, `'`, node.value]],
             node.position!.start.offset,
         )
     } else if (node.kind === "expression") {
         info = getTokenInfo(
-            code,
+            ctx,
             [node.name, "=", "{"],
             node.position!.start.offset,
         )
     } else if (node.kind === "template-literal") {
         info = getTokenInfo(
-            code,
+            ctx,
             [node.name, "=", "`"],
             node.position!.start.offset,
         )
     } else {
-        throw new Error(`Unknown attr kind: ${node.kind}`)
+        throw new ParseError(
+            `Unknown attr kind: ${node.kind}`,
+            node.position!.start.offset,
+            ctx,
+        )
     }
     return info.index
 }
@@ -165,9 +175,9 @@ export function getAttributeValueStartOffset(
 /**
  * Get end offset of comment
  */
-export function getCommentEndOffset(node: CommentNode, code: string): number {
+export function getCommentEndOffset(node: CommentNode, ctx: Context): number {
     const info = getTokenInfo(
-        code,
+        ctx,
         ["<!--", node.value, "-->"],
         node.position!.start.offset,
     )
@@ -179,7 +189,7 @@ export function getCommentEndOffset(node: CommentNode, code: string): number {
  * Get token info
  */
 function getTokenInfo(
-    string: string,
+    ctx: Context,
     tokens: (string | string[])[],
     position: number,
 ): {
@@ -201,10 +211,14 @@ function getTokenInfo(
                 ? matchOfStr(t, index)
                 : matchOfForMulti(t, index)
         if (m == null) {
-            throw new Error(
+            throw new ParseError(
                 `Unknown token at ${index}, expected: ${JSON.stringify(
                     t,
-                )}, actual: ${JSON.stringify(string.slice(index, index + 10))}`,
+                )}, actual: ${JSON.stringify(
+                    ctx.code.slice(index, index + 10),
+                )}`,
+                index,
+                ctx,
             )
         }
         lastMatch = m
@@ -216,8 +230,8 @@ function getTokenInfo(
      */
     function matchOfStr(search: string, position: number) {
         const index =
-            search.trim() === search ? skipSpaces(string, position) : position
-        if (string.startsWith(search, index)) {
+            search.trim() === search ? skipSpaces(ctx.code, position) : position
+        if (ctx.code.startsWith(search, index)) {
             return {
                 match: search,
                 index,
