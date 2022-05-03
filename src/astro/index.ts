@@ -1,6 +1,7 @@
 import type {
     AttributeNode,
     CommentNode,
+    DoctypeNode,
     Node,
     ParentNode,
     TagLikeNode,
@@ -256,51 +257,39 @@ export function skipSpaces(string: string, position: number): number {
  * Get children
  */
 function getSortedChildren(parent: ParentNode, code: string) {
-    if (
-        parent.type === "root" &&
-        parent.children.findIndex((c) => c.type === "frontmatter") === 0
-    ) {
+    if (parent.type === "root" && parent.children[0]?.type === "frontmatter") {
         // The order of comments and frontmatter may be changed.
-        let children = [...parent.children]
-        if (!children.every((n) => n.position)) {
-            let start = skipSpaces(code, 0)
-            if (code.startsWith("<!", start)) {
-                const frontmatter = children.shift()!
-                const before = []
-                let first = children[0]
-                while (
-                    first &&
-                    (first.type === "doctype" || first.type === "comment")
-                ) {
-                    start = skipSpaces(code, start)
-                    if (
-                        first.type === "comment" &&
-                        code.startsWith("<!--", start)
-                    ) {
-                        first.position!.start.offset = start
-                        start = getCommentEndOffset(first, code)
-                        before.push(children.shift()!)
-                    } else if (first.type === "doctype") {
-                        if (!first.position) {
-                            first.position = { start: {}, end: {} } as any
-                        }
-                        first.position!.start.offset = start
-                        start += 2
-                        start = first.position!.end!.offset =
-                            code.indexOf(">", start) + 1
-                        before.push(children.shift()!)
-                    } else {
-                        break
-                    }
-                    first = children[0]
-                }
-                children = [...before, frontmatter, ...children]
-            }
-        }
+        const children = [...parent.children]
         if (children.every((n) => n.position)) {
             return children.sort(
                 (a, b) => a.position!.start.offset - b.position!.start.offset,
             )
+        }
+        let start = skipSpaces(code, 0)
+        if (code.startsWith("<!", start)) {
+            const frontmatter = children.shift()!
+            const before: (CommentNode | DoctypeNode)[] = []
+            let first
+            while ((first = children.shift())) {
+                start = skipSpaces(code, start)
+                if (
+                    first.type === "comment" &&
+                    code.startsWith("<!--", start)
+                ) {
+                    start = code.indexOf("-->", start + 4) + 3
+                    before.push(first)
+                } else if (
+                    first.type === "doctype" &&
+                    code.startsWith("<!", start)
+                ) {
+                    start = code.indexOf(">", start + 2) + 1
+                    before.push(first)
+                } else {
+                    children.unshift(first)
+                    break
+                }
+            }
+            return [...before, frontmatter, ...children]
         }
     }
     return parent.children
