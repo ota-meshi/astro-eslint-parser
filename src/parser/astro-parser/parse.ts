@@ -114,9 +114,6 @@ function fixLocations(node: ParentNode, code: string): void {
                 node.type === "component" ||
                 node.type === "custom-element"
             ) {
-                if (!node.position!.end) {
-                    return
-                }
                 const closeTagStart = tokenIndexSafe(
                     code,
                     `</${node.name}`,
