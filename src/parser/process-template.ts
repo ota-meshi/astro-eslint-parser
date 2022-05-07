@@ -26,6 +26,9 @@ export function processTemplate(
     ctx: Context,
     resultTemplate: ParseResult,
 ): ScriptContext {
+    let uniqueIdSeq = 0
+    const usedUniqueIds = new Set<string>()
+
     const script = new ScriptContext(ctx)
 
     const frontmatter = resultTemplate.ast.children.find(
@@ -154,7 +157,10 @@ export function processTemplate(
                 if (attr.kind === "shorthand") {
                     const start = attr.position!.start.offset
                     script.appendOriginal(start)
-                    script.appendScript(`${attr.name}=`)
+                    const jsxName = /[\s"'[\]{}]/u.test(attr.name)
+                        ? generateUniqueId(attr.name)
+                        : attr.name
+                    script.appendScript(`${jsxName}=`)
 
                     script.addRestoreNodeProcess((scriptNode) => {
                         if (
@@ -168,6 +174,9 @@ export function processTemplate(
                             const locs = ctx.getLocations(
                                 ...attrNode.value.expression.range,
                             )
+                            if (jsxName !== attr.name) {
+                                attrNode.name.name = attr.name
+                            }
                             attrNode.name.range = locs.range
                             attrNode.name.loc = locs.loc
                             return true
@@ -311,6 +320,18 @@ export function processTemplate(
     script.appendScript("</>")
 
     return script
+
+    /**
+     * Generate unique id
+     */
+    function generateUniqueId(base: string) {
+        let candidate = `$_${base.replace(/\W/g, "_")}${uniqueIdSeq++}`
+        while (usedUniqueIds.has(candidate) || ctx.code.includes(candidate)) {
+            candidate = `$_${base.replace(/\W/g, "_")}${uniqueIdSeq++}`
+        }
+        usedUniqueIds.add(candidate)
+        return candidate
+    }
 }
 
 /**

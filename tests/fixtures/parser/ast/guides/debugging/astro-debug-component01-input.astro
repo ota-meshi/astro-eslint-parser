@@ -1,0 +1,7 @@
+---
+import { Debug } from 'astro/components';
+const sum = (a, b) => a + b;
+---
+
+<!-- Example: Outputs {answer: 6} to the browser -->
+<Debug answer={sum(2, 4)} />
