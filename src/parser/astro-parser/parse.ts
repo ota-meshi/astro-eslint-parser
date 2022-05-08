@@ -2,6 +2,8 @@ import type {
     AttributeNode,
     ParentNode,
     TagLikeNode,
+    ElementNode,
+    RootNode,
 } from "@astrojs/compiler/types"
 import type { ParseResult } from "@astrojs/compiler"
 import * as service from "./astrojs-compiler-service"
@@ -20,8 +22,73 @@ import { ParseError } from "../../errors"
  */
 export function parse(code: string, ctx: Context): ParseResult {
     const ast = service.parse(code, { position: true }).ast
+    const htmlElement = ast.children.find(
+        (n): n is ElementNode => n.type === "element" && n.name === "html",
+    )
+    if (htmlElement) {
+        adjustHTML(ast, htmlElement, ctx)
+    }
     fixLocations(ast, ctx)
     return { ast }
+}
+
+/**
+ * Adjust <html> element node
+ */
+function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
+    const htmlEnd = ctx.code.indexOf("</html")
+    if (htmlEnd == null) {
+        return
+    }
+    const children = [...htmlElement.children]
+    for (const child of children) {
+        const offset = child.position?.start.offset
+        if (offset != null) {
+            if (htmlEnd <= offset) {
+                htmlElement.children.splice(
+                    htmlElement.children.indexOf(child),
+                    1,
+                )
+                ast.children.push(child)
+            }
+        }
+        if (child.type === "element" && child.name === "body") {
+            adjustHTMLBody(ast, htmlElement, htmlEnd, child, ctx)
+        }
+    }
+}
+
+/**
+ * Adjust <body> element node
+ */
+function adjustHTMLBody(
+    ast: RootNode,
+    htmlElement: ElementNode,
+    htmlEnd: number,
+    bodyElement: ElementNode,
+    ctx: Context,
+) {
+    const bodyEnd = ctx.code.indexOf("</body")
+    if (bodyEnd == null) {
+        return
+    }
+    const children = [...bodyElement.children]
+    for (const child of children) {
+        const offset = child.position?.start.offset
+        if (offset != null) {
+            if (bodyEnd <= offset) {
+                bodyElement.children.splice(
+                    bodyElement.children.indexOf(child),
+                    1,
+                )
+                if (htmlEnd <= offset) {
+                    ast.children.push(child)
+                } else {
+                    htmlElement.children.push(child)
+                }
+            }
+        }
+    }
 }
 
 /**

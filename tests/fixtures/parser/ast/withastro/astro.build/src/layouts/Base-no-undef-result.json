@@ -1,0 +1,26 @@
+[
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 14,
+    "column": 28
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Astro",
+    "line": 14,
+    "column": 75
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 20,
+    "column": 10
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 25,
+    "column": 10
+  }
+]
