@@ -1,6 +1,6 @@
 import fs from "fs"
 import Go from "./wasm_exec"
-import type { ParseOptions, ParseResult } from "@astrojs/compiler"
+import type { ParseOptions } from "@astrojs/compiler"
 const go = new Go()
 const wasmBuffer = fs.readFileSync(
     require.resolve("@astrojs/compiler/astro.wasm"),
@@ -15,7 +15,11 @@ const service = (globalThis as any)["@astrojs/compiler"] as {
 /**
  * Parse code by `@astrojs/compiler`
  */
-export function parse(code: string, options: ParseOptions): ParseResult {
-    const ast = JSON.parse(service.parse(code, options).ast)
-    return { ast }
+export function parse(
+    code: string,
+    options: ParseOptions,
+): {
+    ast: string
+} {
+    return service.parse(code, options)
 }

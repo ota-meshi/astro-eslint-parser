@@ -21,7 +21,8 @@ import { ParseError } from "../../errors"
  * Parse code by `@astrojs/compiler`
  */
 export function parse(code: string, ctx: Context): ParseResult {
-    const ast = service.parse(code, { position: true }).ast
+    const ast = parseByService(code).ast
+
     const htmlElement = ast.children.find(
         (n): n is ElementNode => n.type === "element" && n.name === "html",
     )
@@ -30,6 +31,31 @@ export function parse(code: string, ctx: Context): ParseResult {
     }
     fixLocations(ast, ctx)
     return { ast }
+}
+
+/**
+ * Parse code by `@astrojs/compiler`
+ */
+function parseByService(code: string): ParseResult {
+    const jsonAst = service.parse(code, { position: true }).ast
+
+    try {
+        const ast = JSON.parse(jsonAst)
+        return { ast }
+    } catch {
+        // Adjust because you may get the wrong escape as JSON.
+        const ast = JSON.parse(
+            jsonAst.replace(/\\./gu, (m) => {
+                try {
+                    JSON.parse(`"${m}"`)
+                    return m
+                } catch {
+                    return `\\${m}`
+                }
+            }),
+        )
+        return { ast }
+    }
 }
 
 /**

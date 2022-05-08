@@ -16,8 +16,7 @@ export function parse(code, options) {
 		// eslint-disable-next-line node/no-unsupported-features/es-builtins -- ignore
 		service = globalThis['@astrojs/compiler'];
 	}
-	const ast = JSON.parse(service.parse(code, options).ast);
-	return { ast };
+	return service.parse(code, options);
 }
 
 /** setup */
