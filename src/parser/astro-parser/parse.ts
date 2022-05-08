@@ -43,7 +43,7 @@ function parseByService(code: string): ParseResult {
         const ast = JSON.parse(jsonAst)
         return { ast }
     } catch {
-        // Adjust because you may get the wrong escape as JSON.
+        // Adjust because may get the wrong escape as JSON.
         const ast = JSON.parse(
             jsonAst.replace(/\\./gu, (m) => {
                 try {
