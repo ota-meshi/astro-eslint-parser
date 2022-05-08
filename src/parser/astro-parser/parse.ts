@@ -126,7 +126,8 @@ function fixLocations(node: ParentNode, ctx: Context): void {
     walk(
         node,
         ctx.code,
-        (node) => {
+        // eslint-disable-next-line complexity -- X(
+        (node, parent) => {
             if (node.type === "frontmatter") {
                 start = node.position!.start.offset = tokenIndex(
                     ctx,
@@ -161,12 +162,28 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 node.position!.start.offset = tokenIndex(ctx, "<!--", start)
                 start = getCommentEndOffset(node, ctx)
             } else if (node.type === "text") {
-                start = node.position!.start.offset = tokenIndex(
-                    ctx,
-                    node.value,
-                    start,
-                )
-                start += node.value.length
+                if (
+                    parent.type === "element" &&
+                    (parent.name === "script" || parent.name === "style")
+                ) {
+                    node.position!.start.offset = start
+                    start = ctx.code.indexOf(`</${parent.name}`, start)
+                    if (start < 0) {
+                        start = ctx.code.length
+                    }
+                    // Workaround for escape bugs
+                    node.value = ctx.code.slice(
+                        node.position!.start.offset,
+                        start,
+                    )
+                } else {
+                    start = node.position!.start.offset = tokenIndex(
+                        ctx,
+                        node.value,
+                        start,
+                    )
+                    start += node.value.length
+                }
             } else if (node.type === "expression") {
                 start = node.position!.start.offset = tokenIndex(
                     ctx,
