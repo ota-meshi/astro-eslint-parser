@@ -39,25 +39,28 @@ npm install --save-dev eslint astro-eslint-parser
 ## 📖 Usage
 
 1. Write `overrides.parser` option into your `.eslintrc.*` file.
-2. Use glob patterns or `--ext .astro` CLI option.
 
-```json
-{
-    "extends": "eslint:recommended",
-    "overrides": [
-        {
-            "files": ["*.astro"],
-            "parser": "astro-eslint-parser"
-        }
-    ]
-}
-```
+    ```json
+    {
+        "extends": "eslint:recommended",
+        "overrides": [
+            {
+                "files": ["*.astro"],
+                "parser": "astro-eslint-parser"
+            }
+        ]
+    }
+    ```
 
-```console
-$ eslint "src/**/*.{js,astro}"
-# or
-$ eslint src --ext .astro
-```
+2. If you have specified the extension in the CLI, add `.astro` as well.
+
+    ```console
+    $ eslint "src/**/*.{js,astro}"
+    # or
+    $ eslint src --ext .js,.astro
+    ```
+
+The commit diff [here](https://github.com/ota-meshi/astro.build/commit/7f291ac15e6d97cc20a64b8f97dcbd85379759b5) is an example of introducing this parser to the `astro.build` repository.
 
 ## 🔧 Options
 
