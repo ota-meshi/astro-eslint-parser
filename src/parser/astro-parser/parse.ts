@@ -43,6 +43,7 @@ function parseByService(code: string): ParseResult {
         const ast = JSON.parse(jsonAst)
         return { ast }
     } catch {
+        // FIXME: Workaround for escape bugs
         // Adjust because may get the wrong escape as JSON.
         const ast = JSON.parse(
             jsonAst.replace(/\\./gu, (m) => {
@@ -171,7 +172,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                     if (start < 0) {
                         start = ctx.code.length
                     }
-                    // Workaround for escape bugs
+                    // FIXME: Workaround for escape bugs
                     node.value = ctx.code.slice(
                         node.position!.start.offset,
                         start,
@@ -182,26 +183,31 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                         start = node.position!.start.offset = index
                         start += node.value.length
                     } else {
-                        // Workaround for escape bugs
+                        // FIXME: Workaround for escape bugs
                         node.position!.start.offset = start
-                        for (const token of node.value.split(/\s+/u)) {
-                            const index = tokenIndexSafe(ctx.code, token, start)
+                        const value = node.value.replace(/\s+/gu, "")
+                        for (
+                            let charIndex = 0;
+                            charIndex < value.length;
+                            charIndex++
+                        ) {
+                            const char = value[charIndex]
+                            const index = tokenIndexSafe(ctx.code, char, start)
                             if (index != null) {
-                                start = index + token.length
+                                start = index + 1
                                 continue
                             }
                             start = skipSpaces(ctx.code, start)
-                            let t = token
                             if (ctx.code.startsWith("\\", start)) {
-                                const char = JSON.parse(
+                                const codeChar = JSON.parse(
                                     `"\\${ctx.code[start + 1]}"`,
                                 )
-                                if (char.trim()) {
-                                    t = t.slice(1)
-                                }
                                 start += 2
+                                if (codeChar === char) {
+                                    continue
+                                }
                             }
-                            start = tokenIndex(ctx, t, start) + t.length
+                            start = tokenIndex(ctx, char, start) + 1
                         }
                         start = skipSpaces(ctx.code, start)
 
