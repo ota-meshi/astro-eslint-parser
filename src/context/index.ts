@@ -17,7 +17,7 @@ export class Context {
 
     private readonly locsMap = new Map<number, TSESTree.Position>()
 
-    private state: { isTypeScript?: boolean } = {}
+    private readonly state: { isTypeScript?: boolean; originalAST?: any } = {}
 
     public constructor(code: string, parserOptions: any) {
         this.locs = new LinesAndColumns(code)
@@ -151,6 +151,14 @@ export class Context {
         for (const comment of ast.comments || []) {
             comment.range = remapRange(comment.range)
         }
+    }
+
+    public get originalAST(): any {
+        return this.state.originalAST
+    }
+
+    public set originalAST(originalAST: any) {
+        this.state.originalAST = originalAST
     }
 }
 

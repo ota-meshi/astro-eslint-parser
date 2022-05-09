@@ -10,6 +10,8 @@ export class ParseError extends SyntaxError {
 
     public column: number
 
+    public originalAST: any
+
     /**
      * Initialize this ParseError instance.
      */
@@ -19,5 +21,6 @@ export class ParseError extends SyntaxError {
         const loc = ctx.getLocFromIndex(offset)
         this.lineNumber = loc.line
         this.column = loc.column
+        this.originalAST = ctx.originalAST
     }
 }

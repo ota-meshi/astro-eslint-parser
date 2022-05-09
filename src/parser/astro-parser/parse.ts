@@ -21,7 +21,7 @@ import { ParseError } from "../../errors"
  * Parse code by `@astrojs/compiler`
  */
 export function parse(code: string, ctx: Context): ParseResult {
-    const ast = parseByService(code).ast
+    const ast = parseByService(code, ctx).ast
 
     const htmlElement = ast.children.find(
         (n): n is ElementNode => n.type === "element" && n.name === "html",
@@ -36,11 +36,13 @@ export function parse(code: string, ctx: Context): ParseResult {
 /**
  * Parse code by `@astrojs/compiler`
  */
-function parseByService(code: string): ParseResult {
+function parseByService(code: string, ctx: Context): ParseResult {
     const jsonAst = service.parse(code, { position: true }).ast
 
+    ctx.originalAST = jsonAst
     try {
         const ast = JSON.parse(jsonAst)
+        ctx.originalAST = ast
         return { ast }
     } catch {
         // FIXME: Workaround for escape bugs
@@ -55,6 +57,7 @@ function parseByService(code: string): ParseResult {
                 }
             }),
         )
+        ctx.originalAST = ast
         return { ast }
     }
 }
