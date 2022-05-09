@@ -8,6 +8,7 @@ export type AstroNode =
     | AstroShorthandAttribute
     | AstroTemplateLiteralAttribute
     | AstroRawText
+    | AstroFragment
 
 /** Node of Astro program root */
 export interface AstroProgram extends Omit<TSESTree.Program, "type" | "body"> {
@@ -65,4 +66,11 @@ export interface AstroRawText
     extends Omit<TSESTree.JSXText, "type" | "parent"> {
     type: "AstroRawText"
     parent: AstroRootFragment | TSESTree.JSXElement | TSESTree.JSXFragment
+}
+/** Node of Astro fragment expression */
+export interface AstroFragment
+    extends Omit<TSESTree.BaseNode, "type" | "parent"> {
+    type: "AstroFragment"
+    children: TSESTree.JSXFragment["children"]
+    parent: TSESTree.JSXFragment["parent"]
 }

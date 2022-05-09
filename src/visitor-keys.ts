@@ -17,6 +17,7 @@ const astroKeys: AstroKeysType = {
     AstroShorthandAttribute: ["name", "value"],
     AstroTemplateLiteralAttribute: ["name", "value"],
     AstroRawText: [],
+    AstroFragment: ["children"],
 }
 
 export const KEYS: SourceCode.VisitorKeys = unionWith(

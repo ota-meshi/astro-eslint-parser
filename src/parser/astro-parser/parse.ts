@@ -128,7 +128,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
         node,
         ctx.code,
         // eslint-disable-next-line complexity -- X(
-        (node, parent) => {
+        (node, [parent]) => {
             if (node.type === "frontmatter") {
                 start = node.position!.start.offset = tokenIndex(
                     ctx,
@@ -243,7 +243,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 // noop
             }
         },
-        (node, parent) => {
+        (node, [parent]) => {
             if (node.type === "attribute") {
                 const attributes = (parent as TagLikeNode).attributes
                 if (attributes[attributes.length - 1] === node) {

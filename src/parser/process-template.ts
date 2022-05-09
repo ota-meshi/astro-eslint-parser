@@ -1,11 +1,12 @@
 import type { ParseResult } from "@astrojs/compiler"
-import type { TagLikeNode, ParentNode } from "@astrojs/compiler/types"
 import { AST_TOKEN_TYPES, AST_NODE_TYPES } from "@typescript-eslint/types"
 import type { TSESTree } from "@typescript-eslint/types"
 import {
     getAttributeEndOffset,
     getAttributeValueStartOffset,
-    getStartTagEndOffset,
+    getCommentEndOffset,
+    getTagEndOffset,
+    getSelfClosingTag,
     isTag,
     walkElements,
 } from "../astro"
@@ -13,6 +14,7 @@ import type { Context } from "../context"
 import { ScriptContext } from "../context/script"
 import type {
     AstroDoctype,
+    AstroFragment,
     AstroHTMLComment,
     AstroRawText,
     AstroShorthandAttribute,
@@ -41,7 +43,44 @@ export function processTemplate(
     }
 
     // eslint-disable-next-line complexity -- X(
-    walkElements(resultTemplate.ast, ctx.code, (node, parent) => {
+    walkElements(resultTemplate.ast, ctx.code, (node, parents) => {
+        const parent = parents[0]
+        if (isTag(node) && parent.type === "expression") {
+            const index = parent.children.indexOf(node)
+            const before = parent.children[index - 1]
+            if (!before || !isTag(before)) {
+                const after = parent.children[index + 1]
+                if (after && (isTag(after) || after.type === "comment")) {
+                    const start = node.position!.start.offset
+                    script.appendOriginal(start)
+                    script.appendScript("<>")
+                    script.addRestoreNodeProcess((scriptNode) => {
+                        if (
+                            scriptNode.range[0] === start &&
+                            scriptNode.type === AST_NODE_TYPES.JSXFragment
+                        ) {
+                            delete (scriptNode as any).openingFragment
+                            delete (scriptNode as any).closingFragment
+                            const fragmentNode =
+                                scriptNode as unknown as AstroFragment
+                            fragmentNode.type = "AstroFragment"
+                            const last =
+                                fragmentNode.children[
+                                    fragmentNode.children.length - 1
+                                ]
+                            if (fragmentNode.range[1] < last.range[1]) {
+                                fragmentNode.range[1] = last.range[1]
+                                fragmentNode.loc.end = ctx.getLocFromIndex(
+                                    fragmentNode.range[1],
+                                )
+                            }
+                            return true
+                        }
+                        return false
+                    })
+                }
+            }
+        }
         if (node.type === "frontmatter") {
             const start = node.position!.start.offset
             script.appendOriginal(start)
@@ -207,7 +246,7 @@ export function processTemplate(
                 }
             }
 
-            const end = getVoidSelfClosingTag(node, parent, ctx)
+            const end = getSelfClosingTag(node, parents, ctx)
             if (end && end.end === ">") {
                 script.appendOriginal(end.offset - 1)
                 script.appendScript("/")
@@ -254,15 +293,17 @@ export function processTemplate(
             script.appendOriginal(start)
             let targetType: AST_NODE_TYPES
             if (fragmentOpened) {
-                script.appendScript(`<></>`)
+                script.appendOriginal(start + 1)
+                script.appendScript(`></`)
+                script.skipOriginalOffset(length - 2)
                 targetType = AST_NODE_TYPES.JSXFragment
             } else {
                 script.appendScript(`0;`)
                 targetType = AST_NODE_TYPES.ExpressionStatement
+                script.skipOriginalOffset(length)
             }
-            script.skipOriginalOffset(length)
 
-            script.addRestoreNodeProcess((scriptNode) => {
+            script.addRestoreNodeProcess((scriptNode, result) => {
                 if (
                     scriptNode.range[0] === start &&
                     scriptNode.type === targetType
@@ -275,6 +316,34 @@ export function processTemplate(
                         scriptNode as unknown as AstroHTMLComment
                     commentNode.type = "AstroHTMLComment"
                     commentNode.value = node.value
+
+                    if (fragmentOpened) {
+                        const removeTokenSet = new Set([
+                            (token: TSESTree.Token) =>
+                                token.value === "<" &&
+                                token.range[0] === scriptNode.range[0],
+                            (token: TSESTree.Token) =>
+                                token.value === ">" &&
+                                token.range[1] === scriptNode.range[1],
+                        ])
+                        const tokens = result.ast.tokens || []
+                        for (
+                            let index = tokens.length - 1;
+                            index >= 0;
+                            index--
+                        ) {
+                            const token = tokens[index]
+                            for (const rt of removeTokenSet) {
+                                if (rt(token)) {
+                                    tokens.splice(index, 1)
+                                    removeTokenSet.delete(rt)
+                                    if (!removeTokenSet.size) {
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
                     return true
                 }
                 return false
@@ -314,6 +383,23 @@ export function processTemplate(
             })
             script.addToken("HTMLDocType" as AST_TOKEN_TYPES, [start, end])
         }
+        if (
+            (isTag(node) || node.type === "comment") &&
+            parent.type === "expression"
+        ) {
+            const index = parent.children.indexOf(node)
+            const after = parent.children[index + 1]
+            if (!after || (!isTag(after) && after.type !== "comment")) {
+                const before = parent.children[index - 1]
+                if (before && (isTag(before) || before.type === "comment")) {
+                    const end = isTag(node)
+                        ? getTagEndOffset(node, parents, ctx)
+                        : getCommentEndOffset(node, ctx)
+                    script.appendOriginal(end)
+                    script.appendScript("</>")
+                }
+            }
+        }
     })
 
     script.appendOriginal(ctx.code.length)
@@ -331,43 +417,5 @@ export function processTemplate(
         }
         usedUniqueIds.add(candidate)
         return candidate
-    }
-}
-
-/**
- * If the given tag is a void tag, get the self-closing tag.
- */
-function getVoidSelfClosingTag(
-    node: TagLikeNode,
-    parent: ParentNode,
-    ctx: Context,
-) {
-    const children = node.children.filter(
-        (c) => c.type !== "text" || c.value.trim(),
-    )
-    if (children.length > 0) {
-        return false
-    }
-    const code = ctx.code
-    let nextElementIndex = code.length
-    const childIndex = parent.children.indexOf(node)
-    if (childIndex === parent.children.length - 1) {
-        // last
-        if (parent.position?.end) {
-            nextElementIndex = parent.position.end.offset
-            nextElementIndex = code.lastIndexOf("</", nextElementIndex)
-        }
-    } else {
-        const next = parent.children[childIndex + 1]
-        nextElementIndex = next.position!.start.offset
-    }
-    const endOffset = getStartTagEndOffset(node, ctx)
-    if (code.slice(endOffset, nextElementIndex).trim()) {
-        // has end tag
-        return null
-    }
-    return {
-        offset: endOffset,
-        end: code.slice(endOffset - 2, endOffset) === "/>" ? "/>" : ">",
     }
 }
