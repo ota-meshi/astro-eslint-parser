@@ -177,12 +177,39 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                         start,
                     )
                 } else {
-                    start = node.position!.start.offset = tokenIndex(
-                        ctx,
-                        node.value,
-                        start,
-                    )
-                    start += node.value.length
+                    const index = tokenIndexSafe(ctx.code, node.value, start)
+                    if (index != null) {
+                        start = node.position!.start.offset = index
+                        start += node.value.length
+                    } else {
+                        // Workaround for escape bugs
+                        node.position!.start.offset = start
+                        for (const token of node.value.split(/\s+/u)) {
+                            const index = tokenIndexSafe(ctx.code, token, start)
+                            if (index != null) {
+                                start = index + token.length
+                                continue
+                            }
+                            start = skipSpaces(ctx.code, start)
+                            let t = token
+                            if (ctx.code.startsWith("\\", start)) {
+                                const char = JSON.parse(
+                                    `"\\${ctx.code[start + 1]}"`,
+                                )
+                                if (char.trim()) {
+                                    t = t.slice(1)
+                                }
+                                start += 2
+                            }
+                            start = tokenIndex(ctx, t, start) + t.length
+                        }
+                        start = skipSpaces(ctx.code, start)
+
+                        node.value = ctx.code.slice(
+                            node.position!.start.offset,
+                            start,
+                        )
+                    }
                 }
             } else if (node.type === "expression") {
                 start = node.position!.start.offset = tokenIndex(

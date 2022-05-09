@@ -20,6 +20,7 @@
         "debug": "mocha --require ts-node/register/transpile-only \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
         "preversion": "npm run lint && npm test",
         "update-fixtures": "ts-node --transpile-only ./tools/update-fixtures.ts",
+        "debug-parser": "ts-node --transpile-only ./tools/parser-test.ts",
         "eslint-playground": "eslint tests/fixtures --ext .astro --config .eslintrc-for-playground.js --format codeframe",
         "benchmark": "ts-node --transpile-only benchmark/index.ts"
     },
