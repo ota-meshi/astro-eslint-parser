@@ -48,7 +48,7 @@ export function processTemplate(
         resultTemplate.ast,
         ctx.code,
         // eslint-disable-next-line complexity -- X(
-        (node, parents) => {
+        (node, [parent]) => {
             if (node.type === "frontmatter") {
                 const start = node.position!.start.offset
                 script.appendOriginal(start)
@@ -87,7 +87,6 @@ export function processTemplate(
                 script.addToken(AST_TOKEN_TYPES.Punctuator, [end - 3, end])
             } else if (isTag(node)) {
                 // Process for multiple tag
-                const parent = parents[0]
                 if (parent.type === "expression") {
                     const index = parent.children.indexOf(node)
                     const before = parent.children[index - 1]
@@ -280,7 +279,7 @@ export function processTemplate(
                 }
 
                 // Process for start tag close
-                const closing = getSelfClosingTag(node, parents, ctx)
+                const closing = getSelfClosingTag(node, parent, ctx)
                 if (closing && closing.end === ">") {
                     script.appendOriginal(closing.offset - 1)
                     script.appendScript("/")
@@ -421,13 +420,13 @@ export function processTemplate(
                 script.addToken("HTMLDocType" as AST_TOKEN_TYPES, [start, end])
             }
         },
-        (node, parents) => {
+        (node, [parent]) => {
             if (isTag(node)) {
-                const closing = getSelfClosingTag(node, parents, ctx)
+                const closing = getSelfClosingTag(node, parent, ctx)
                 if (!closing) {
-                    const end = getEndTag(node, parents, ctx)
+                    const end = getEndTag(node, ctx)
                     if (!end) {
-                        const offset = getContentEndOffset(node, parents, ctx)
+                        const offset = getContentEndOffset(node, ctx)
                         script.appendOriginal(offset)
                         script.appendScript(`</${node.name}>`)
                         script.addRestoreNodeProcess(
@@ -448,7 +447,6 @@ export function processTemplate(
                 }
             }
             // Process for multiple tag
-            const parent = parents[0]
             if (
                 (isTag(node) || node.type === "comment") &&
                 parent.type === "expression"
@@ -462,7 +460,7 @@ export function processTemplate(
                         (isTag(before) || before.type === "comment")
                     ) {
                         const end = isTag(node)
-                            ? getTagEndOffset(node, parents, ctx)
+                            ? getTagEndOffset(node, ctx)
                             : getCommentEndOffset(node, ctx)
                         script.appendOriginal(end)
                         script.appendScript("</>")

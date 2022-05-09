@@ -36,7 +36,9 @@ export function parseScript(code: string, ctx: Context): ESLintExtendedProgram {
         debug(
             "[script] parsing error:",
             (e as any).message,
-            `@ ${JSON.stringify(code)}`,
+            `@ ${JSON.stringify(code)}
+
+${code}`,
         )
         throw e
     } finally {

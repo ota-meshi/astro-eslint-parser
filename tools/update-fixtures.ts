@@ -46,19 +46,6 @@ function parse(code: string, filePath: string) {
     })
 }
 
-for (const { input, inputFileName, outputFileName } of listupFixtures(
-    ERROR_FIXTURE_ROOT,
-)) {
-    // eslint-disable-next-line no-console -- ignore
-    console.log(inputFileName)
-    try {
-        parse(input, inputFileName)
-    } catch (e) {
-        const errorJson = JSON.stringify(normalizeError(e), nodeReplacer, 2)
-        fs.writeFileSync(outputFileName, errorJson, "utf8")
-    }
-}
-
 for (const {
     input,
     inputFileName,
@@ -119,6 +106,19 @@ for (const {
             )
             fs.writeFileSync(ruleOutputFileName, messagesJson, "utf8")
         }
+    }
+}
+
+for (const { input, inputFileName, outputFileName } of listupFixtures(
+    ERROR_FIXTURE_ROOT,
+)) {
+    // eslint-disable-next-line no-console -- ignore
+    console.log(inputFileName)
+    try {
+        parse(input, inputFileName)
+    } catch (e) {
+        const errorJson = JSON.stringify(normalizeError(e), nodeReplacer, 2)
+        fs.writeFileSync(outputFileName, errorJson, "utf8")
     }
 }
 
