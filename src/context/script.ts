@@ -21,6 +21,7 @@ export class ScriptContext {
     private readonly restoreNodeProcesses: ((
         node: TSESTree.Node,
         result: ESLintExtendedProgram,
+        parent: TSESTree.Node,
     ) => boolean)[] = []
 
     public constructor(ctx: Context) {
@@ -54,6 +55,7 @@ export class ScriptContext {
         process: (
             node: TSESTree.Node,
             result: ESLintExtendedProgram,
+            parent: TSESTree.Node,
         ) => boolean,
     ): void {
         this.restoreNodeProcesses.push(process)
@@ -89,12 +91,12 @@ export class ScriptContext {
 
         // remap locations
 
-        const traversed = new Set<TSESTree.Node>()
+        const traversed = new Map<TSESTree.Node, TSESTree.Node | null>()
         traverseNodes(result.ast, {
             visitorKeys: result.visitorKeys,
-            enterNode: (node) => {
+            enterNode: (node, p) => {
                 if (!traversed.has(node)) {
-                    traversed.add(node)
+                    traversed.set(node, p)
 
                     this.remapLocation(node)
                 }
@@ -121,9 +123,10 @@ export class ScriptContext {
         }
 
         let restoreNodeProcesses = this.restoreNodeProcesses
-        for (const node of traversed) {
+        for (const [node, parent] of traversed) {
+            if (!parent) continue
             restoreNodeProcesses = restoreNodeProcesses.filter(
-                (proc) => !proc(node, result),
+                (proc) => !proc(node, result, parent),
             )
         }
 
