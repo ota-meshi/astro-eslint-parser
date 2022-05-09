@@ -244,7 +244,7 @@ export function getContentEndOffset(parent: ParentNode, ctx: Context): number {
         if (code[end - 1] !== ">") {
             return end
         }
-        const index = code.lastIndexOf("</", end)
+        const index = code.lastIndexOf("</", end - 1)
         if (
             index >= 0 &&
             code.slice(index + 2, end - 1).trim() === parent.name
