@@ -254,7 +254,10 @@ export function getContentEndOffset(
             return end
         }
         const index = code.lastIndexOf("</", end)
-        if (index >= 0 && code.slice(index, end).trim() === parent.name) {
+        if (
+            index >= 0 &&
+            code.slice(index + 2, end - 1).trim() === parent.name
+        ) {
             return index
         }
         return end
