@@ -10,6 +10,7 @@ import * as service from "./astrojs-compiler-service"
 import {
     getAttributeEndOffset,
     getCommentEndOffset,
+    getSelfClosingTag,
     getStartTagEndOffset,
     skipSpaces,
     walk,
@@ -252,9 +253,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 if (attributes[attributes.length - 1] === node) {
                     start = getStartTagEndOffset(parent as TagLikeNode, ctx)
                 }
-                return
-            }
-            if (node.type === "expression") {
+            } else if (node.type === "expression") {
                 start = tokenIndex(ctx, "}", start) + 1
             } else if (
                 node.type === "fragment" ||
@@ -262,14 +261,16 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 node.type === "component" ||
                 node.type === "custom-element"
             ) {
-                const closeTagStart = tokenIndexSafe(
-                    ctx.code,
-                    `</${node.name}`,
-                    start,
-                )
-                if (closeTagStart != null) {
-                    start = closeTagStart + 2 + node.name.length
-                    start = tokenIndex(ctx, ">", start) + 1
+                if (!getSelfClosingTag(node, parent, ctx)) {
+                    const closeTagStart = tokenIndexSafe(
+                        ctx.code,
+                        `</${node.name}`,
+                        start,
+                    )
+                    if (closeTagStart != null) {
+                        start = closeTagStart + 2 + node.name.length
+                        start = tokenIndex(ctx, ">", start) + 1
+                    }
                 }
             } else {
                 return

@@ -134,7 +134,27 @@
         },
         {
           "type": "JSXElement",
-          "children": [],
+          "children": [
+            {
+              "type": "JSXText",
+              "raw": "\n",
+              "value": "\n",
+              "range": [
+                87,
+                88
+              ],
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 32
+                },
+                "end": {
+                  "line": 5,
+                  "column": 0
+                }
+              }
+            }
+          ],
           "closingElement": null,
           "openingElement": {
             "type": "JSXOpeningElement",
@@ -263,7 +283,7 @@
                 }
               }
             ],
-            "selfClosing": true,
+            "selfClosing": false,
             "range": [
               55,
               87
@@ -281,31 +301,12 @@
           },
           "range": [
             55,
-            87
-          ],
-          "loc": {
-            "start": {
-              "line": 4,
-              "column": 0
-            },
-            "end": {
-              "line": 4,
-              "column": 32
-            }
-          }
-        },
-        {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            87,
             88
           ],
           "loc": {
             "start": {
               "line": 4,
-              "column": 32
+              "column": 0
             },
             "end": {
               "line": 5,
@@ -316,7 +317,7 @@
       ],
       "range": [
         54,
-        88
+        99
       ],
       "loc": {
         "start": {
@@ -325,7 +326,7 @@
         },
         "end": {
           "line": 5,
-          "column": 0
+          "column": 11
         }
       }
     }
@@ -732,7 +733,7 @@
   ],
   "range": [
     4,
-    88
+    99
   ],
   "loc": {
     "start": {
@@ -741,7 +742,7 @@
     },
     "end": {
       "line": 5,
-      "column": 0
+      "column": 11
     }
   }
 }

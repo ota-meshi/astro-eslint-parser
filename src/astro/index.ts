@@ -95,18 +95,14 @@ export function getStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
 /**
  * Get end offset of tag
  */
-export function getTagEndOffset(
-    node: TagLikeNode,
-    parents: ParentNode[],
-    ctx: Context,
-): number {
+export function getTagEndOffset(node: TagLikeNode, ctx: Context): number {
     if (node.position!.end?.offset != null) {
         return node.position!.end.offset
     }
     let beforeIndex: number
     if (node.children.length) {
         const lastChild = node.children[node.children.length - 1]
-        beforeIndex = getEndOffset(lastChild, [node, ...parents], ctx)
+        beforeIndex = getEndOffset(lastChild, ctx)
     } else {
         beforeIndex = getStartTagEndOffset(node, ctx)
     }
@@ -125,7 +121,6 @@ export function getTagEndOffset(
  */
 export function getExpressionEndOffset(
     node: ExpressionNode,
-    parents: ParentNode[],
     ctx: Context,
 ): number {
     if (node.position!.end?.offset != null) {
@@ -133,7 +128,7 @@ export function getExpressionEndOffset(
     }
     if (node.children.length) {
         const lastChild = node.children[node.children.length - 1]
-        const beforeIndex = getEndOffset(lastChild, [node, ...parents], ctx)
+        const beforeIndex = getEndOffset(lastChild, ctx)
         const info = getTokenInfo(ctx, ["}"], beforeIndex)
         return info.index + info.match.length
     }
@@ -242,24 +237,23 @@ export function getCommentEndOffset(node: CommentNode, ctx: Context): number {
 /**
  * Get content end offset
  */
-export function getContentEndOffset(
-    parent: ParentNode,
-    parents: ParentNode[],
-    ctx: Context,
-): number {
+export function getContentEndOffset(parent: ParentNode, ctx: Context): number {
     const code = ctx.code
     if (isTag(parent)) {
-        const end = getTagEndOffset(parent, parents, ctx)
+        const end = getTagEndOffset(parent, ctx)
         if (code[end - 1] !== ">") {
             return end
         }
-        const index = code.lastIndexOf("</", end)
-        if (index >= 0 && code.slice(index, end).trim() === parent.name) {
+        const index = code.lastIndexOf("</", end - 1)
+        if (
+            index >= 0 &&
+            code.slice(index + 2, end - 1).trim() === parent.name
+        ) {
             return index
         }
         return end
     } else if (parent.type === "expression") {
-        const end = getExpressionEndOffset(parent, parents, ctx)
+        const end = getExpressionEndOffset(parent, ctx)
         return code.lastIndexOf("}", end)
     } else if (parent.type === "root") {
         return code.length
@@ -272,25 +266,21 @@ export function getContentEndOffset(
  */
 export function getSelfClosingTag(
     node: TagLikeNode,
-    parents: ParentNode[],
+    parent: ParentNode,
     ctx: Context,
 ): null | {
     offset: number
     end: "/>" | ">"
 } {
-    const children = node.children.filter(
-        (c) => c.type !== "text" || c.value.trim(),
-    )
-    if (children.length > 0) {
+    if (node.children.length > 0) {
         return null
     }
-    const parent = parents[0]
     const code = ctx.code
     let nextElementIndex = code.length
     const childIndex = parent.children.indexOf(node)
     if (childIndex === parent.children.length - 1) {
         // last
-        nextElementIndex = getContentEndOffset(parent, parents.slice(1), ctx)
+        nextElementIndex = getContentEndOffset(parent, ctx)
     } else {
         const next = parent.children[childIndex + 1]
         nextElementIndex = next.position!.start.offset
@@ -310,7 +300,6 @@ export function getSelfClosingTag(
  */
 export function getEndTag(
     node: TagLikeNode,
-    parents: ParentNode[],
     ctx: Context,
 ): null | {
     offset: number
@@ -319,7 +308,7 @@ export function getEndTag(
     let beforeIndex: number
     if (node.children.length) {
         const lastChild = node.children[node.children.length - 1]
-        beforeIndex = getEndOffset(lastChild, [node, ...parents], ctx)
+        beforeIndex = getEndOffset(lastChild, ctx)
     } else {
         beforeIndex = getStartTagEndOffset(node, ctx)
     }
@@ -341,13 +330,12 @@ export function getEndTag(
 /**
  * Get end offset of tag
  */
-function getEndOffset(node: Node, parents: ParentNode[], ctx: Context): number {
+function getEndOffset(node: Node, ctx: Context): number {
     if (node.position!.end?.offset != null) {
         return node.position!.end.offset
     }
-    if (isTag(node)) return getTagEndOffset(node, parents, ctx)
-    if (node.type === "expression")
-        return getExpressionEndOffset(node, parents, ctx)
+    if (isTag(node)) return getTagEndOffset(node, ctx)
+    if (node.type === "expression") return getExpressionEndOffset(node, ctx)
     if (node.type === "comment") return getCommentEndOffset(node, ctx)
     if (node.type === "frontmatter") {
         const start = node.position!.start.offset

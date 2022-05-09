@@ -1,0 +1,14 @@
+[
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 7,
+    "column": 6
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 18,
+    "column": 6
+  }
+]
