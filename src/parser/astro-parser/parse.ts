@@ -8,10 +8,10 @@ import type {
 import type { ParseResult } from "@astrojs/compiler"
 import * as service from "./astrojs-compiler-service"
 import {
-    getAttributeEndOffset,
-    getCommentEndOffset,
+    calcAttributeEndOffset,
+    calcCommentEndOffset,
     getSelfClosingTag,
-    getStartTagEndOffset,
+    calcStartTagEndOffset,
     skipSpaces,
     walk,
 } from "../../astro"
@@ -158,14 +158,20 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 start += 1
                 start += node.name.length
                 if (!node.attributes.length) {
-                    start = getStartTagEndOffset(node, ctx)
+                    start = calcStartTagEndOffset(node, ctx)
                 }
             } else if (node.type === "attribute") {
                 fixLocationForAttr(node, ctx, start)
-                start = getAttributeEndOffset(node, ctx)
+                start = calcAttributeEndOffset(node, ctx)
+                if (node.position!.end) {
+                    node.position!.end.offset = start
+                }
             } else if (node.type === "comment") {
                 node.position!.start.offset = tokenIndex(ctx, "<!--", start)
-                start = getCommentEndOffset(node, ctx)
+                start = calcCommentEndOffset(node, ctx)
+                if (node.position!.end) {
+                    node.position!.end.offset = start
+                }
             } else if (node.type === "text") {
                 if (
                     parent.type === "element" &&
@@ -221,6 +227,9 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                         )
                     }
                 }
+                if (node.position!.end) {
+                    node.position!.end.offset = start
+                }
             } else if (node.type === "expression") {
                 start = node.position!.start.offset = tokenIndex(
                     ctx,
@@ -251,7 +260,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
             if (node.type === "attribute") {
                 const attributes = (parent as TagLikeNode).attributes
                 if (attributes[attributes.length - 1] === node) {
-                    start = getStartTagEndOffset(parent as TagLikeNode, ctx)
+                    start = calcStartTagEndOffset(parent as TagLikeNode, ctx)
                 }
             } else if (node.type === "expression") {
                 start = tokenIndex(ctx, "}", start) + 1
@@ -261,7 +270,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                 node.type === "component" ||
                 node.type === "custom-element"
             ) {
-                if (!getSelfClosingTag(node, parent, ctx)) {
+                if (!getSelfClosingTag(node, ctx)) {
                     const closeTagStart = tokenIndexSafe(
                         ctx.code,
                         `</${node.name}`,
