@@ -2,15 +2,14 @@ import type { ParseResult } from "@astrojs/compiler"
 import { AST_TOKEN_TYPES, AST_NODE_TYPES } from "@typescript-eslint/types"
 import type { TSESTree } from "@typescript-eslint/types"
 import {
-    getAttributeEndOffset,
-    getAttributeValueStartOffset,
-    getCommentEndOffset,
-    getTagEndOffset,
+    calcAttributeEndOffset,
+    calcAttributeValueStartOffset,
     getSelfClosingTag,
     isTag,
     walkElements,
     getEndTag,
-    getContentEndOffset,
+    calcContentEndOffset,
+    getEndOffset,
 } from "../astro"
 import type { Context } from "../context"
 import { ScriptContext } from "../context/script"
@@ -53,7 +52,7 @@ export function processTemplate(
                 const start = node.position!.start.offset
                 script.appendOriginal(start)
                 script.skipOriginalOffset(3)
-                const end = node.position!.end!.offset
+                const end = getEndOffset(node, ctx)
                 script.appendOriginal(end - 3)
 
                 script.appendScript(";<>")
@@ -255,8 +254,8 @@ export function processTemplate(
                         })
                     } else if (attr.kind === "template-literal") {
                         const attrStart = attr.position!.start.offset
-                        const start = getAttributeValueStartOffset(attr, ctx)
-                        const end = getAttributeEndOffset(attr, ctx)
+                        const start = calcAttributeValueStartOffset(attr, ctx)
+                        const end = calcAttributeEndOffset(attr, ctx)
                         script.appendOriginal(start)
                         script.appendScript("{")
                         script.appendOriginal(end)
@@ -279,7 +278,7 @@ export function processTemplate(
                 }
 
                 // Process for start tag close
-                const closing = getSelfClosingTag(node, parent, ctx)
+                const closing = getSelfClosingTag(node, ctx)
                 if (closing && closing.end === ">") {
                     script.appendOriginal(closing.offset - 1)
                     script.appendScript("/")
@@ -389,7 +388,7 @@ export function processTemplate(
                 ])
             } else if (node.type === "doctype") {
                 const start = node.position!.start.offset
-                const end = node.position!.end!.offset
+                const end = getEndOffset(node, ctx)
                 script.appendOriginal(start)
                 let targetType: AST_NODE_TYPES
                 if (fragmentOpened) {
@@ -422,11 +421,11 @@ export function processTemplate(
         },
         (node, [parent]) => {
             if (isTag(node)) {
-                const closing = getSelfClosingTag(node, parent, ctx)
+                const closing = getSelfClosingTag(node, ctx)
                 if (!closing) {
                     const end = getEndTag(node, ctx)
                     if (!end) {
-                        const offset = getContentEndOffset(node, ctx)
+                        const offset = calcContentEndOffset(node, ctx)
                         script.appendOriginal(offset)
                         script.appendScript(`</${node.name}>`)
                         script.addRestoreNodeProcess(
@@ -459,9 +458,7 @@ export function processTemplate(
                         before &&
                         (isTag(before) || before.type === "comment")
                     ) {
-                        const end = isTag(node)
-                            ? getTagEndOffset(node, ctx)
-                            : getCommentEndOffset(node, ctx)
+                        const end = getEndOffset(node, ctx)
                         script.appendOriginal(end)
                         script.appendScript("</>")
                     }

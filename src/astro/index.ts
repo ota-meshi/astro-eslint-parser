@@ -75,11 +75,11 @@ export function walk(
 /**
  * Get end offset of start tag
  */
-export function getStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
+export function calcStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
     const lastAttr = node.attributes[node.attributes.length - 1]
     let beforeCloseIndex: number
     if (lastAttr) {
-        beforeCloseIndex = getAttributeEndOffset(lastAttr, ctx)
+        beforeCloseIndex = calcAttributeEndOffset(lastAttr, ctx)
     } else {
         const info = getTokenInfo(
             ctx,
@@ -93,52 +93,9 @@ export function getStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
 }
 
 /**
- * Get end offset of tag
- */
-export function getTagEndOffset(node: TagLikeNode, ctx: Context): number {
-    if (node.position!.end?.offset != null) {
-        return node.position!.end.offset
-    }
-    let beforeIndex: number
-    if (node.children.length) {
-        const lastChild = node.children[node.children.length - 1]
-        beforeIndex = getEndOffset(lastChild, ctx)
-    } else {
-        beforeIndex = getStartTagEndOffset(node, ctx)
-    }
-    beforeIndex = skipSpaces(ctx.code, beforeIndex)
-
-    if (ctx.code.startsWith(`</${node.name}`, beforeIndex)) {
-        beforeIndex = beforeIndex + 2 + node.name.length
-        const info = getTokenInfo(ctx, [">"], beforeIndex)
-        return info.index + info.match.length
-    }
-    return beforeIndex
-}
-
-/**
- * Get end offset of Expression
- */
-export function getExpressionEndOffset(
-    node: ExpressionNode,
-    ctx: Context,
-): number {
-    if (node.position!.end?.offset != null) {
-        return node.position!.end.offset
-    }
-    if (node.children.length) {
-        const lastChild = node.children[node.children.length - 1]
-        const beforeIndex = getEndOffset(lastChild, ctx)
-        const info = getTokenInfo(ctx, ["}"], beforeIndex)
-        return info.index + info.match.length
-    }
-    const info = getTokenInfo(ctx, ["{", "}"], node.position!.start.offset)
-    return info.index + info.match.length
-}
-/**
  * Get end offset of attribute
  */
-export function getAttributeEndOffset(
+export function calcAttributeEndOffset(
     node: AttributeNode,
     ctx: Context,
 ): number {
@@ -149,13 +106,13 @@ export function getAttributeEndOffset(
         info = getTokenInfo(
             ctx,
             [[`"${node.value}"`, `'${node.value}'`, node.value]],
-            getAttributeValueStartOffset(node, ctx),
+            calcAttributeValueStartOffset(node, ctx),
         )
     } else if (node.kind === "expression") {
         info = getTokenInfo(
             ctx,
             ["{", node.value, "}"],
-            getAttributeValueStartOffset(node, ctx),
+            calcAttributeValueStartOffset(node, ctx),
         )
     } else if (node.kind === "shorthand") {
         info = getTokenInfo(
@@ -173,7 +130,7 @@ export function getAttributeEndOffset(
         info = getTokenInfo(
             ctx,
             [`\`${node.value}\``],
-            getAttributeValueStartOffset(node, ctx),
+            calcAttributeValueStartOffset(node, ctx),
         )
     } else {
         throw new ParseError(
@@ -188,7 +145,7 @@ export function getAttributeEndOffset(
 /**
  * Get start offset of attribute value
  */
-export function getAttributeValueStartOffset(
+export function calcAttributeValueStartOffset(
     node: AttributeNode,
     ctx: Context,
 ): number {
@@ -222,121 +179,15 @@ export function getAttributeValueStartOffset(
 }
 
 /**
- * Get end offset of comment
- */
-export function getCommentEndOffset(node: CommentNode, ctx: Context): number {
-    const info = getTokenInfo(
-        ctx,
-        ["<!--", node.value, "-->"],
-        node.position!.start.offset,
-    )
-
-    return info.index + info.match.length
-}
-
-/**
- * Get content end offset
- */
-export function getContentEndOffset(parent: ParentNode, ctx: Context): number {
-    const code = ctx.code
-    if (isTag(parent)) {
-        const end = getTagEndOffset(parent, ctx)
-        if (code[end - 1] !== ">") {
-            return end
-        }
-        const index = code.lastIndexOf("</", end - 1)
-        if (
-            index >= 0 &&
-            code.slice(index + 2, end - 1).trim() === parent.name
-        ) {
-            return index
-        }
-        return end
-    } else if (parent.type === "expression") {
-        const end = getExpressionEndOffset(parent, ctx)
-        return code.lastIndexOf("}", end)
-    } else if (parent.type === "root") {
-        return code.length
-    }
-    throw new Error(`unknown type: ${(parent as any).type}`)
-}
-
-/**
- * If the given tag is a self-close tag, get the self-closing tag.
- */
-export function getSelfClosingTag(
-    node: TagLikeNode,
-    parent: ParentNode,
-    ctx: Context,
-): null | {
-    offset: number
-    end: "/>" | ">"
-} {
-    if (node.children.length > 0) {
-        return null
-    }
-    const code = ctx.code
-    let nextElementIndex = code.length
-    const childIndex = parent.children.indexOf(node)
-    if (childIndex === parent.children.length - 1) {
-        // last
-        nextElementIndex = getContentEndOffset(parent, ctx)
-    } else {
-        const next = parent.children[childIndex + 1]
-        nextElementIndex = next.position!.start.offset
-    }
-    const endOffset = getStartTagEndOffset(node, ctx)
-    if (code.slice(endOffset, nextElementIndex).trim()) {
-        // has end tag
-        return null
-    }
-    return {
-        offset: endOffset,
-        end: code.slice(endOffset - 2, endOffset) === "/>" ? "/>" : ">",
-    }
-}
-/**
- * If the given tag has a end tag, get the end tag.
- */
-export function getEndTag(
-    node: TagLikeNode,
-    ctx: Context,
-): null | {
-    offset: number
-    tag: string
-} {
-    let beforeIndex: number
-    if (node.children.length) {
-        const lastChild = node.children[node.children.length - 1]
-        beforeIndex = getEndOffset(lastChild, ctx)
-    } else {
-        beforeIndex = getStartTagEndOffset(node, ctx)
-    }
-    beforeIndex = skipSpaces(ctx.code, beforeIndex)
-
-    if (ctx.code.startsWith(`</${node.name}`, beforeIndex)) {
-        const offset = beforeIndex
-        beforeIndex = beforeIndex + 2 + node.name.length
-        const info = getTokenInfo(ctx, [">"], beforeIndex)
-        const end = info.index + info.match.length
-        return {
-            offset,
-            tag: ctx.code.slice(offset, end),
-        }
-    }
-    return null
-}
-
-/**
  * Get end offset of tag
  */
-function getEndOffset(node: Node, ctx: Context): number {
+export function getEndOffset(node: Node, ctx: Context): number {
     if (node.position!.end?.offset != null) {
         return node.position!.end.offset
     }
-    if (isTag(node)) return getTagEndOffset(node, ctx)
-    if (node.type === "expression") return getExpressionEndOffset(node, ctx)
-    if (node.type === "comment") return getCommentEndOffset(node, ctx)
+    if (isTag(node)) return calcTagEndOffset(node, ctx)
+    if (node.type === "expression") return calcExpressionEndOffset(node, ctx)
+    if (node.type === "comment") return calcCommentEndOffset(node, ctx)
     if (node.type === "frontmatter") {
         const start = node.position!.start.offset
         return ctx.code.indexOf("---", start + 3) + 3
@@ -354,6 +205,142 @@ function getEndOffset(node: Node, ctx: Context): number {
     }
 
     throw new Error(`unknown type: ${(node as any).type}`)
+}
+
+/**
+ * Get content end offset
+ */
+export function calcContentEndOffset(parent: ParentNode, ctx: Context): number {
+    const code = ctx.code
+    if (isTag(parent)) {
+        const end = getEndOffset(parent, ctx)
+        if (code[end - 1] !== ">") {
+            return end
+        }
+        const index = code.lastIndexOf("</", end - 1)
+        if (
+            index >= 0 &&
+            code.slice(index + 2, end - 1).trim() === parent.name
+        ) {
+            return index
+        }
+        return end
+    } else if (parent.type === "expression") {
+        const end = getEndOffset(parent, ctx)
+        return code.lastIndexOf("}", end)
+    } else if (parent.type === "root") {
+        return code.length
+    }
+    throw new Error(`unknown type: ${(parent as any).type}`)
+}
+
+/**
+ * If the given tag is a self-close tag, get the self-closing tag.
+ */
+export function getSelfClosingTag(
+    node: TagLikeNode,
+    ctx: Context,
+): null | {
+    offset: number
+    end: "/>" | ">"
+} {
+    if (node.children.length > 0) {
+        return null
+    }
+    const code = ctx.code
+    const startTagEndOffset = calcStartTagEndOffset(node, ctx)
+    if (code.startsWith("/>", startTagEndOffset - 2)) {
+        return {
+            offset: startTagEndOffset,
+            end: "/>",
+        }
+    }
+    if (code.startsWith(`</${node.name}`, startTagEndOffset)) {
+        return null
+    }
+    return {
+        offset: startTagEndOffset,
+        end: ">",
+    }
+}
+/**
+ * If the given tag has a end tag, get the end tag.
+ */
+export function getEndTag(
+    node: TagLikeNode,
+    ctx: Context,
+): null | {
+    offset: number
+    tag: string
+} {
+    let beforeIndex: number
+    if (node.children.length) {
+        const lastChild = node.children[node.children.length - 1]
+        beforeIndex = getEndOffset(lastChild, ctx)
+    } else {
+        beforeIndex = calcStartTagEndOffset(node, ctx)
+    }
+    beforeIndex = skipSpaces(ctx.code, beforeIndex)
+
+    if (ctx.code.startsWith(`</${node.name}`, beforeIndex)) {
+        const offset = beforeIndex
+        beforeIndex = beforeIndex + 2 + node.name.length
+        const info = getTokenInfo(ctx, [">"], beforeIndex)
+        const end = info.index + info.match.length
+        return {
+            offset,
+            tag: ctx.code.slice(offset, end),
+        }
+    }
+    return null
+}
+
+/**
+ * Get end offset of comment
+ */
+export function calcCommentEndOffset(node: CommentNode, ctx: Context): number {
+    const info = getTokenInfo(
+        ctx,
+        ["<!--", node.value, "-->"],
+        node.position!.start.offset,
+    )
+
+    return info.index + info.match.length
+}
+
+/**
+ * Get end offset of tag
+ */
+function calcTagEndOffset(node: TagLikeNode, ctx: Context): number {
+    let beforeIndex: number
+    if (node.children.length) {
+        const lastChild = node.children[node.children.length - 1]
+        beforeIndex = getEndOffset(lastChild, ctx)
+    } else {
+        beforeIndex = calcStartTagEndOffset(node, ctx)
+    }
+    beforeIndex = skipSpaces(ctx.code, beforeIndex)
+
+    if (ctx.code.startsWith(`</${node.name}`, beforeIndex)) {
+        beforeIndex = beforeIndex + 2 + node.name.length
+        const info = getTokenInfo(ctx, [">"], beforeIndex)
+        return info.index + info.match.length
+    }
+    return beforeIndex
+}
+
+/**
+ * Get end offset of Expression
+ */
+function calcExpressionEndOffset(node: ExpressionNode, ctx: Context): number {
+    if (node.children.length) {
+        const lastChild = node.children[node.children.length - 1]
+        const beforeIndex = getEndOffset(lastChild, ctx)
+        const info = getTokenInfo(ctx, ["}"], beforeIndex)
+        return info.index + info.match.length
+    }
+    const info = getTokenInfo(ctx, ["{", "}"], node.position!.start.offset)
+    return info.index + info.match.length
 }
 
 /**

@@ -6,9 +6,11 @@ import { parseForESLint } from "../src/index"
 import { parseForESLint as parseOld } from "../node_modules/astro-eslint-parser"
 
 const contents = `${fs.readFileSync(
-    require.resolve("../explorer-v2/src/lib/RulesSettings.astro"),
+    require.resolve(
+        "../tests/fixtures/parser/ast/withastro/astro.build/src/components/landing/Sponsors-input.astro",
+    ),
     "utf-8",
-)}// comments`
+)}`
 
 type Result = { name: string; hz: number }
 const results: Result[] = []
