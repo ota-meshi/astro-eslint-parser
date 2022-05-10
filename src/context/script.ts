@@ -5,6 +5,20 @@ import type { TSESTree } from "@typescript-eslint/types"
 import { ParseError } from "../errors"
 import type { AstroProgram, AstroRootFragment } from "../ast"
 
+class RestoreNodeProcessContext {
+    public readonly result: ESLintExtendedProgram
+
+    public readonly removeTokens = new Set<(token: TSESTree.Token) => boolean>()
+
+    public constructor(result: ESLintExtendedProgram) {
+        this.result = result
+    }
+
+    public addRemoveToken(test: (token: TSESTree.Token) => boolean) {
+        this.removeTokens.add(test)
+    }
+}
+
 export class ScriptContext {
     private readonly ctx: Context
 
@@ -20,7 +34,7 @@ export class ScriptContext {
 
     private readonly restoreNodeProcesses: ((
         node: TSESTree.Node,
-        result: ESLintExtendedProgram,
+        context: RestoreNodeProcessContext,
         parent: TSESTree.Node,
     ) => boolean)[] = []
 
@@ -54,7 +68,7 @@ export class ScriptContext {
     public addRestoreNodeProcess(
         process: (
             node: TSESTree.Node,
-            result: ESLintExtendedProgram,
+            context: RestoreNodeProcessContext,
             parent: TSESTree.Node,
         ) => boolean,
     ): void {
@@ -64,6 +78,7 @@ export class ScriptContext {
     /**
      * Restore AST nodes
      */
+    // eslint-disable-next-line complexity -- X(
     public restore(result: ESLintExtendedProgram): void {
         const last = result.ast.body[result.ast.body.length - 1]
         if (last.type !== "ExpressionStatement") {
@@ -122,12 +137,29 @@ export class ScriptContext {
             this.remapLocation(token)
         }
 
+        const context = new RestoreNodeProcessContext(result)
         let restoreNodeProcesses = this.restoreNodeProcesses
         for (const [node, parent] of traversed) {
             if (!parent) continue
             restoreNodeProcesses = restoreNodeProcesses.filter(
-                (proc) => !proc(node, result, parent),
+                (proc) => !proc(node, context, parent),
             )
+        }
+
+        if (context.removeTokens.size) {
+            const tokens = result.ast.tokens || []
+            for (let index = tokens.length - 1; index >= 0; index--) {
+                const token = tokens[index]
+                for (const rt of context.removeTokens) {
+                    if (rt(token)) {
+                        tokens.splice(index, 1)
+                        context.removeTokens.delete(rt)
+                        if (!context.removeTokens.size) {
+                            break
+                        }
+                    }
+                }
+            }
         }
 
         // Adjust program node location
