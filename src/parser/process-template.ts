@@ -59,7 +59,7 @@ export function processTemplate(
                 fragmentOpened = true
                 script.skipOriginalOffset(3)
 
-                script.addRestoreNodeProcess((_scriptNode, result) => {
+                script.addRestoreNodeProcess((_scriptNode, { result }) => {
                     for (
                         let index = 0;
                         index < result.ast.body.length;
@@ -158,7 +158,7 @@ export function processTemplate(
                                 start + attr.name.length,
                             ])
                             script.addRestoreNodeProcess(
-                                (scriptNode, result) => {
+                                (scriptNode, context) => {
                                     if (
                                         scriptNode.type ===
                                             AST_NODE_TYPES.JSXAttribute &&
@@ -198,23 +198,13 @@ export function processTemplate(
                                         nsn.namespace.parent = nsn
                                         nsn.name.parent = nsn
 
-                                        const tokens = result.ast.tokens || []
-                                        for (
-                                            let index = 0;
-                                            index < tokens.length;
-                                            index++
-                                        ) {
-                                            const token = tokens[index]
-                                            if (
+                                        context.addRemoveToken(
+                                            (token) =>
                                                 token.range[0] ===
                                                     baseNameNode.range[0] &&
                                                 token.range[1] ===
-                                                    baseNameNode.range[1]
-                                            ) {
-                                                tokens.splice(index, 1)
-                                                break
-                                            }
-                                        }
+                                                    baseNameNode.range[1],
+                                        )
                                         return true
                                     }
                                     return false
@@ -323,7 +313,8 @@ export function processTemplate(
                 }
             } else if (node.type === "comment") {
                 const start = node.position!.start.offset
-                const length = 4 + node.value.length + 3
+                const end = getEndOffset(node, ctx)
+                const length = end - start
                 script.appendOriginal(start)
                 let targetType: AST_NODE_TYPES
                 if (fragmentOpened) {
@@ -337,7 +328,7 @@ export function processTemplate(
                     script.skipOriginalOffset(length)
                 }
 
-                script.addRestoreNodeProcess((scriptNode, result) => {
+                script.addRestoreNodeProcess((scriptNode, context) => {
                     if (
                         scriptNode.range[0] === start &&
                         scriptNode.type === targetType
@@ -351,32 +342,17 @@ export function processTemplate(
                         commentNode.type = "AstroHTMLComment"
                         commentNode.value = node.value
 
-                        if (fragmentOpened) {
-                            const removeTokenSet = new Set([
+                        if (targetType === AST_NODE_TYPES.JSXFragment) {
+                            context.addRemoveToken(
                                 (token: TSESTree.Token) =>
                                     token.value === "<" &&
                                     token.range[0] === scriptNode.range[0],
+                            )
+                            context.addRemoveToken(
                                 (token: TSESTree.Token) =>
                                     token.value === ">" &&
                                     token.range[1] === scriptNode.range[1],
-                            ])
-                            const tokens = result.ast.tokens || []
-                            for (
-                                let index = tokens.length - 1;
-                                index >= 0;
-                                index--
-                            ) {
-                                const token = tokens[index]
-                                for (const rt of removeTokenSet) {
-                                    if (rt(token)) {
-                                        tokens.splice(index, 1)
-                                        removeTokenSet.delete(rt)
-                                        if (!removeTokenSet.size) {
-                                            break
-                                        }
-                                    }
-                                }
-                            }
+                            )
                         }
                         return true
                     }
@@ -389,18 +365,21 @@ export function processTemplate(
             } else if (node.type === "doctype") {
                 const start = node.position!.start.offset
                 const end = getEndOffset(node, ctx)
+                const length = end - start
                 script.appendOriginal(start)
                 let targetType: AST_NODE_TYPES
                 if (fragmentOpened) {
-                    script.appendScript(`<></>`)
+                    script.appendOriginal(start + 1)
+                    script.appendScript(`></`)
+                    script.skipOriginalOffset(length - 2)
                     targetType = AST_NODE_TYPES.JSXFragment
                 } else {
                     script.appendScript(`0;`)
                     targetType = AST_NODE_TYPES.ExpressionStatement
+                    script.skipOriginalOffset(length)
                 }
-                script.skipOriginalOffset(end - start)
 
-                script.addRestoreNodeProcess((scriptNode) => {
+                script.addRestoreNodeProcess((scriptNode, context) => {
                     if (
                         scriptNode.range[0] === start &&
                         scriptNode.type === targetType
@@ -412,6 +391,19 @@ export function processTemplate(
                         const doctypeNode =
                             scriptNode as unknown as AstroDoctype
                         doctypeNode.type = "AstroDoctype"
+
+                        if (targetType === AST_NODE_TYPES.JSXFragment) {
+                            context.addRemoveToken(
+                                (token: TSESTree.Token) =>
+                                    token.value === "<" &&
+                                    token.range[0] === scriptNode.range[0],
+                            )
+                            context.addRemoveToken(
+                                (token: TSESTree.Token) =>
+                                    token.value === ">" &&
+                                    token.range[1] === scriptNode.range[1],
+                            )
+                        }
                         return true
                     }
                     return false
