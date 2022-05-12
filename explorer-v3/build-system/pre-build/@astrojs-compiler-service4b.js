@@ -13,7 +13,7 @@ export function parse(code, options) {
     service = globalThis["@astrojs/compiler"];
   }
   const { ast } = service.parse(code, options);
-  return { ast };
+  return { ast: JSON.parse(ast) };
 }
 
 /** setup */

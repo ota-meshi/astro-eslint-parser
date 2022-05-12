@@ -22,7 +22,7 @@ import { ParseError } from "../../errors"
  * Parse code by `@astrojs/compiler`
  */
 export function parse(code: string, ctx: Context): ParseResult {
-    const ast = parseByService(code, ctx).ast
+    const ast = service.parse(code, { position: true }).ast
     if (!ast.children) {
         // If the source code is empty, the children property may not be available.
         ast.children = []
@@ -36,35 +36,6 @@ export function parse(code: string, ctx: Context): ParseResult {
     }
     fixLocations(ast, ctx)
     return { ast }
-}
-
-/**
- * Parse code by `@astrojs/compiler`
- */
-function parseByService(code: string, ctx: Context): ParseResult {
-    const jsonAst = service.parse(code, { position: true }).ast
-
-    ctx.originalAST = jsonAst
-    try {
-        const ast = JSON.parse(jsonAst)
-        ctx.originalAST = ast
-        return { ast }
-    } catch {
-        // FIXME: Workaround for escape bugs
-        // Adjust because may get the wrong escape as JSON.
-        const ast = JSON.parse(
-            jsonAst.replace(/\\./gu, (m) => {
-                try {
-                    JSON.parse(`"${m}"`)
-                    return m
-                } catch {
-                    return `\\${m}`
-                }
-            }),
-        )
-        ctx.originalAST = ast
-        return { ast }
-    }
 }
 
 /**
