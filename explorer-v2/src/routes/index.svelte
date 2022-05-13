@@ -8,7 +8,7 @@
 
 <svelte:head>
 	<title>astro-eslint-parser</title>
-	<meta name="description" content="Astro parser for ESLint" />
+	<meta name="description" content="Astro component parser for ESLint" />
 </svelte:head>
 
 <AstExplorer />

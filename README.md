@@ -1,6 +1,6 @@
 # astro-eslint-parser
 
-[Astro] parser for [ESLint].  
+[Astro] component parser for [ESLint].  
 You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/playground).
 
 [![NPM license](https://img.shields.io/npm/l/astro-eslint-parser.svg)](https://www.npmjs.com/package/astro-eslint-parser)
