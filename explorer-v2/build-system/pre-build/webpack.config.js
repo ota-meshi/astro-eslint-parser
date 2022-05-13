@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import WrapperPlugin from 'wrapper-webpack-plugin';
+import webpack from 'webpack';
 
 const output = {
 	path: resolve('../shim'),
@@ -107,6 +108,9 @@ export default [
 				header: `
 				import $$inject_pako$$ from 'pako';
 				`
+			}),
+			new webpack.optimize.LimitChunkCountPlugin({
+				maxChunks: 1
 			})
 		]
 	}
