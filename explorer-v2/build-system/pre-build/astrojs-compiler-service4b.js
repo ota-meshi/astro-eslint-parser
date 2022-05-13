@@ -1,7 +1,3 @@
-import Go from './wasm_exec';
-// eslint-disable-next-line node/no-extraneous-import -- ignore
-import wasmBuffer from '@astrojs/compiler/astro.wasm';
-
 let service;
 
 if (typeof atob !== 'undefined' && typeof window !== 'undefined') {
@@ -16,17 +12,43 @@ export function parse(code, options) {
 		// eslint-disable-next-line node/no-unsupported-features/es-builtins -- ignore
 		service = globalThis['@astrojs/compiler'];
 	}
-	return service.parse(code, options);
+	const { ast } = service.parse(code, options);
+	return { ast };
 }
 
 /** setup */
 async function setup() {
-	const go = new Go();
-	const mod = await WebAssembly.compile(dataURItoUint8Array(wasmBuffer));
-	const instance = await WebAssembly.instantiate(mod, go.importObject);
-	go.run(instance);
+	let bkProcess;
+	if (typeof globalThis.process !== 'undefined') {
+		bkProcess = globalThis.process;
+	}
 
-	return watch();
+	const [{ default: Go }, { default: wasmBuffer }] = await Promise.all([
+		import('../../../node_modules/@astrojs/compiler/browser/wasm_exec.js'),
+		// eslint-disable-next-line node/no-extraneous-import -- ignore
+		import('@astrojs/compiler/astro.wasm')
+	]);
+
+	// Adjust process object
+	if (bkProcess) {
+		// eslint-disable-next-line require-atomic-updates -- ignore
+		globalThis.process = bkProcess;
+	} else {
+		process.cwd = () => '';
+		process.hrtime = () => Date.now();
+	}
+	const go = new Go();
+	try {
+		const mod = await WebAssembly.compile(wasmBuffer);
+		const instance = await WebAssembly.instantiate(mod, go.importObject);
+		go.run(instance);
+
+		return watch();
+	} catch (e) {
+		// eslint-disable-next-line no-console -- log
+		console.log(e);
+		throw e;
+	}
 
 	function watch() {
 		return new Promise((resolve) => {
@@ -40,23 +62,4 @@ async function setup() {
 			}
 		});
 	}
-}
-
-function dataURItoUint8Array(dataURI) {
-	// convert base64 to raw binary data held in a string
-	// doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-	const byteString = atob(dataURI.split(',')[1]);
-
-	// write the bytes of the string to an ArrayBuffer
-	const ab = new ArrayBuffer(byteString.length);
-
-	// create a view into the buffer
-	const ia = new Uint8Array(ab);
-
-	// set the bytes of the buffer to the correct values
-	for (let i = 0; i < byteString.length; i++) {
-		ia[i] = byteString.charCodeAt(i);
-	}
-
-	return ia;
 }

@@ -1,10 +1,9 @@
 import { resolve } from 'path';
 import WrapperPlugin from 'wrapper-webpack-plugin';
-import webpack from 'webpack';
 
 const output = {
 	path: resolve('../shim'),
-	filename: '[name]/index.js',
+	filename: 'index.js',
 	library: {
 		type: 'module'
 	}
@@ -17,29 +16,38 @@ const alias = {
 	module: resolve('../shim/module.js'),
 	url: resolve('../shim/url.js'),
 	util: resolve('../shim/util.js'),
-	typescript: resolve('../shim/typescript.js')
+	typescript: resolve('../shim/typescript.js'),
+	[resolve('../../../lib/parser/astro-parser/astrojs-compiler-service.js')]: resolve(
+		'./astrojs-compiler-service4b.js'
+	)
 };
-/** @type {import('webpack').Configuration} */
-const base = {
-	output,
-	resolve: {
-		alias,
-		fallback: { crypto: false }
-	},
-	target: ['web'],
-	optimization: {
-		minimize: false
-	},
-	mode: 'production',
-	experiments: {
-		outputModule: true
-	},
-	externalsType: 'var'
-};
+
+function getBase(name) {
+	/** @type {import('webpack').Configuration} */
+	const base = {
+		output: { ...output, path: resolve(`../shim/${name}`) },
+		resolve: {
+			alias,
+			fallback: { crypto: false },
+			modules: [resolve('../../node_modules'), resolve('../../../node_modules')]
+		},
+		target: ['web'],
+		optimization: {
+			minimize: false
+		},
+		mode: 'production',
+		experiments: {
+			outputModule: true
+		},
+		externalsType: 'var'
+	};
+	return base;
+}
+
 /** @type {import('webpack').Configuration[]} */
 export default [
 	{
-		...base,
+		...getBase('eslint'),
 		entry: {
 			eslint: resolve('./eslint.js')
 		},
@@ -49,7 +57,7 @@ export default [
 		},
 		plugins: [
 			new WrapperPlugin({
-				test: /eslint\/index\.js/,
+				test: /^index\.js/,
 				header: `
 				if (typeof window !== "undefined") {
 					if (typeof window.global === "undefined") {
@@ -69,7 +77,7 @@ export default [
 		]
 	},
 	{
-		...base,
+		...getBase('astro-eslint-parser'),
 		entry: {
 			'astro-eslint-parser': resolve('./astro-eslint-parser.js')
 		},
@@ -77,28 +85,27 @@ export default [
 			rules: [
 				{
 					test: /\.wasm/,
-					type: 'asset/inline'
+					// type: 'asset/inline'
+					loader: resolve('./binary-loader.cjs')
 				}
 			]
 		},
 		externals: {
-			espree: '$$inject_espree$$'
+			espree: '$$inject_espree$$',
+			pako: '$$inject_pako$$'
 		},
 		plugins: [
-			new webpack.NormalModuleReplacementPlugin(
-				/astrojs-compiler-service\.js/,
-				resolve('./astrojs-compiler-service4b.js')
-			),
-			new webpack.NormalModuleReplacementPlugin(/wasm_exec\.js/, resolve('./wasm_exec4b.js')),
 			new WrapperPlugin({
-				test: /astro-eslint-parser\/index\.js/,
+				test: /^index\.js/,
 				header: `
 				import * as $$inject_espree$$ from 'espree';
-				if (!globalThis.process) {
-					globalThis.process = {
-						env:{}
-					}
-				}
+				const self = globalThis;
+				`
+			}),
+			new WrapperPlugin({
+				test: /index\.js/,
+				header: `
+				import $$inject_pako$$ from 'pako';
 				`
 			})
 		]
