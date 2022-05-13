@@ -18,7 +18,7 @@
 	>
 	<a
 		class="menu"
-		class:active={isActive($page.url.pathname, `/playground`)}
+		class:active={isActive($page.url.pathname, `/playground/`)}
 		sveltekit:prefetch
 		href="{baseUrl}/playground">Playgroud</a
 	>
