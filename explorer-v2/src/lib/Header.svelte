@@ -22,6 +22,12 @@
 		sveltekit:prefetch
 		href="{baseUrl}/playground">Playgroud</a
 	>
+	<a
+		class="menu"
+		class:active={isActive($page.url.pathname, `/astrojs-compiler/`)}
+		sveltekit:prefetch
+		href="{baseUrl}/astrojs-compiler/">@astrojs/compiler</a
+	>
 	<div class="debug">
 		$page.url.pathname: {$page.url.pathname}
 		baseUrl: {baseUrl}

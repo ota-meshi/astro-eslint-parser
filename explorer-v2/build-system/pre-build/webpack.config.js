@@ -19,7 +19,7 @@ const alias = {
 	util: resolve('../shim/util.js'),
 	typescript: resolve('../shim/typescript.js'),
 	[resolve('../../../lib/parser/astro-parser/astrojs-compiler-service.js')]: resolve(
-		'./astrojs-compiler-service4b.js'
+		'./astrojs-compiler-service4b-inject.js'
 	)
 };
 
@@ -82,6 +82,30 @@ export default [
 		entry: {
 			'astro-eslint-parser': resolve('./astro-eslint-parser.js')
 		},
+		externals: {
+			espree: '$$inject_espree$$',
+			pako: '$$inject_pako$$',
+			'@astrojs-compiler-service4b': '$$inject_astrojs_compiler_service4b$$'
+		},
+		plugins: [
+			new WrapperPlugin({
+				test: /^index\.js/,
+				header: `
+				import * as $$inject_espree$$ from 'espree';
+				import * as $$inject_astrojs_compiler_service4b$$ from '@astrojs-compiler-service4b';
+				const self = globalThis;
+				`
+			}),
+			new webpack.optimize.LimitChunkCountPlugin({
+				maxChunks: 1
+			})
+		]
+	},
+	{
+		...getBase('@astrojs-compiler-service4b'),
+		entry: {
+			'@astrojs-compiler-service4b': resolve('./@astrojs-compiler-service4b.js')
+		},
 		module: {
 			rules: [
 				{
@@ -92,21 +116,14 @@ export default [
 			]
 		},
 		externals: {
-			espree: '$$inject_espree$$',
 			pako: '$$inject_pako$$'
 		},
 		plugins: [
 			new WrapperPlugin({
 				test: /^index\.js/,
 				header: `
-				import * as $$inject_espree$$ from 'espree';
-				const self = globalThis;
-				`
-			}),
-			new WrapperPlugin({
-				test: /index\.js/,
-				header: `
 				import $$inject_pako$$ from 'pako';
+				const self = globalThis;
 				`
 			}),
 			new webpack.optimize.LimitChunkCountPlugin({

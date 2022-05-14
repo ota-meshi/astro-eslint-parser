@@ -27,7 +27,10 @@ const config = {
 					module: resolve('./build-system/shim/module.js'),
 					'eslint/package.json': resolve('./build-system/shim/eslint/package.json'),
 					eslint: resolve('./build-system/shim/eslint/index.js'),
-					'astro-eslint-parser': resolve('./build-system/shim/astro-eslint-parser/index.js')
+					'astro-eslint-parser': resolve('./build-system/shim/astro-eslint-parser/index.js'),
+					'@astrojs-compiler-service4b': resolve(
+						'./build-system/shim/@astrojs-compiler-service4b/index.js'
+					)
 				}
 			}
 		}

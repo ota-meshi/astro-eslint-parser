@@ -4,5 +4,6 @@ node_modules
 /build
 /functions
 /build-system/shim/astro-eslint-parser/*.*
+/build-system/shim/@astrojs-compiler-service4b/*.*
 /build-system/shim/eslint-scope/*.*
 /build-system/shim/eslint/*.*
