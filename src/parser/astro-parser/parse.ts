@@ -166,12 +166,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                         // FIXME: Some white space may be removed.
                         node.position!.start.offset = start
                         const value = node.value.replace(/\s+/gu, "")
-                        for (
-                            let charIndex = 0;
-                            charIndex < value.length;
-                            charIndex++
-                        ) {
-                            const char = value[charIndex]
+                        for (const char of value) {
                             const index = tokenIndex(ctx, char, start)
                             start = index + 1
                         }
