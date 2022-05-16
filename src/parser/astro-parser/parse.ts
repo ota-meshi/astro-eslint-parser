@@ -157,18 +157,13 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                     if (start < 0) {
                         start = ctx.code.length
                     }
-                    // FIXME: Workaround for escape bugs
-                    node.value = ctx.code.slice(
-                        node.position!.start.offset,
-                        start,
-                    )
                 } else {
                     const index = tokenIndexSafe(ctx.code, node.value, start)
                     if (index != null) {
                         start = node.position!.start.offset = index
                         start += node.value.length
                     } else {
-                        // FIXME: Workaround for escape bugs
+                        // FIXME: Some white space may be removed.
                         node.position!.start.offset = start
                         const value = node.value.replace(/\s+/gu, "")
                         for (
@@ -177,22 +172,8 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                             charIndex++
                         ) {
                             const char = value[charIndex]
-                            const index = tokenIndexSafe(ctx.code, char, start)
-                            if (index != null) {
-                                start = index + 1
-                                continue
-                            }
-                            start = skipSpaces(ctx.code, start)
-                            if (ctx.code.startsWith("\\", start)) {
-                                const codeChar = JSON.parse(
-                                    `"\\${ctx.code[start + 1]}"`,
-                                )
-                                start += 2
-                                if (codeChar === char) {
-                                    continue
-                                }
-                            }
-                            start = tokenIndex(ctx, char, start) + 1
+                            const index = tokenIndex(ctx, char, start)
+                            start = index + 1
                         }
                         start = skipSpaces(ctx.code, start)
 
