@@ -82,6 +82,19 @@ export default [
 		entry: {
 			'astro-eslint-parser': resolve('./astro-eslint-parser.js')
 		},
+		module: {
+			rules: [
+				{
+					test: /parser\/resolve-parser\.js$/u,
+					loader: 'string-replace-loader',
+					options: {
+						search: /require\(name\)/gu.source,
+						replace: () => '__non_webpack_require__(name)',
+						flags: 'g'
+					}
+				}
+			]
+		},
 		externals: {
 			espree: '$$inject_espree$$',
 			pako: '$$inject_pako$$',

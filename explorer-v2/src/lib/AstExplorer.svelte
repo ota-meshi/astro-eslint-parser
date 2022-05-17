@@ -24,9 +24,16 @@ let b = 2;
 	let waiting = true;
 
 	if (typeof window !== 'undefined')
-		window.waitSetupForAstroCompilerWasm.then(() => {
-			waiting = false;
-		});
+		window.waitSetupForAstroCompilerWasm
+			.then(async () => {
+				const parser = await import('@typescript-eslint/parser');
+				if (typeof window !== 'undefined') {
+					window.require.define('@typescript-eslint/parser', parser);
+				}
+			})
+			.then(() => {
+				waiting = false;
+			});
 
 	$: {
 		waiting;
@@ -37,11 +44,22 @@ let b = 2;
 		if (waiting) {
 			return;
 		}
+		if (typeof globalThis.process === 'undefined') {
+			globalThis.process = {};
+		}
+		if (!process.env) {
+			process.env = {};
+		}
+		// process.cwd = () => '';
+		// process.hrtime = () => Date.now();
 		let ast;
 		const start = Date.now();
 		try {
-			ast = astroEslintParser.parseForESLint(astroValue).ast;
+			ast = astroEslintParser.parseForESLint(astroValue, {
+				parser: '@typescript-eslint/parser'
+			}).ast;
 		} catch (e) {
+			console.error(e);
 			ast = {
 				message: e.message,
 				...e

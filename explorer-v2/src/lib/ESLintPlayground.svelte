@@ -10,7 +10,11 @@
 
 	let linter = null;
 
-	function setupLinter() {
+	async function setupLinter() {
+		const parser = await import('@typescript-eslint/parser');
+		if (typeof window !== 'undefined') {
+			window.require.define('@typescript-eslint/parser', parser);
+		}
 		const linter = new Linter();
 		linter.defineParser('astro-eslint-parser', astroEslintParser);
 		for (const [id, rule] of Object.entries(pluginReact.rules)) {
@@ -22,7 +26,7 @@
 	if (typeof window !== 'undefined') {
 		linter = window.waitSetupForAstroCompilerWasm.then(() => setupLinter());
 	} else {
-		setupLinter();
+		linter = setupLinter();
 	}
 
 	const DEFAULT_CODE = `---
@@ -114,7 +118,8 @@ let b = 2;
 					parser: 'astro-eslint-parser',
 					parserOptions: {
 						ecmaVersion: 2020,
-						sourceType: 'module'
+						sourceType: 'module',
+						parser: '@typescript-eslint/parser'
 					},
 					rules,
 					env: {
