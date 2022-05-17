@@ -3,48 +3,61 @@ import type { TSESTree } from "@typescript-eslint/types"
 export type AstroNode =
     | AstroProgram
     | AstroRootFragment
+    | AstroFragment
     | AstroHTMLComment
     | AstroDoctype
     | AstroShorthandAttribute
     | AstroTemplateLiteralAttribute
     | AstroRawText
-    | AstroFragment
+
+export type AstroChild =
+    | TSESTree.JSXFragment["children"][number]
+    | AstroHTMLComment
 
 /** Node of Astro program root */
 export interface AstroProgram extends Omit<TSESTree.Program, "type" | "body"> {
     type: "Program"
-    body: (
-        | TSESTree.Program["body"][number]
-        | AstroRootFragment
-        | AstroHTMLComment
-    )[]
+    body: (TSESTree.Program["body"][number] | AstroRootFragment)[]
     sourceType: "script" | "module"
     comments: TSESTree.Comment[]
     tokens: TSESTree.Token[]
     parent: undefined
 }
 
-/** Node of Astro fragment root */
+/* --- Tags --- */
+/** Node of Astro fragment for root (as statements) */
 export interface AstroRootFragment
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroRootFragment"
-    children: TSESTree.JSXFragment["children"]
+    children: (AstroChild | AstroDoctype)[]
     parent: AstroProgram
+}
+/** Node of Astro fragment expression (as expressions) */
+export interface AstroFragment
+    extends Omit<TSESTree.BaseNode, "type" | "parent"> {
+    type: "AstroFragment"
+    children: AstroChild[]
+    parent: TSESTree.JSXFragment["parent"]
 }
 /** Node of Astro html comment */
 export interface AstroHTMLComment
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroHTMLComment"
     value: string
-    parent: AstroRootFragment | TSESTree.JSXElement | TSESTree.JSXFragment
+    parent:
+        | AstroRootFragment
+        | AstroFragment
+        | TSESTree.JSXElement
+        | TSESTree.JSXFragment
 }
-
 /** Node of Astro doctype */
 export interface AstroDoctype
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroDoctype"
-    parent: AstroRootFragment
+    parent: AstroRootFragment | AstroFragment
 }
+
+/* --- Attributes --- */
 /** Node of Astro shorthand attribute */
 export interface AstroShorthandAttribute
     extends Omit<TSESTree.JSXAttribute, "type" | "parent"> {
@@ -61,16 +74,11 @@ export interface AstroTemplateLiteralAttribute
     }
     parent: TSESTree.JSXElement | TSESTree.JSXFragment
 }
+
+/* --- Texts --- */
 /** Node of Astro raw text */
 export interface AstroRawText
     extends Omit<TSESTree.JSXText, "type" | "parent"> {
     type: "AstroRawText"
     parent: AstroRootFragment | TSESTree.JSXElement | TSESTree.JSXFragment
-}
-/** Node of Astro fragment expression */
-export interface AstroFragment
-    extends Omit<TSESTree.BaseNode, "type" | "parent"> {
-    type: "AstroFragment"
-    children: TSESTree.JSXFragment["children"]
-    parent: TSESTree.JSXFragment["parent"]
 }

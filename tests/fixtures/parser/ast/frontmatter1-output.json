@@ -588,12 +588,12 @@
     }
   ],
   "range": [
-    4,
+    0,
     38
   ],
   "loc": {
     "start": {
-      "line": 2,
+      "line": 1,
       "column": 0
     },
     "end": {
