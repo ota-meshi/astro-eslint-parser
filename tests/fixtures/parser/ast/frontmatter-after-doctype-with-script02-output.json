@@ -2,7 +2,7 @@
   "type": "Program",
   "body": [
     {
-      "type": "AstroRootFragment",
+      "type": "AstroFragment",
       "children": [
         {
           "type": "AstroHTMLComment",
@@ -167,7 +167,7 @@
       }
     },
     {
-      "type": "AstroRootFragment",
+      "type": "AstroFragment",
       "children": [
         {
           "type": "JSXElement",

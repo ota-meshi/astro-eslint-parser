@@ -244,7 +244,7 @@
       }
     },
     {
-      "type": "AstroRootFragment",
+      "type": "AstroFragment",
       "children": [
         {
           "type": "JSXElement",

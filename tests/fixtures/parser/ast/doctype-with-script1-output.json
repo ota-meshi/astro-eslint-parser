@@ -76,7 +76,7 @@
       }
     },
     {
-      "type": "AstroRootFragment",
+      "type": "AstroFragment",
       "children": [
         {
           "type": "AstroDoctype",

@@ -242,13 +242,12 @@ type AstroKeysType<T extends TargetNode = TargetNode> = {
 type KeyofObject<T> = { [key in keyof T]: key }[keyof T]
 const nodeToKeys: AstroKeysType = {
     Program: ["body", "sourceType", "comments", "tokens"],
-    AstroRootFragment: ["children"],
+    AstroFragment: ["children"],
     AstroHTMLComment: ["value"],
     AstroDoctype: [],
     AstroShorthandAttribute: ["name", "value"],
     AstroTemplateLiteralAttribute: ["name", "value"],
     AstroRawText: ["value", "raw"],
-    AstroFragment: ["children"],
 
     JSXNamespacedName: ["namespace", "name"],
 }
