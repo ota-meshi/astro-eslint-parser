@@ -19,8 +19,6 @@ This parser is in the ***experimental stages*** of development.
 
 At least it works fine with a [fork of the `astro.build` repository](https://github.com/ota-meshi/astro.build/tree/eslint).
 
-⚠ Currently this parser relies heavily on the internal API of [@astrojs/compiler]. It may stop working in a future update of [@astrojs/compiler]. ⚠
-
 [@astrojs/compiler]: https://github.com/withastro/compiler
 
 <!--
@@ -28,7 +26,7 @@ At least it works fine with a [fork of the `astro.build` repository](https://git
 
 #### [@ota-meshi/eslint-plugin-astro](https://ota-meshi.github.io/eslint-plugin-astro/)
 
-ESLint plugin for Astro.  
+ESLint plugin for Astro component.  
 It provides many unique check rules by using the template AST.
 -->
 
