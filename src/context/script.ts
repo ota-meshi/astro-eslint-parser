@@ -45,6 +45,9 @@ export class ScriptContext {
     }
 
     public appendOriginal(index: number): void {
+        if (this.consumedIndex >= index) {
+            return
+        }
         this.offsets.push({
             original: this.consumedIndex,
             script: this.script.length,
@@ -185,6 +188,9 @@ export class ScriptContext {
     }
 
     private getRemapRange(start: number, end: number): TSESTree.Range {
+        if (!this.offsets.length) {
+            return [start, end]
+        }
         let lastStart = this.offsets[0]
         let lastEnd = this.offsets[0]
         for (const offset of this.offsets) {

@@ -132,10 +132,11 @@ function checkLoc(ast: AstroProgram, fileName: string, _code: string) {
     }
     traverseNodes(ast, {
         enterNode(node, parent) {
-            assert.ok(
-                node.range[0] < node.range[1],
-                `No range on "${node.type} line:${node.loc.start.line} col:${node.loc.start.column}" in ${fileName}`,
-            )
+            if (node.type !== "Program" || node.body.length)
+                assert.ok(
+                    node.range[0] < node.range[1],
+                    `No range on "${node.type} line:${node.loc.start.line} col:${node.loc.start.column}" in ${fileName}`,
+                )
 
             if (parent) {
                 assert.ok(

@@ -23,6 +23,10 @@ import { ParseError } from "../../errors"
  */
 export function parse(code: string, ctx: Context): ParseResult {
     const ast = parseByService(code, ctx).ast
+    if (!ast.children) {
+        // If the source code is empty, the children property may not be available.
+        ast.children = []
+    }
 
     const htmlElement = ast.children.find(
         (n): n is ElementNode => n.type === "element" && n.name === "html",

@@ -533,25 +533,6 @@
       "type": "AstroRootFragment",
       "children": [
         {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            172,
-            173
-          ],
-          "loc": {
-            "start": {
-              "line": 9,
-              "column": 3
-            },
-            "end": {
-              "line": 10,
-              "column": 0
-            }
-          }
-        },
-        {
           "type": "JSXElement",
           "children": [
             {
@@ -771,13 +752,13 @@
         }
       ],
       "range": [
-        172,
+        173,
         202
       ],
       "loc": {
         "start": {
-          "line": 9,
-          "column": 3
+          "line": 10,
+          "column": 0
         },
         "end": {
           "line": 11,
@@ -1363,24 +1344,6 @@
         "end": {
           "line": 9,
           "column": 3
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        172,
-        173
-      ],
-      "loc": {
-        "start": {
-          "line": 9,
-          "column": 3
-        },
-        "end": {
-          "line": 10,
-          "column": 0
         }
       }
     },

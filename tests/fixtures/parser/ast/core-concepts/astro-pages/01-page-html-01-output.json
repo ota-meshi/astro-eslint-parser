@@ -5,25 +5,6 @@
       "type": "AstroRootFragment",
       "children": [
         {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            41,
-            42
-          ],
-          "loc": {
-            "start": {
-              "line": 3,
-              "column": 3
-            },
-            "end": {
-              "line": 4,
-              "column": 0
-            }
-          }
-        },
-        {
           "type": "JSXElement",
           "children": [
             {
@@ -648,39 +629,20 @@
               "column": 7
             }
           }
-        },
-        {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            161,
-            162
-          ],
-          "loc": {
-            "start": {
-              "line": 11,
-              "column": 7
-            },
-            "end": {
-              "line": 12,
-              "column": 0
-            }
-          }
         }
       ],
       "range": [
-        41,
-        162
+        42,
+        161
       ],
       "loc": {
         "start": {
-          "line": 3,
-          "column": 3
+          "line": 4,
+          "column": 0
         },
         "end": {
-          "line": 12,
-          "column": 0
+          "line": 11,
+          "column": 7
         }
       }
     }
@@ -740,24 +702,6 @@
         "end": {
           "line": 3,
           "column": 3
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        41,
-        42
-      ],
-      "loc": {
-        "start": {
-          "line": 3,
-          "column": 3
-        },
-        "end": {
-          "line": 4,
-          "column": 0
         }
       }
     },
@@ -1550,24 +1494,6 @@
         "end": {
           "line": 11,
           "column": 7
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        161,
-        162
-      ],
-      "loc": {
-        "start": {
-          "line": 11,
-          "column": 7
-        },
-        "end": {
-          "line": 12,
-          "column": 0
         }
       }
     }
