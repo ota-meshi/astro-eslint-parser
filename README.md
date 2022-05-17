@@ -168,9 +168,9 @@ Welcome contributing!
 
 Please use GitHub's Issues/PRs.
 
-## :heart: Support This Project
+## :heart: Supporting
 
-If you are willing to see that this project continues to be maintained, please consider sponsoring me.
+If you are willing to see that this package continues to be maintained, please consider sponsoring me.
 
 [![sponsors](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/ota-meshi)
 
