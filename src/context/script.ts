@@ -2,8 +2,6 @@ import type { Context } from "."
 import type { ESLintExtendedProgram } from "../parser"
 import { traverseNodes } from "../traverse"
 import type { TSESTree } from "@typescript-eslint/types"
-import { ParseError } from "../errors"
-import type { AstroProgram, AstroRootFragment } from "../ast"
 
 class RestoreNodeProcessContext {
     public readonly result: ESLintExtendedProgram
@@ -78,34 +76,8 @@ export class ScriptContext {
     /**
      * Restore AST nodes
      */
-    // eslint-disable-next-line complexity -- X(
     public restore(result: ESLintExtendedProgram): void {
-        const last = result.ast.body[result.ast.body.length - 1]
-        if (last.type !== "ExpressionStatement") {
-            throw new ParseError(
-                "Unknown state error: Expected ExpressionStatement",
-                last.range[0],
-                this.ctx,
-            )
-        }
-        if (last.expression.type !== "JSXFragment") {
-            throw new ParseError(
-                "Unknown state error: Expected JSXFragment",
-                last.expression.range[0],
-                this.ctx,
-            )
-        }
-
-        // Process for Astro
-        const rootFragment = ((result.ast as AstroProgram).body[
-            result.ast.body.length - 1
-        ] = last.expression as unknown as AstroRootFragment)
-        delete (rootFragment as any).closingFragment
-        delete (rootFragment as any).openingFragment
-        rootFragment.type = "AstroRootFragment"
-
         // remap locations
-
         const traversed = new Map<TSESTree.Node, TSESTree.Node | null>()
         traverseNodes(result.ast, {
             visitorKeys: result.visitorKeys,
@@ -163,10 +135,18 @@ export class ScriptContext {
         }
 
         // Adjust program node location
-        const first = result.ast.body[0]
-        if (first.range[0] < result.ast.range[0]) {
-            result.ast.range[0] = first.range[0]
-            result.ast.loc.start = this.ctx.getLocFromIndex(result.ast.range[0])
+        const firstOffset = Math.min(
+            ...[
+                result.ast.body[0],
+                result.ast.tokens?.[0],
+                result.ast.comments?.[0],
+            ]
+                .filter(Boolean)
+                .map((t) => t!.range[0]),
+        )
+        if (firstOffset < result.ast.range[0]) {
+            result.ast.range[0] = firstOffset
+            result.ast.loc.start = this.ctx.getLocFromIndex(firstOffset)
         }
     }
 

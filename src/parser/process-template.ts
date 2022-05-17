@@ -17,7 +17,9 @@ import type {
     AstroDoctype,
     AstroFragment,
     AstroHTMLComment,
+    AstroProgram,
     AstroRawText,
+    AstroRootFragment,
     AstroShorthandAttribute,
     AstroTemplateLiteralAttribute,
 } from "../ast"
@@ -39,8 +41,31 @@ export function processTemplate(
     )
     let fragmentOpened = false
     if (!frontmatter) {
+        openRootFragment(0)
+    }
+
+    /** Open astro root fragment */
+    function openRootFragment(startOffset: number) {
         script.appendScript("<>")
         fragmentOpened = true
+        script.addRestoreNodeProcess((scriptNode, { result }) => {
+            if (
+                scriptNode.type === AST_NODE_TYPES.ExpressionStatement &&
+                scriptNode.expression.type === AST_NODE_TYPES.JSXFragment &&
+                scriptNode.range[0] === startOffset &&
+                result.ast.body.includes(scriptNode)
+            ) {
+                const index = result.ast.body.indexOf(scriptNode)
+                const rootFragment = ((result.ast as AstroProgram).body[index] =
+                    scriptNode.expression as unknown as AstroRootFragment)
+                delete (rootFragment as any).closingFragment
+                delete (rootFragment as any).openingFragment
+                rootFragment.type = "AstroRootFragment"
+
+                return true
+            }
+            return false
+        })
     }
 
     walkElements(
@@ -50,14 +75,17 @@ export function processTemplate(
         (node, [parent]) => {
             if (node.type === "frontmatter") {
                 const start = node.position!.start.offset
+                if (fragmentOpened) {
+                    script.appendScript("</>;")
+                }
                 script.appendOriginal(start)
                 script.skipOriginalOffset(3)
                 const end = getEndOffset(node, ctx)
                 script.appendOriginal(end - 3)
 
-                script.appendScript(";<>")
-                fragmentOpened = true
+                script.appendScript(";")
                 script.skipOriginalOffset(3)
+                openRootFragment(end)
 
                 script.addRestoreNodeProcess((_scriptNode, { result }) => {
                     for (
@@ -67,10 +95,7 @@ export function processTemplate(
                     ) {
                         const st = result.ast.body[index] as TSESTree.Node
                         if (st.type === AST_NODE_TYPES.EmptyStatement) {
-                            if (
-                                st.range[0] === end - 3 &&
-                                st.range[1] === end
-                            ) {
+                            if (st.range[0] === end - 3 && st.range[1] <= end) {
                                 result.ast.body.splice(index, 1)
                                 break
                             }
@@ -316,22 +341,18 @@ export function processTemplate(
                 const end = getEndOffset(node, ctx)
                 const length = end - start
                 script.appendOriginal(start)
-                let targetType: AST_NODE_TYPES
-                if (fragmentOpened) {
-                    script.appendOriginal(start + 1)
-                    script.appendScript(`></`)
-                    script.skipOriginalOffset(length - 2)
-                    targetType = AST_NODE_TYPES.JSXFragment
-                } else {
-                    script.appendScript(`0;`)
-                    targetType = AST_NODE_TYPES.ExpressionStatement
-                    script.skipOriginalOffset(length)
+                if (!fragmentOpened) {
+                    openRootFragment(start)
                 }
+                script.appendOriginal(start + 1)
+                script.appendScript(`></`)
+                script.skipOriginalOffset(length - 2)
+                script.appendOriginal(end)
 
                 script.addRestoreNodeProcess((scriptNode, context) => {
                     if (
                         scriptNode.range[0] === start &&
-                        scriptNode.type === targetType
+                        scriptNode.type === AST_NODE_TYPES.JSXFragment
                     ) {
                         delete (scriptNode as any).children
                         delete (scriptNode as any).openingFragment
@@ -342,18 +363,16 @@ export function processTemplate(
                         commentNode.type = "AstroHTMLComment"
                         commentNode.value = node.value
 
-                        if (targetType === AST_NODE_TYPES.JSXFragment) {
-                            context.addRemoveToken(
-                                (token: TSESTree.Token) =>
-                                    token.value === "<" &&
-                                    token.range[0] === scriptNode.range[0],
-                            )
-                            context.addRemoveToken(
-                                (token: TSESTree.Token) =>
-                                    token.value === ">" &&
-                                    token.range[1] === scriptNode.range[1],
-                            )
-                        }
+                        context.addRemoveToken(
+                            (token: TSESTree.Token) =>
+                                token.value === "<" &&
+                                token.range[0] === scriptNode.range[0],
+                        )
+                        context.addRemoveToken(
+                            (token: TSESTree.Token) =>
+                                token.value === ">" &&
+                                token.range[1] === scriptNode.range[1],
+                        )
                         return true
                     }
                     return false
@@ -367,22 +386,18 @@ export function processTemplate(
                 const end = getEndOffset(node, ctx)
                 const length = end - start
                 script.appendOriginal(start)
-                let targetType: AST_NODE_TYPES
-                if (fragmentOpened) {
-                    script.appendOriginal(start + 1)
-                    script.appendScript(`></`)
-                    script.skipOriginalOffset(length - 2)
-                    targetType = AST_NODE_TYPES.JSXFragment
-                } else {
-                    script.appendScript(`0;`)
-                    targetType = AST_NODE_TYPES.ExpressionStatement
-                    script.skipOriginalOffset(length)
+                if (!fragmentOpened) {
+                    openRootFragment(start)
                 }
+                script.appendOriginal(start + 1)
+                script.appendScript(`></`)
+                script.skipOriginalOffset(length - 2)
+                script.appendOriginal(end)
 
                 script.addRestoreNodeProcess((scriptNode, context) => {
                     if (
                         scriptNode.range[0] === start &&
-                        scriptNode.type === targetType
+                        scriptNode.type === AST_NODE_TYPES.JSXFragment
                     ) {
                         delete (scriptNode as any).children
                         delete (scriptNode as any).openingFragment
@@ -392,18 +407,16 @@ export function processTemplate(
                             scriptNode as unknown as AstroDoctype
                         doctypeNode.type = "AstroDoctype"
 
-                        if (targetType === AST_NODE_TYPES.JSXFragment) {
-                            context.addRemoveToken(
-                                (token: TSESTree.Token) =>
-                                    token.value === "<" &&
-                                    token.range[0] === scriptNode.range[0],
-                            )
-                            context.addRemoveToken(
-                                (token: TSESTree.Token) =>
-                                    token.value === ">" &&
-                                    token.range[1] === scriptNode.range[1],
-                            )
-                        }
+                        context.addRemoveToken(
+                            (token: TSESTree.Token) =>
+                                token.value === "<" &&
+                                token.range[0] === scriptNode.range[0],
+                        )
+                        context.addRemoveToken(
+                            (token: TSESTree.Token) =>
+                                token.value === ">" &&
+                                token.range[1] === scriptNode.range[1],
+                        )
                         return true
                     }
                     return false
