@@ -19,7 +19,6 @@ import type {
     AstroHTMLComment,
     AstroProgram,
     AstroRawText,
-    AstroRootFragment,
     AstroShorthandAttribute,
     AstroTemplateLiteralAttribute,
 } from "../ast"
@@ -51,10 +50,10 @@ export function processTemplate(
             ) {
                 const index = result.ast.body.indexOf(scriptNode)
                 const rootFragment = ((result.ast as AstroProgram).body[index] =
-                    scriptNode.expression as unknown as AstroRootFragment)
+                    scriptNode.expression as unknown as AstroFragment)
                 delete (rootFragment as any).closingFragment
                 delete (rootFragment as any).openingFragment
-                rootFragment.type = "AstroRootFragment"
+                rootFragment.type = "AstroFragment"
 
                 return true
             }

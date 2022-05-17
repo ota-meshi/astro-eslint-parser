@@ -2,7 +2,6 @@ import type { TSESTree } from "@typescript-eslint/types"
 
 export type AstroNode =
     | AstroProgram
-    | AstroRootFragment
     | AstroFragment
     | AstroHTMLComment
     | AstroDoctype
@@ -17,7 +16,7 @@ export type AstroChild =
 /** Node of Astro program root */
 export interface AstroProgram extends Omit<TSESTree.Program, "type" | "body"> {
     type: "Program"
-    body: (TSESTree.Program["body"][number] | AstroRootFragment)[]
+    body: (TSESTree.Program["body"][number] | AstroFragment)[]
     sourceType: "script" | "module"
     comments: TSESTree.Comment[]
     tokens: TSESTree.Token[]
@@ -25,14 +24,7 @@ export interface AstroProgram extends Omit<TSESTree.Program, "type" | "body"> {
 }
 
 /* --- Tags --- */
-/** Node of Astro fragment for root (as statements) */
-export interface AstroRootFragment
-    extends Omit<TSESTree.BaseNode, "type" | "parent"> {
-    type: "AstroRootFragment"
-    children: (AstroChild | AstroDoctype)[]
-    parent: AstroProgram
-}
-/** Node of Astro fragment expression (as expressions) */
+/** Node of Astro fragment */
 export interface AstroFragment
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroFragment"
@@ -45,7 +37,7 @@ export interface AstroHTMLComment
     type: "AstroHTMLComment"
     value: string
     parent:
-        | AstroRootFragment
+        | AstroFragment
         | AstroFragment
         | TSESTree.JSXElement
         | TSESTree.JSXFragment
@@ -54,7 +46,7 @@ export interface AstroHTMLComment
 export interface AstroDoctype
     extends Omit<TSESTree.BaseNode, "type" | "parent"> {
     type: "AstroDoctype"
-    parent: AstroRootFragment | AstroFragment
+    parent: AstroFragment | AstroFragment
 }
 
 /* --- Attributes --- */
@@ -80,5 +72,5 @@ export interface AstroTemplateLiteralAttribute
 export interface AstroRawText
     extends Omit<TSESTree.JSXText, "type" | "parent"> {
     type: "AstroRawText"
-    parent: AstroRootFragment | TSESTree.JSXElement | TSESTree.JSXFragment
+    parent: AstroFragment | TSESTree.JSXElement | TSESTree.JSXFragment
 }

@@ -11,13 +11,12 @@ type KeyofObject<T> = { [key in keyof T]: key }[keyof T]
 
 const astroKeys: AstroKeysType = {
     Program: ["body"],
-    AstroRootFragment: ["children"],
+    AstroFragment: ["children"],
     AstroHTMLComment: [],
     AstroDoctype: [],
     AstroShorthandAttribute: ["name", "value"],
     AstroTemplateLiteralAttribute: ["name", "value"],
     AstroRawText: [],
-    AstroFragment: ["children"],
 }
 
 export const KEYS: SourceCode.VisitorKeys = unionWith(
