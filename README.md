@@ -3,6 +3,8 @@
 [Astro] component parser for [ESLint].  
 You can check it on [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/playground).
 
+[![sponsors](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/ota-meshi)
+
 [![NPM license](https://img.shields.io/npm/l/astro-eslint-parser.svg)](https://www.npmjs.com/package/astro-eslint-parser)
 [![NPM version](https://img.shields.io/npm/v/astro-eslint-parser.svg)](https://www.npmjs.com/package/astro-eslint-parser)
 [![NPM downloads](https://img.shields.io/badge/dynamic/json.svg?label=downloads&colorB=green&suffix=/day&query=$.downloads&uri=https://api.npmjs.org//downloads/point/last-day/astro-eslint-parser&maxAge=3600)](http://www.npmtrends.com/astro-eslint-parser)
@@ -143,7 +145,7 @@ Example **.vscode/settings.json**:
 }
 ```
 
-## Compatibility With Existing ESLint Rules
+## :two_hearts: Compatibility With Existing ESLint Rules
 
 Most of the rules in the ESLint core work for the script part, but some rules are incompatible.  
 This parser will generate a JSX compatible AST for most of the HTML part of the Astro component. Therefore, some rules of [eslint-plugin-react] may work.
@@ -152,7 +154,7 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 [eslint-plugin-react]: https://github.com/jsx-eslint/eslint-plugin-react/
 [react/jsx-no-target-blank]: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
 
-## Usage for Custom Rules / Plugins
+## :hammer: Usage for Custom Rules / Plugins
 
 - TBA
 - You can check the AST in the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
@@ -165,6 +167,12 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 Welcome contributing!
 
 Please use GitHub's Issues/PRs.
+
+## :heart: Support This Project
+
+If you are willing to see that this project continues to be maintained, please consider sponsoring me.
+
+[![sponsors](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/ota-meshi)
 
 ## :lock: License
 
