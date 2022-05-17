@@ -322,25 +322,6 @@
       "type": "AstroRootFragment",
       "children": [
         {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            506,
-            507
-          ],
-          "loc": {
-            "start": {
-              "line": 16,
-              "column": 3
-            },
-            "end": {
-              "line": 17,
-              "column": 0
-            }
-          }
-        },
-        {
           "type": "JSXElement",
           "children": [
             {
@@ -3352,39 +3333,20 @@
               "column": 7
             }
           }
-        },
-        {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            1843,
-            1844
-          ],
-          "loc": {
-            "start": {
-              "line": 84,
-              "column": 7
-            },
-            "end": {
-              "line": 85,
-              "column": 0
-            }
-          }
         }
       ],
       "range": [
-        506,
-        1844
+        507,
+        1843
       ],
       "loc": {
         "start": {
-          "line": 16,
-          "column": 3
+          "line": 17,
+          "column": 0
         },
         "end": {
-          "line": 85,
-          "column": 0
+          "line": 84,
+          "column": 7
         }
       }
     }
@@ -3984,24 +3946,6 @@
         "end": {
           "line": 16,
           "column": 3
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        506,
-        507
-      ],
-      "loc": {
-        "start": {
-          "line": 16,
-          "column": 3
-        },
-        "end": {
-          "line": 17,
-          "column": 0
         }
       }
     },
@@ -7548,24 +7492,6 @@
         "end": {
           "line": 84,
           "column": 7
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        1843,
-        1844
-      ],
-      "loc": {
-        "start": {
-          "line": 84,
-          "column": 7
-        },
-        "end": {
-          "line": 85,
-          "column": 0
         }
       }
     }

@@ -36,13 +36,7 @@ export function processTemplate(
 
     const script = new ScriptContext(ctx)
 
-    const frontmatter = resultTemplate.ast.children.find(
-        (n) => n.type === "frontmatter",
-    )
     let fragmentOpened = false
-    if (!frontmatter) {
-        openRootFragment(0)
-    }
 
     /** Open astro root fragment */
     function openRootFragment(startOffset: number) {
@@ -77,6 +71,7 @@ export function processTemplate(
                 const start = node.position!.start.offset
                 if (fragmentOpened) {
                     script.appendScript("</>;")
+                    fragmentOpened = false
                 }
                 script.appendOriginal(start)
                 script.skipOriginalOffset(3)
@@ -85,7 +80,6 @@ export function processTemplate(
 
                 script.appendScript(";")
                 script.skipOriginalOffset(3)
-                openRootFragment(end)
 
                 script.addRestoreNodeProcess((_scriptNode, { result }) => {
                     for (
@@ -151,6 +145,12 @@ export function processTemplate(
                             })
                         }
                     }
+                }
+
+                const start = node.position!.start.offset
+                script.appendOriginal(start)
+                if (!fragmentOpened) {
+                    openRootFragment(start)
                 }
 
                 // Process for attributes
@@ -422,6 +422,12 @@ export function processTemplate(
                     return false
                 })
                 script.addToken("HTMLDocType" as AST_TOKEN_TYPES, [start, end])
+            } else {
+                const start = node.position!.start.offset
+                script.appendOriginal(start)
+                if (!fragmentOpened) {
+                    openRootFragment(start)
+                }
             }
         },
         (node, [parent]) => {
@@ -471,9 +477,15 @@ export function processTemplate(
             }
         },
     )
+    if (fragmentOpened) {
+        const last =
+            resultTemplate.ast.children[resultTemplate.ast.children.length - 1]
+        const end = getEndOffset(last, ctx)
+        script.appendOriginal(end)
+        script.appendScript("</>")
+    }
 
     script.appendOriginal(ctx.code.length)
-    script.appendScript("</>")
 
     return script
 
