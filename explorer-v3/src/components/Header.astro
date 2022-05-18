@@ -18,18 +18,18 @@ function isActive(path) {
         ><span>AST</span>
     </a>
     <a
-        class:list={["menu", { active: isActive(`/playground`) }]}
+        class:list={["menu", { active: isActive(`playground`) }]}
         href=`${baseUrl}playground/`
         ><span>Playgroud</span>
     </a>
     <a
-        class:list={["menu", { active: isActive(`/astrojs-compiler`) }]}
+        class:list={["menu", { active: isActive(`astrojs-compiler`) }]}
         href=`${baseUrl}astrojs-compiler/`
         ><span>@astrojs/compiler</span>
     </a>
     <div class="debug">
-        currentPage: {currentPage}
-        baseUrl: {baseUrl}
+        currentPage: {JSON.stringify(currentPage)}
+        baseUrl: {JSON.stringify(baseUrl)}
     </div>
     <SnsBar client:visible />
     <a
