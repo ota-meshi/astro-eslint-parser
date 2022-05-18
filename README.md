@@ -145,7 +145,7 @@ Example **.vscode/settings.json**:
 }
 ```
 
-## :two_hearts: Compatibility With Existing ESLint Rules
+## :handshake: Compatibility With Existing ESLint Rules
 
 Most of the rules in the ESLint core work for the script part, but some rules are incompatible.  
 This parser will generate a JSX compatible AST for most of the HTML part of the Astro component. Therefore, some rules of [eslint-plugin-react] may work.
@@ -154,7 +154,7 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 [eslint-plugin-react]: https://github.com/jsx-eslint/eslint-plugin-react/
 [react/jsx-no-target-blank]: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
 
-## :hammer: Usage for Custom Rules / Plugins
+## :hammer_and_wrench: Usage for Custom Rules / Plugins
 
 - TBA
 - You can check the AST in the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
