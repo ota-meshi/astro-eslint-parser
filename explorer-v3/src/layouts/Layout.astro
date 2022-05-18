@@ -21,6 +21,11 @@ const { title } = Astro.props as Props
         <main class="main">
             <slot></slot>
         </main>
+        <style is:global>
+            a {
+                color: #aa186f;
+            }
+        </style>
         <style>
             :root {
                 --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
