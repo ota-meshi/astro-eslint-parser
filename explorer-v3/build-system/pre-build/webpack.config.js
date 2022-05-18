@@ -57,6 +57,7 @@ export default [
     externals: {
       espree: "$$inject_espree$$",
       esquery: "$$inject_esquery$$",
+      "escape-string-regexp": "$$inject_escape_string_regexp$$",
     },
     plugins: [
       new WrapperPlugin({
@@ -75,9 +76,17 @@ export default [
 				}
 				import * as $$inject_espree$$ from 'espree';
 				import $$inject_esquery$$ from 'esquery';
+				import * as $$inject_escape_string_regexp$$_all from 'escape-string-regexp';
+        const $$inject_escape_string_regexp$$ = $$inject_escape_string_regexp$$_all.default;
 				`,
       }),
     ],
+  },
+  {
+    ...getBase("escape-string-regexp"),
+    entry: {
+      "escape-string-regexp": resolve("./escape-string-regexp.js"),
+    },
   },
   {
     ...getBase("astro-eslint-parser"),
