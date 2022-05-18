@@ -75,7 +75,6 @@
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react": "^7.29.4",
         "eslint-plugin-regexp": "^1.5.0",
-        "eslint-plugin-vue": "^8.0.3",
         "estree-walker": "^3.0.0",
         "locate-character": "^2.0.5",
         "magic-string": "^0.26.0",
@@ -87,7 +86,6 @@
         "semver": "^7.3.5",
         "string-replace-loader": "^3.0.3",
         "ts-node": "^10.4.0",
-        "typescript": "~4.6.0",
-        "vue-eslint-parser": "^9.0.0"
+        "typescript": "~4.6.0"
     }
 }
