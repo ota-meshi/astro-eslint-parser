@@ -3,10 +3,10 @@
 /lib
 /node_modules
 /tests/fixtures/**/*.json
-/explorer/dist
-/explorer/node_modules
-/explorer-v2/build
-/explorer-v2/build-system/shim/astro-eslint-parser/*.*
-/explorer-v2/build-system/shim/@astrojs-compiler-service4b/*.*
-/explorer-v2/build-system/shim/eslint-scope/*.*
-/explorer-v2/build-system/shim/eslint/*.*
+/tests/fixtures/**/*.astro
+/explorer-v3/dist
+/explorer-v3/build
+/explorer-v3/build-system/shim/astro-eslint-parser/*.*
+/explorer-v3/build-system/shim/@astrojs-compiler-service4b/*.*
+/explorer-v3/build-system/shim/eslint-scope/*.*
+/explorer-v3/build-system/shim/eslint/*.*
