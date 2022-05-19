@@ -14,17 +14,17 @@ function isActive(path) {
 
 <header class="header">
     <span class="title">astro-eslint-parser</span>
-    <a class:list={["menu", { active: isActive(``) }]} href=`${baseUrl}`
+    <a class:list={["menu", { active: isActive(``) }]} href={`${baseUrl}`}
         ><span>AST</span>
     </a>
     <a
         class:list={["menu", { active: isActive(`playground`) }]}
-        href=`${baseUrl}playground/`
+        href={`${baseUrl}playground/`}
         ><span>Playgroud</span>
     </a>
     <a
         class:list={["menu", { active: isActive(`astrojs-compiler`) }]}
-        href=`${baseUrl}astrojs-compiler/`
+        href={`${baseUrl}astrojs-compiler/`}
         ><span>@astrojs/compiler</span>
     </a>
     <div class="debug">
