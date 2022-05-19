@@ -21,6 +21,7 @@ import type {
     AstroRawText,
     AstroShorthandAttribute,
     AstroTemplateLiteralAttribute,
+    JSXElement,
 } from "../ast"
 
 /**
@@ -316,7 +317,7 @@ export function processTemplate(
                                     type: "AstroRawText",
                                     value: text.value,
                                     raw: text.value,
-                                    parent: scriptNode,
+                                    parent: scriptNode as JSXElement,
                                     ...ctx.getLocations(
                                         start,
                                         start + text.value.length,
