@@ -40,7 +40,7 @@ let b = 2;
     let ast;
     const start = Date.now();
     try {
-      ast = JSON.parse((await astro.parse(astroValue, { position: true })).ast);
+      ast = (await astro.parse(astroValue, { position: true })).ast;
     } catch (e) {
       ast = {
         message: e.message,

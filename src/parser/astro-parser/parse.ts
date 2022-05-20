@@ -22,7 +22,7 @@ import { ParseError } from "../../errors"
  * Parse code by `@astrojs/compiler`
  */
 export function parse(code: string, ctx: Context): ParseResult {
-    const ast = parseByService(code, ctx).ast
+    const ast = service.parse(code, { position: true }).ast
     if (!ast.children) {
         // If the source code is empty, the children property may not be available.
         ast.children = []
@@ -36,35 +36,6 @@ export function parse(code: string, ctx: Context): ParseResult {
     }
     fixLocations(ast, ctx)
     return { ast }
-}
-
-/**
- * Parse code by `@astrojs/compiler`
- */
-function parseByService(code: string, ctx: Context): ParseResult {
-    const jsonAst = service.parse(code, { position: true }).ast
-
-    ctx.originalAST = jsonAst
-    try {
-        const ast = JSON.parse(jsonAst)
-        ctx.originalAST = ast
-        return { ast }
-    } catch {
-        // FIXME: Workaround for escape bugs
-        // Adjust because may get the wrong escape as JSON.
-        const ast = JSON.parse(
-            jsonAst.replace(/\\./gu, (m) => {
-                try {
-                    JSON.parse(`"${m}"`)
-                    return m
-                } catch {
-                    return `\\${m}`
-                }
-            }),
-        )
-        ctx.originalAST = ast
-        return { ast }
-    }
 }
 
 /**
@@ -186,42 +157,18 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                     if (start < 0) {
                         start = ctx.code.length
                     }
-                    // FIXME: Workaround for escape bugs
-                    node.value = ctx.code.slice(
-                        node.position!.start.offset,
-                        start,
-                    )
                 } else {
                     const index = tokenIndexSafe(ctx.code, node.value, start)
                     if (index != null) {
                         start = node.position!.start.offset = index
                         start += node.value.length
                     } else {
-                        // FIXME: Workaround for escape bugs
+                        // FIXME: Some white space may be removed.
                         node.position!.start.offset = start
                         const value = node.value.replace(/\s+/gu, "")
-                        for (
-                            let charIndex = 0;
-                            charIndex < value.length;
-                            charIndex++
-                        ) {
-                            const char = value[charIndex]
-                            const index = tokenIndexSafe(ctx.code, char, start)
-                            if (index != null) {
-                                start = index + 1
-                                continue
-                            }
-                            start = skipSpaces(ctx.code, start)
-                            if (ctx.code.startsWith("\\", start)) {
-                                const codeChar = JSON.parse(
-                                    `"\\${ctx.code[start + 1]}"`,
-                                )
-                                start += 2
-                                if (codeChar === char) {
-                                    continue
-                                }
-                            }
-                            start = tokenIndex(ctx, char, start) + 1
+                        for (const char of value) {
+                            const index = tokenIndex(ctx, char, start)
+                            start = index + 1
                         }
                         start = skipSpaces(ctx.code, start)
 

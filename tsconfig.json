@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2015",
+        "target": "es2020",
         "strict": true,
         "lib": ["es2020", "DOM"],
         "module": "commonjs",
@@ -10,7 +10,8 @@
         "noFallthroughCasesInSwitch": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "allowJs": true
     },
     "include": [
         "src/**/*.ts",
