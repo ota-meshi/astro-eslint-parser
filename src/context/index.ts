@@ -1,9 +1,5 @@
-import path from "path"
-import fs from "fs"
 import type { TSESTree } from "@typescript-eslint/types"
-import { getParserName } from "../parser/resolve-parser"
-import { traverseNodes } from "../traverse"
-import type { ESLintExtendedProgram } from "../parser"
+
 type RangeAndLoc = {
     range: TSESTree.Range
     loc: TSESTree.SourceLocation
@@ -11,18 +7,15 @@ type RangeAndLoc = {
 export class Context {
     public readonly code: string
 
-    public readonly parserOptions: any
-
     public readonly locs: LinesAndColumns
 
     private readonly locsMap = new Map<number, TSESTree.Position>()
 
     private readonly state: { isTypeScript?: boolean; originalAST?: any } = {}
 
-    public constructor(code: string, parserOptions: any) {
+    public constructor(code: string) {
         this.locs = new LinesAndColumns(code)
-        this.code = this.locs.code
-        this.parserOptions = parserOptions
+        this.code = code
     }
 
     public getLocFromIndex(index: number): { line: number; column: number } {
@@ -71,88 +64,6 @@ export class Context {
         return this.code.slice(range[0], range[1])
     }
 
-    public isTypeScript(): boolean {
-        if (this.state.isTypeScript != null) {
-            return this.state.isTypeScript
-        }
-        const parserName = getParserName({}, this.parserOptions?.parser)
-        if (parserName === "@typescript-eslint/parser") {
-            return (this.state.isTypeScript = true)
-        }
-        if (parserName.includes("@typescript-eslint/parser")) {
-            let targetPath = parserName
-            while (targetPath) {
-                const pkgPath = path.join(targetPath, "package.json")
-                if (fs.existsSync(pkgPath)) {
-                    try {
-                        return (this.state.isTypeScript =
-                            JSON.parse(fs.readFileSync(pkgPath, "utf-8"))
-                                ?.name === "@typescript-eslint/parser")
-                    } catch {
-                        return (this.state.isTypeScript = false)
-                    }
-                }
-                const parent = path.dirname(targetPath)
-                if (targetPath === parent) {
-                    break
-                }
-                targetPath = parent
-            }
-        }
-
-        return (this.state.isTypeScript = false)
-    }
-
-    public remapCR({ ast, visitorKeys }: ESLintExtendedProgram): void {
-        const crs = this.locs.getCRs()
-        if (!crs.length) {
-            return
-        }
-        const cache: Record<number, number> = {}
-
-        /**
-         * Remap index
-         */
-        function remapIndex(index: number) {
-            let result = cache[index]
-            if (result != null) {
-                return result
-            }
-            result = index
-            for (const cr of crs) {
-                if (cr < result) {
-                    result++
-                } else {
-                    break
-                }
-            }
-            return (cache[index] = result)
-        }
-
-        /**
-         * Remap range
-         */
-        function remapRange(range: TSESTree.Range): TSESTree.Range {
-            return [remapIndex(range[0]), remapIndex(range[1])]
-        }
-
-        traverseNodes(ast, {
-            visitorKeys,
-            enterNode(node) {
-                node.range = remapRange(node.range)
-            },
-            leaveNode() {
-                // ignore
-            },
-        })
-        for (const token of ast.tokens || []) {
-            token.range = remapRange(token.range)
-        }
-        for (const comment of ast.comments || []) {
-            comment.range = remapRange(comment.range)
-        }
-    }
-
     public get originalAST(): any {
         return this.state.originalAST
     }
@@ -163,39 +74,38 @@ export class Context {
 }
 
 export class LinesAndColumns {
-    public readonly code: string
-
-    private readonly crs: number[]
-
     private readonly lineStartIndices: number[]
+
+    private readonly normalizedLineFeed: NormalizedLineFeed
 
     public constructor(origCode: string) {
         const len = origCode.length
         const lineStartIndices = [0]
         const crs = []
-        let code = ""
+        let normalizedCode = ""
         for (let index = 0; index < len; ) {
             const c = origCode[index++]
             if (c === "\r") {
                 const next = origCode[index++] || ""
                 if (next === "\n") {
-                    code += next
+                    normalizedCode += next
                     crs.push(index - 2)
+                    lineStartIndices.push(index)
                 } else {
-                    code += `\n${next}`
+                    normalizedCode += `\n${next}`
+                    lineStartIndices.push(index - 1)
                 }
-                lineStartIndices.push(code.length)
             } else {
-                code += c
+                normalizedCode += c
                 if (c === "\n") {
-                    lineStartIndices.push(code.length)
+                    lineStartIndices.push(index)
                 }
             }
         }
 
         this.lineStartIndices = lineStartIndices
-        this.code = code
-        this.crs = crs
+        //
+        this.normalizedLineFeed = new NormalizedLineFeed(normalizedCode, crs)
     }
 
     public getLocFromIndex(index: number): { line: number; column: number } {
@@ -213,8 +123,48 @@ export class LinesAndColumns {
         return positionIndex
     }
 
-    public getCRs(): number[] {
-        return this.crs
+    public getNormalizedLineFeed(): NormalizedLineFeed {
+        return this.normalizedLineFeed
+    }
+}
+
+export class NormalizedLineFeed {
+    public readonly code: string
+
+    private readonly offsets: number[]
+
+    public get needRemap(): boolean {
+        return this.offsets.length > 0
+    }
+
+    /**
+     * Remap index
+     */
+    public readonly remapIndex: (index: number) => number
+
+    public constructor(code: string, offsets: number[]) {
+        this.code = code
+        this.offsets = offsets
+        if (offsets.length) {
+            const cache: Record<number, number> = {}
+            this.remapIndex = (index: number) => {
+                let result = cache[index]
+                if (result != null) {
+                    return result
+                }
+                result = index
+                for (const offset of offsets) {
+                    if (offset < result) {
+                        result++
+                    } else {
+                        break
+                    }
+                }
+                return (cache[index] = result)
+            }
+        } else {
+            this.remapIndex = (i) => i
+        }
     }
 }
 

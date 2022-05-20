@@ -7,7 +7,7 @@ type AstroKeysType<T extends AstroNode = AstroNode> = {
         ? KeyofObject<T>[]
         : never
 }
-type KeyofObject<T> = { [key in keyof T]: key }[keyof T]
+type KeyofObject<T> = { [key in keyof T]-?: key }[keyof T]
 
 const astroKeys: AstroKeysType = {
     Program: ["body"],

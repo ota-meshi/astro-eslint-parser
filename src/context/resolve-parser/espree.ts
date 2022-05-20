@@ -1,6 +1,6 @@
 import Module from "module"
 import path from "path"
-import type { ESLintCustomParser } from "./resolve-parser"
+import type { ESLintCustomParser } from "../../types"
 
 const createRequire: (filename: string) => (modName: string) => any =
     // Added in v12.2.0

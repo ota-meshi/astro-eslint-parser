@@ -1,25 +1,16 @@
 import { KEYS } from "../visitor-keys"
-import { Context } from "../context"
+import type { Context } from "../context"
 import type { AstroProgram } from "../ast"
 import { AST_TOKEN_TYPES } from "@typescript-eslint/types"
-import type { TSESTree } from "@typescript-eslint/types"
 import type { ScopeManager } from "eslint-scope"
 import { parseScript } from "./script"
 import { sort } from "./sort"
-import { ParseError } from "../errors"
 import type { ParseResult } from "@astrojs/compiler"
-import { parse as parseAstro } from "./astro-parser/parse"
 import { processTemplate } from "./process-template"
+import { parseTemplate } from "./template"
+import { ParserOptionsContext } from "../context/parser-options"
+import type { ESLintExtendedProgram } from "../types"
 
-/**
- * The parsing result of ESLint custom parsers.
- */
-export interface ESLintExtendedProgram {
-    ast: TSESTree.Program
-    services?: Record<string, any>
-    visitorKeys?: { [type: string]: string[] }
-    scopeManager?: ScopeManager
-}
 /**
  * Parse source code
  */
@@ -35,32 +26,11 @@ export function parseForESLint(
     visitorKeys: { [type: string]: string[] }
     scopeManager: ScopeManager
 } {
-    const parserOptions = {
-        ecmaVersion: 2020,
-        sourceType: "module",
-        loc: true,
-        range: true,
-        raw: true,
-        tokens: true,
-        comment: true,
-        eslintVisitorKeys: true,
-        eslintScopeManager: true,
-        ...(options || {}),
-    }
-    parserOptions.ecmaFeatures = {
-        ...(parserOptions.ecmaFeatures || {}),
-        jsx: true,
-    }
-    parserOptions.sourceType = "module"
-    if (parserOptions.ecmaVersion <= 5 || parserOptions.ecmaVersion == null) {
-        parserOptions.ecmaVersion = 2015
-    }
-
-    const ctx = new Context(code, parserOptions)
-    const resultTemplate = parseTemplate(ctx.code, ctx)
+    const { result: resultTemplate, context: ctx } = parseTemplate(code)
     const scriptContext = processTemplate(ctx, resultTemplate)
 
-    const resultScript = parseScript(scriptContext.script, ctx)
+    const parserOptions = new ParserOptionsContext(options)
+    const resultScript = parseScript(scriptContext.script, ctx, parserOptions)
     scriptContext.restore(resultScript)
     sort(resultScript.ast.comments!)
     sort(resultScript.ast.tokens!)
@@ -73,8 +43,6 @@ export function parseForESLint(
         },
     })
     resultScript.visitorKeys = Object.assign({}, KEYS, resultScript.visitorKeys)
-
-    ctx.remapCR(resultScript)
 
     return resultScript as any
 }
@@ -120,21 +88,5 @@ function extractTokens(ast: ESLintExtendedProgram, ctx: Context) {
      */
     function isPunctuator(c: string) {
         return /^[^\w$]$/iu.test(c)
-    }
-}
-
-/**
- * Parse for template
- */
-export function parseTemplate(code: string, ctx: Context): ParseResult {
-    try {
-        return parseAstro(code, ctx)
-    } catch (e: any) {
-        if (typeof e.pos === "number") {
-            const err = new ParseError(e.message, e.pos, ctx)
-            ;(err as any).astroCompilerError = e
-            throw err
-        }
-        throw e
     }
 }
