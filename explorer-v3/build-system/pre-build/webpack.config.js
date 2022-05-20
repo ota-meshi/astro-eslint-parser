@@ -96,7 +96,7 @@ export default [
     module: {
       rules: [
         {
-          test: /parser\/resolve-parser\.js$/u,
+          test: /context\/resolve-parser\/index\.js$/u,
           loader: "string-replace-loader",
           options: {
             search: /require\(name\)/gu.source,

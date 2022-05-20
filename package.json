@@ -42,7 +42,7 @@
     },
     "homepage": "https://github.com/ota-meshi/astro-eslint-parser#readme",
     "dependencies": {
-        "@astrojs/compiler": "^0.14.2",
+        "@astrojs/compiler": "^0.14.3",
         "debug": "^4.3.4",
         "eslint-visitor-keys": "^3.0.0",
         "espree": "^9.0.0",
