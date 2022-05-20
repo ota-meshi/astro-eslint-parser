@@ -1,32 +1,36 @@
-import type { ESLintExtendedProgram } from "."
 import type { Context } from "../context"
-import { getParser } from "./resolve-parser"
 import fs from "fs"
 import { debug } from "../debug"
+import type { ParserOptionsContext } from "../context/parser-options"
+import type { ESLintExtendedProgram } from "../types"
 
 /**
  * Parse for script
  */
-export function parseScript(code: string, ctx: Context): ESLintExtendedProgram {
-    const parser = getParser({}, ctx.parserOptions.parser)
+export function parseScript(
+    code: string,
+    _ctx: Context,
+    parserOptions: ParserOptionsContext,
+): ESLintExtendedProgram {
+    const parser = parserOptions.getParser()
 
     let removeFile: string | null = null
 
     try {
-        const scriptOption = { ...ctx.parserOptions }
-        if (ctx.isTypeScript() && scriptOption.filePath) {
-            scriptOption.filePath += ".tsx"
-            if (!fs.existsSync(scriptOption.filePath)) {
+        const scriptParserOptions = { ...parserOptions.parserOptions }
+        if (parserOptions.isTypeScript() && scriptParserOptions.filePath) {
+            scriptParserOptions.filePath += ".tsx"
+            if (!fs.existsSync(scriptParserOptions.filePath)) {
                 fs.writeFileSync(
-                    scriptOption.filePath,
+                    scriptParserOptions.filePath,
                     "/* temp for astro-eslint-parser */",
                 )
-                removeFile = scriptOption.filePath
+                removeFile = scriptParserOptions.filePath
             }
         }
         const result =
-            parser.parseForESLint?.(code, scriptOption) ??
-            parser.parse?.(code, scriptOption)
+            parser.parseForESLint?.(code, scriptParserOptions) ??
+            parser.parse?.(code, scriptParserOptions)
 
         if ("ast" in result && result.ast != null) {
             return result

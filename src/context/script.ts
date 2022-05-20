@@ -1,7 +1,7 @@
 import type { Context } from "."
-import type { ESLintExtendedProgram } from "../parser"
 import { traverseNodes } from "../traverse"
 import type { TSESTree } from "@typescript-eslint/types"
+import type { ESLintExtendedProgram } from "../types"
 
 class RestoreNodeProcessContext {
     public readonly result: ESLintExtendedProgram

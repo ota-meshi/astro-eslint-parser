@@ -1,18 +1,5 @@
-import type { ESLintExtendedProgram } from "."
+import type { ESLintCustomParser } from "../../types"
 import { getEspree } from "./espree"
-/**
- * The interface of a result of ESLint custom parser.
- */
-export type ESLintCustomParserResult =
-    | ESLintExtendedProgram["ast"]
-    | ESLintExtendedProgram
-/**
- * The interface of ESLint custom parsers.
- */
-export interface ESLintCustomParser {
-    parse(code: string, options: any): ESLintCustomParserResult
-    parseForESLint?(code: string, options: any): ESLintCustomParserResult
-}
 
 /** Get parser name */
 export function getParserName(
