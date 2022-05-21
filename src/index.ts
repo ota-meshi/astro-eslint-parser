@@ -1,5 +1,5 @@
 import { parseForESLint } from "./parser"
-import { parseTemplate } from "./astro-tools"
+import { parseTemplate, ParseTemplateResult } from "./astro-tools"
 import * as AST from "./ast"
 import { traverseNodes } from "./traverse"
 import { KEYS } from "./visitor-keys"
@@ -14,4 +14,4 @@ export { parseForESLint }
 export const VisitorKeys = KEYS
 
 // tools
-export { traverseNodes, parseTemplate }
+export { traverseNodes, parseTemplate, ParseTemplateResult }
