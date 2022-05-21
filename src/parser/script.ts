@@ -18,7 +18,11 @@ export function parseScript(
 
     try {
         const scriptParserOptions = { ...parserOptions.parserOptions }
-        if (parserOptions.isTypeScript() && scriptParserOptions.filePath) {
+        if (
+            parserOptions.isTypeScript() &&
+            scriptParserOptions.filePath &&
+            scriptParserOptions.project
+        ) {
             scriptParserOptions.filePath += ".tsx"
             if (!fs.existsSync(scriptParserOptions.filePath)) {
                 fs.writeFileSync(

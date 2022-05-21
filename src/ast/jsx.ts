@@ -1,4 +1,4 @@
-import type { TSESTree as ES, AST_NODE_TYPES } from "@typescript-eslint/types"
+import type { TSESTree as ES } from "@typescript-eslint/types"
 import type {
     AstroFragment,
     AstroHTMLComment,
@@ -32,21 +32,21 @@ export type JSXChild =
 export type JSXParentNode = JSXElement | JSXFragment | AstroFragment
 /* --- Tags --- */
 export interface JSXElement extends BaseNode {
-    type: AST_NODE_TYPES.JSXElement
+    type: "JSXElement"
     openingElement: JSXOpeningElement
     closingElement: JSXClosingElement | null
     children: JSXChild[]
     parent?: JSXParentNode
 }
 export interface JSXFragment extends BaseNode {
-    type: AST_NODE_TYPES.JSXFragment
+    type: "JSXFragment"
     openingFragment: JSXOpeningFragment
     closingFragment: JSXClosingFragment
     children: JSXChild[]
     parent?: JSXParentNode
 }
 export interface JSXOpeningElement extends BaseNode {
-    type: AST_NODE_TYPES.JSXOpeningElement
+    type: "JSXOpeningElement"
     typeParameters?: ES.TSTypeParameterInstantiation
     selfClosing: boolean
     name: JSXTagNameExpression
@@ -59,28 +59,28 @@ export interface JSXOpeningElement extends BaseNode {
     parent?: JSXElement
 }
 export interface JSXClosingElement extends BaseNode {
-    type: AST_NODE_TYPES.JSXClosingElement
+    type: "JSXClosingElement"
     name: JSXTagNameExpression
     parent?: JSXElement
 }
 export interface JSXClosingFragment extends BaseNode {
-    type: AST_NODE_TYPES.JSXClosingFragment
+    type: "JSXClosingFragment"
     parent?: JSXFragment
 }
 export interface JSXOpeningFragment extends BaseNode {
-    type: AST_NODE_TYPES.JSXOpeningFragment
+    type: "JSXOpeningFragment"
     parent?: JSXFragment
 }
 
 /* --- Attributes --- */
 export interface JSXAttribute extends BaseNode {
-    type: AST_NODE_TYPES.JSXAttribute
+    type: "JSXAttribute"
     name: JSXIdentifier | JSXNamespacedName
     value: JSXExpression | ES.Literal | null
     parent?: JSXOpeningElement
 }
 export interface JSXSpreadAttribute extends BaseNode {
-    type: AST_NODE_TYPES.JSXSpreadAttribute
+    type: "JSXSpreadAttribute"
     argument: ES.Expression
     parent?: JSXOpeningElement
 }
@@ -91,7 +91,7 @@ export type JSXTagNameExpression =
     | JSXMemberExpression
     | JSXNamespacedName
 export interface JSXIdentifier extends BaseNode {
-    type: AST_NODE_TYPES.JSXIdentifier
+    type: "JSXIdentifier"
     name: string
     parent?:
         | JSXAttribute
@@ -103,13 +103,13 @@ export interface JSXIdentifier extends BaseNode {
         | JSXClosingElement
 }
 export interface JSXMemberExpression extends BaseNode {
-    type: AST_NODE_TYPES.JSXMemberExpression
+    type: "JSXMemberExpression"
     object: JSXTagNameExpression
     property: JSXIdentifier
     parent?: JSXMemberExpression | JSXOpeningElement | JSXClosingElement
 }
 export interface JSXNamespacedName extends BaseNode {
-    type: AST_NODE_TYPES.JSXNamespacedName
+    type: "JSXNamespacedName"
     namespace: JSXIdentifier
     name: JSXIdentifier
     parent?:
@@ -124,7 +124,7 @@ export interface JSXNamespacedName extends BaseNode {
 /* --- Expressions --- */
 export type JSXExpression = JSXExpressionContainer | JSXSpreadChild
 export interface JSXExpressionContainer extends BaseNode {
-    type: AST_NODE_TYPES.JSXExpressionContainer
+    type: "JSXExpressionContainer"
     expression: ES.Expression | JSXEmptyExpression
     parent?:
         | JSXAttribute
@@ -133,18 +133,18 @@ export interface JSXExpressionContainer extends BaseNode {
         | JSXParentNode
 }
 export interface JSXSpreadChild extends BaseNode {
-    type: AST_NODE_TYPES.JSXSpreadChild
+    type: "JSXSpreadChild"
     expression: ES.Expression
     parent?: JSXAttribute | JSXParentNode
 }
 export interface JSXEmptyExpression extends BaseNode {
-    type: AST_NODE_TYPES.JSXEmptyExpression
+    type: "JSXEmptyExpression"
     parent?: JSXExpressionContainer
 }
 
 /* --- Texts --- */
 export interface JSXText extends BaseNode {
-    type: AST_NODE_TYPES.JSXText
+    type: "JSXText"
     value: string
     raw: string
     parent?: JSXParentNode
