@@ -21,14 +21,19 @@ At least it works fine with a [fork of the `astro.build` repository](https://git
 
 [@astrojs/compiler]: https://github.com/withastro/compiler
 
-<!--
+## :checkered_flag: Motivation
+
+This parser allows us to lint the script of `.astro` files.
+
+> Note that this parser alone will not lint the scripts inside the `<script>` tag. Use [eslint-plugin-astro] to lint the script inside the `<script>` tag as well.
+
 ### ESLint Plugins Using astro-eslint-parser
 
-#### [@ota-meshi/eslint-plugin-astro](https://ota-meshi.github.io/eslint-plugin-astro/)
+#### [eslint-plugin-astro]
 
 ESLint plugin for Astro component.  
-It provides many unique check rules by using the template AST.
--->
+
+[eslint-plugin-astro]: https://ota-meshi.github.io/eslint-plugin-astro/
 
 ## 💿 Installation
 
@@ -60,7 +65,7 @@ npm install --save-dev eslint astro-eslint-parser
     $ eslint src --ext .js,.astro
     ```
 
-The commit diff [here](https://github.com/ota-meshi/astro.build/commit/7f291ac15e6d97cc20a64b8f97dcbd85379759b5) is an example of introducing this parser to the `astro.build` repository.
+The commit diff [here](https://github.com/withastro/astro.build/compare/main...ota-meshi:eslint) is an example of introducing this parser to the `astro.build` repository.
 
 ## 🔧 Options
 

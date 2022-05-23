@@ -47,16 +47,19 @@ module.exports = {
     },
     {
       files: ["*.astro"],
-      plugins: ["react"],
+      // Enable this plugin
+      plugins: ["astro", "react"],
+      env: {
+        // Enables global variables available in Astro components.
+        node: true,
+        "astro/astro": true,
+      },
       extends: [
         require.resolve("../.eslintrc.js"),
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
       ],
-      globals: {
-        Astro: "readonly",
-      },
-      parser: require.resolve(".."),
+      parser: "astro-eslint-parser",
       parserOptions: {
         sourceType: "module",
         ecmaVersion: 2022,
@@ -70,6 +73,14 @@ module.exports = {
         "react/no-unknown-property": "off",
 
         "require-jsdoc": "off", // ignore
+      },
+    },
+    {
+      // Define the configuration for `<script>` tag.
+      // Script in `<script>` is assigned a virtual file name with the `.js` extension.
+      files: ["**/*.astro/*.js", "*.astro/*.js"],
+      env: {
+        browser: true,
       },
     },
   ],
