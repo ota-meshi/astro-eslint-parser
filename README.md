@@ -65,7 +65,7 @@ npm install --save-dev eslint astro-eslint-parser
     $ eslint src --ext .js,.astro
     ```
 
-The commit diff [here](https://github.com/ota-meshi/astro.build/commit/7f291ac15e6d97cc20a64b8f97dcbd85379759b5) is an example of introducing this parser to the `astro.build` repository.
+The commit diff [here](https://github.com/withastro/astro.build/compare/main...ota-meshi:eslint) is an example of introducing this parser to the `astro.build` repository.
 
 ## 🔧 Options
 
