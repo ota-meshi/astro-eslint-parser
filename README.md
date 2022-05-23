@@ -157,6 +157,14 @@ For example, the [react/jsx-no-target-blank] rule works fine.
 [eslint-plugin-react]: https://github.com/jsx-eslint/eslint-plugin-react/
 [react/jsx-no-target-blank]: https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-target-blank.md
 
+## :ghost: Limitations
+
+If this parser is used with `@typescript-eslint/parser` and `parserOptions.project` is set, it will temporarily create a `.tsx` file to parse the `.astro` file.  
+This parser works by converting the `.astro` file to JSX and letting the JavaScript parser parse it.
+Since `@typescript-eslint/parser` can only parse files with the extension `.tsx` as JSX, it is necessary to temporarily create a `.tsx` file. Temporarily created files will try to be deleted after parses, but if the parsing takes a long time, the files may be visible to you.
+
+See also [`@typescript-eslint/parser` readme](https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/parser#parseroptionsecmafeaturesjsx).
+
 ## :hammer_and_wrench: Usage for Custom Rules / Plugins
 
 - TBA
