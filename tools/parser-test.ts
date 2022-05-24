@@ -11,5 +11,6 @@ async function main() {
         "utf8",
     )
     const result = await parse(contents)
+    // eslint-disable-next-line no-console -- test
     console.log(result)
 }

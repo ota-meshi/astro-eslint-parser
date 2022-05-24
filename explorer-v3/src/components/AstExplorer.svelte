@@ -60,6 +60,7 @@ let b = 2;
         parser: "@typescript-eslint/parser",
       }).ast;
     } catch (e) {
+      // eslint-disable-next-line no-console -- Demo
       console.error(e);
       ast = {
         message: e.message,

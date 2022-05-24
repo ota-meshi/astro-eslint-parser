@@ -66,6 +66,8 @@ module.exports = {
         parser: "@typescript-eslint/parser",
       },
       rules: {
+        "astro/no-set-html-directive": "error",
+        "astro/no-set-text-directive": "error",
         "prettier/prettier": "error",
         "react/jsx-equals-spacing": "error",
 
