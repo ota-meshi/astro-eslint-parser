@@ -1,23 +1,6 @@
-import Module from "module"
+import { createRequire } from "module"
 import path from "path"
 import type { ESLintCustomParser } from "../../types"
-
-const createRequire: (filename: string) => (modName: string) => any =
-    // Added in v12.2.0
-    Module.createRequire ||
-    // Added in v10.12.0, but deprecated in v12.2.0.
-    // @ts-expect-error -- old type
-    Module.createRequireFromPath ||
-    // Polyfill - This is not executed on the tests on node@>=10.
-    /* istanbul ignore next */
-    ((modName) => {
-        const mod = new Module(modName)
-
-        mod.filename = modName
-        mod.paths = (Module as any)._nodeModulePaths(path.dirname(modName))
-        ;(mod as any)._compile("module.exports = require;", modName)
-        return mod.exports
-    })
 
 let espreeCache: ESLintCustomParser | null = null
 

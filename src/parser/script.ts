@@ -1,9 +1,8 @@
 import type { Context } from "../context"
-import fs from "fs"
 import { debug } from "../debug"
 import type { ParserOptionsContext } from "../context/parser-options"
 import type { ESLintExtendedProgram } from "../types"
-
+import { patch } from "./ts-patch"
 /**
  * Parse for script
  */
@@ -14,7 +13,7 @@ export function parseScript(
 ): ESLintExtendedProgram {
     const parser = parserOptions.getParser()
 
-    let removeFile: string | null = null
+    let patchResult
 
     try {
         const scriptParserOptions = { ...parserOptions.parserOptions }
@@ -23,14 +22,7 @@ export function parseScript(
             scriptParserOptions.filePath &&
             scriptParserOptions.project
         ) {
-            scriptParserOptions.filePath += ".tsx"
-            if (!fs.existsSync(scriptParserOptions.filePath)) {
-                fs.writeFileSync(
-                    scriptParserOptions.filePath,
-                    "/* temp for astro-eslint-parser */",
-                )
-                removeFile = scriptParserOptions.filePath
-            }
+            patchResult = patch(scriptParserOptions)
         }
         const result =
             parser.parseForESLint?.(code, scriptParserOptions) ??
@@ -50,6 +42,6 @@ ${code}`,
         )
         throw e
     } finally {
-        if (removeFile) fs.unlinkSync(removeFile)
+        patchResult?.terminate()
     }
 }
