@@ -14,7 +14,7 @@ export type PatchTerminate = { terminate: () => void }
 /**
  * Apply a patch to parse .astro files as TSX.
  */
-export function patch(
+export function tsPatch(
     scriptParserOptions: ParserOptions,
 ): PatchTerminate | null {
     try {

@@ -2,7 +2,8 @@ import type { Context } from "../context"
 import { debug } from "../debug"
 import type { ParserOptionsContext } from "../context/parser-options"
 import type { ESLintExtendedProgram } from "../types"
-import { patch } from "./ts-patch"
+import { tsPatch } from "./ts-patch"
+import type { ParserOptions } from "@typescript-eslint/types"
 /**
  * Parse for script
  */
@@ -16,13 +17,19 @@ export function parseScript(
     let patchResult
 
     try {
-        const scriptParserOptions = { ...parserOptions.parserOptions }
+        const scriptParserOptions: ParserOptions = {
+            ...parserOptions.parserOptions,
+        }
+        scriptParserOptions.ecmaFeatures = {
+            ...(scriptParserOptions.ecmaFeatures || {}),
+            jsx: true,
+        }
         if (
             parserOptions.isTypeScript() &&
             scriptParserOptions.filePath &&
             scriptParserOptions.project
         ) {
-            patchResult = patch(scriptParserOptions)
+            patchResult = tsPatch(scriptParserOptions)
         }
         const result =
             parser.parseForESLint?.(code, scriptParserOptions) ??
