@@ -1,9 +1,9 @@
 import type { Context } from "../context"
-import fs from "fs"
 import { debug } from "../debug"
 import type { ParserOptionsContext } from "../context/parser-options"
 import type { ESLintExtendedProgram } from "../types"
-
+import { tsPatch } from "./ts-patch"
+import type { ParserOptions } from "@typescript-eslint/types"
 /**
  * Parse for script
  */
@@ -14,23 +14,22 @@ export function parseScript(
 ): ESLintExtendedProgram {
     const parser = parserOptions.getParser()
 
-    let removeFile: string | null = null
+    let patchResult
 
     try {
-        const scriptParserOptions = { ...parserOptions.parserOptions }
+        const scriptParserOptions: ParserOptions = {
+            ...parserOptions.parserOptions,
+        }
+        scriptParserOptions.ecmaFeatures = {
+            ...(scriptParserOptions.ecmaFeatures || {}),
+            jsx: true,
+        }
         if (
             parserOptions.isTypeScript() &&
             scriptParserOptions.filePath &&
             scriptParserOptions.project
         ) {
-            scriptParserOptions.filePath += ".tsx"
-            if (!fs.existsSync(scriptParserOptions.filePath)) {
-                fs.writeFileSync(
-                    scriptParserOptions.filePath,
-                    "/* temp for astro-eslint-parser */",
-                )
-                removeFile = scriptParserOptions.filePath
-            }
+            patchResult = tsPatch(scriptParserOptions)
         }
         const result =
             parser.parseForESLint?.(code, scriptParserOptions) ??
@@ -50,6 +49,6 @@ ${code}`,
         )
         throw e
     } finally {
-        if (removeFile) fs.unlinkSync(removeFile)
+        patchResult?.terminate()
     }
 }
