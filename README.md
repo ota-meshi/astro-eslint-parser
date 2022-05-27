@@ -33,8 +33,6 @@ This parser allows us to lint the script of `.astro` files.
 
 ESLint plugin for Astro component.  
 
-[eslint-plugin-astro]: https://ota-meshi.github.io/eslint-plugin-astro/
-
 ## 💿 Installation
 
 ```bash
@@ -167,11 +165,11 @@ See also [`@typescript-eslint/parser` readme](https://github.com/typescript-esli
 
 ## :hammer_and_wrench: Usage for Custom Rules / Plugins
 
+<!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
+
 - TBA
 - You can check the AST in the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). However, AST is subject to major changes in the future.
-
-<!-- - [AST.md](./docs/AST.md) is AST specification. You can check it on the [Online DEMO](https://ota-meshi.github.io/astro-eslint-parser/). -->
-<!-- - I have already [implemented some rules] in the [`@ota-meshi/eslint-plugin-astro`]. The source code for these rules will be helpful to you. -->
+- I have already [implemented some rules] in the [eslint-plugin-astro]. The source code for these rules will be helpful to you.
 
 ## :beers: Contributing
 
@@ -191,3 +189,5 @@ See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
 
 [Astro]: https://astro.build/
 [ESLint]: https://eslint.org/
+[eslint-plugin-astro]: https://ota-meshi.github.io/eslint-plugin-astro/
+[implemented some rules]: https://ota-meshi.github.io/eslint-plugin-astro/rules/
