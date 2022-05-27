@@ -66,6 +66,7 @@ module.exports = {
         parser: "@typescript-eslint/parser",
       },
       rules: {
+        "astro/no-unused-define-vars-in-style": "error",
         "astro/no-set-html-directive": "error",
         "astro/no-set-text-directive": "error",
         "astro/prefer-class-list-directive": "error",
