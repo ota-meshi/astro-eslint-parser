@@ -23,6 +23,7 @@ export type AstroChild =
     | JSXExpression
     | JSXText
     | AstroHTMLComment
+    | AstroRawText
 export type AstroParentNode = JSXElement | JSXFragment | AstroFragment
 
 /** Node of Astro program root */
