@@ -2,6 +2,7 @@ import type { TSESTree as ES } from "@typescript-eslint/types"
 import type {
     AstroFragment,
     AstroHTMLComment,
+    AstroRawText,
     AstroShorthandAttribute,
     AstroTemplateLiteralAttribute,
 } from "./astro"
@@ -29,6 +30,7 @@ export type JSXChild =
     | JSXExpression
     | JSXText
     | AstroHTMLComment
+    | AstroRawText
 export type JSXParentNode = JSXElement | JSXFragment | AstroFragment
 /* --- Tags --- */
 export interface JSXElement extends BaseNode {
