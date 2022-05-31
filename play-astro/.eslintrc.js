@@ -1,9 +1,5 @@
 module.exports = {
-    extends: [
-        require.resolve("../.eslintrc.js"),
-        "plugin:react/recommended",
-        "plugin:react/jsx-runtime",
-    ],
+    extends: [require.resolve("../.eslintrc.js")],
     plugins: ["react"],
     parserOptions: {
         sourceType: "module",
@@ -13,6 +9,7 @@ module.exports = {
     overrides: [
         {
             files: ["*.astro"],
+            extends: ["plugin:react/recommended", "plugin:react/jsx-runtime"],
             parser: require.resolve(".."),
             rules: {
                 "prettier/prettier": "off",
@@ -20,6 +17,11 @@ module.exports = {
 
                 // Incompatible rules
                 "react/no-unknown-property": "off",
+            },
+            settings: {
+                react: {
+                    version: "16.3",
+                },
             },
         },
     ],

@@ -6,6 +6,7 @@ module.exports = {
     "plugin:@ota-meshi/+json",
     "plugin:@ota-meshi/+prettier",
     "plugin:@ota-meshi/svelte/recommended",
+    "plugin:astro/all",
   ],
   parserOptions: {
     sourceType: "module",
@@ -47,13 +48,7 @@ module.exports = {
     },
     {
       files: ["*.astro"],
-      // Enable this plugin
-      plugins: ["astro", "react"],
-      env: {
-        // Enables global variables available in Astro components.
-        node: true,
-        "astro/astro": true,
-      },
+      plugins: ["react"],
       extends: [
         require.resolve("../.eslintrc.js"),
         "plugin:react/recommended",
@@ -66,11 +61,6 @@ module.exports = {
         parser: "@typescript-eslint/parser",
       },
       rules: {
-        "astro/no-unused-define-vars-in-style": "error",
-        "astro/no-set-html-directive": "error",
-        "astro/no-set-text-directive": "error",
-        "astro/prefer-class-list-directive": "error",
-        "astro/prefer-object-class-list": "error",
         "astro/prefer-split-class-list": [
           "error",
           {
@@ -84,6 +74,11 @@ module.exports = {
         "react/no-unknown-property": "off",
 
         "require-jsdoc": "off", // ignore
+      },
+      settings: {
+        react: {
+          version: "16.3",
+        },
       },
     },
     {
