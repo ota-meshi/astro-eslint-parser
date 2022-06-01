@@ -758,30 +758,11 @@
               "column": 7
             }
           }
-        },
-        {
-          "type": "JSXText",
-          "raw": "\n",
-          "value": "\n",
-          "range": [
-            125,
-            126
-          ],
-          "loc": {
-            "start": {
-              "line": 19,
-              "column": 7
-            },
-            "end": {
-              "line": 20,
-              "column": 0
-            }
-          }
         }
       ],
       "range": [
         0,
-        126
+        125
       ],
       "loc": {
         "start": {
@@ -789,8 +770,8 @@
           "column": 0
         },
         "end": {
-          "line": 20,
-          "column": 0
+          "line": 19,
+          "column": 7
         }
       }
     }
@@ -1749,24 +1730,6 @@
         "end": {
           "line": 19,
           "column": 7
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": "\n",
-      "range": [
-        125,
-        126
-      ],
-      "loc": {
-        "start": {
-          "line": 19,
-          "column": 7
-        },
-        "end": {
-          "line": 20,
-          "column": 0
         }
       }
     }
