@@ -46,10 +46,11 @@ function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
     if (htmlEnd == null) {
         return
     }
+    const hasTokenAfter = Boolean(ctx.code.slice(htmlEnd + 7).trim())
     const children = [...htmlElement.children]
     for (const child of children) {
         const offset = child.position?.start.offset
-        if (offset != null) {
+        if (hasTokenAfter && offset != null) {
             if (htmlEnd <= offset) {
                 htmlElement.children.splice(
                     htmlElement.children.indexOf(child),
@@ -59,7 +60,7 @@ function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
             }
         }
         if (child.type === "element" && child.name === "body") {
-            adjustHTMLBody(ast, htmlElement, htmlEnd, child, ctx)
+            adjustHTMLBody(ast, htmlElement, htmlEnd, hasTokenAfter, child, ctx)
         }
     }
 }
@@ -71,6 +72,7 @@ function adjustHTMLBody(
     ast: RootNode,
     htmlElement: ElementNode,
     htmlEnd: number,
+    hasTokenAfterHtmlEnd: boolean,
     bodyElement: ElementNode,
     ctx: Context,
 ) {
@@ -78,18 +80,26 @@ function adjustHTMLBody(
     if (bodyEnd == null) {
         return
     }
+    const hasTokenAfter = Boolean(ctx.code.slice(bodyEnd + 7, htmlEnd).trim())
+    if (!hasTokenAfter && !hasTokenAfterHtmlEnd) {
+        return
+    }
     const children = [...bodyElement.children]
     for (const child of children) {
         const offset = child.position?.start.offset
         if (offset != null) {
             if (bodyEnd <= offset) {
-                bodyElement.children.splice(
-                    bodyElement.children.indexOf(child),
-                    1,
-                )
-                if (htmlEnd <= offset) {
+                if (hasTokenAfterHtmlEnd && htmlEnd <= offset) {
+                    bodyElement.children.splice(
+                        bodyElement.children.indexOf(child),
+                        1,
+                    )
                     ast.children.push(child)
-                } else {
+                } else if (hasTokenAfter) {
+                    bodyElement.children.splice(
+                        bodyElement.children.indexOf(child),
+                        1,
+                    )
                     htmlElement.children.push(child)
                 }
             }
