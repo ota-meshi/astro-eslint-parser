@@ -22,7 +22,6 @@ const alias = {
     resolve("./astrojs-compiler-service4b-inject.js"),
   [resolve("../../../lib/markdown/mdast-util-from-markdown-service.js")]:
     resolve("./mdast-util-from-markdown-service4b-inject.js"),
-  yaml$: resolve("../../../node_modules/yaml/dist/index.js"),
 };
 
 function getBase(name) {
