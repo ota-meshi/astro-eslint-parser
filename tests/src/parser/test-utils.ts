@@ -22,7 +22,7 @@ export function getBasicParserOptions(
         ecmaVersion: 2020,
         parser,
         project: require.resolve("../../fixtures/parser/tsconfig.test.json"),
-        extraFileExtensions: [".astro"],
+        extraFileExtensions: [".astro", ".md"],
         sourceType: "module",
     }
 }
@@ -56,21 +56,21 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
 }> {
     for (const filename of fs.readdirSync(dir)) {
         const inputFileName = path.join(dir, filename)
-        if (filename.endsWith("input.astro")) {
+        if (filename.endsWith("input.astro") || filename.endsWith("input.md")) {
             const outputFileName = inputFileName.replace(
-                /input\.astro$/u,
+                /input\.[a-z]+$/u,
                 "output.json",
             )
             const scopeFileName = inputFileName.replace(
-                /input\.astro$/u,
+                /input\.[a-z]+$/u,
                 "scope-output.json",
             )
             const typeFileName = inputFileName.replace(
-                /input\.astro$/u,
-                "type-output.astro",
+                /input\.([a-z]+)$/u,
+                "type-output.$1",
             )
             const requirementsFileName = inputFileName.replace(
-                /input\.astro$/u,
+                /input\.[a-z]+$/u,
                 "requirements.json",
             )
 
@@ -87,7 +87,7 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
                 requirements,
                 getRuleOutputFileName: (ruleName) => {
                     return inputFileName.replace(
-                        /input\.astro$/u,
+                        /input\.[a-z]+$/u,
                         `${ruleName}-result.json`,
                     )
                 },

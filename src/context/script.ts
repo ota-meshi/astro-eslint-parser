@@ -8,12 +8,22 @@ class RestoreNodeProcessContext {
 
     public readonly removeTokens = new Set<(token: TSESTree.Token) => boolean>()
 
-    public constructor(result: ESLintExtendedProgram) {
+    private readonly parentMap: Map<TSESTree.Node, TSESTree.Node | null>
+
+    public constructor(
+        result: ESLintExtendedProgram,
+        parentMap: Map<TSESTree.Node, TSESTree.Node | null>,
+    ) {
         this.result = result
+        this.parentMap = parentMap
     }
 
     public addRemoveToken(test: (token: TSESTree.Token) => boolean) {
         this.removeTokens.add(test)
+    }
+
+    public getParent(node: TSESTree.Node): TSESTree.Node | null {
+        return this.parentMap.get(node) || null
     }
 }
 
@@ -33,11 +43,14 @@ export class ScriptContext {
     private readonly restoreNodeProcesses: ((
         node: TSESTree.Node,
         context: RestoreNodeProcessContext,
-        parent: TSESTree.Node,
     ) => boolean)[] = []
 
     public constructor(ctx: Context) {
         this.ctx = ctx
+    }
+
+    public get originalCode(): string {
+        return this.ctx.code
     }
 
     public skipOriginalOffset(offset: number): void {
@@ -63,6 +76,9 @@ export class ScriptContext {
     }
 
     public addToken(type: TSESTree.Token["type"], range: TSESTree.Range): void {
+        if (range[0] >= range[1]) {
+            return
+        }
         this.tokens.push(this.ctx.buildToken(type, range))
     }
 
@@ -70,7 +86,6 @@ export class ScriptContext {
         process: (
             node: TSESTree.Node,
             context: RestoreNodeProcessContext,
-            parent: TSESTree.Node,
         ) => boolean,
     ): void {
         this.restoreNodeProcesses.push(process)
@@ -112,12 +127,12 @@ export class ScriptContext {
             this.remapLocation(token)
         }
 
-        const context = new RestoreNodeProcessContext(result)
+        const context = new RestoreNodeProcessContext(result, traversed)
         let restoreNodeProcesses = this.restoreNodeProcesses
         for (const [node, parent] of traversed) {
             if (!parent) continue
             restoreNodeProcesses = restoreNodeProcesses.filter(
-                (proc) => !proc(node, context, parent),
+                (proc) => !proc(node, context),
             )
         }
 

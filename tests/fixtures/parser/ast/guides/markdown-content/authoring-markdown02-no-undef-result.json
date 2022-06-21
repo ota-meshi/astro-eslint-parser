@@ -1,0 +1,14 @@
+[
+  {
+    "ruleId": "no-undef",
+    "code": "frontmatter",
+    "line": 9,
+    "column": 15
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "frontmatter",
+    "line": 11,
+    "column": 4
+  }
+]

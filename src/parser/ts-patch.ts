@@ -17,6 +17,13 @@ export type PatchTerminate = { terminate: () => void }
 export function tsPatch(
     scriptParserOptions: ParserOptions,
 ): PatchTerminate | null {
+    let targetExt = ".astro"
+    if (scriptParserOptions.filePath) {
+        const ext = path.extname(scriptParserOptions.filePath)
+        if (ext) {
+            targetExt = ext
+        }
+    }
     try {
         // Apply a patch to parse .astro files as TSX.
         const cwd = process.cwd()
@@ -29,7 +36,7 @@ export function tsPatch(
             typeof getScriptKindFromFileName === "function"
         ) {
             ts.ensureScriptKind = function (fileName: string, ...args: any[]) {
-                if (fileName.endsWith(".astro")) {
+                if (fileName.endsWith(targetExt)) {
                     return ts.ScriptKind.TSX
                 }
                 return ensureScriptKind.call(this, fileName, ...args)
@@ -38,7 +45,7 @@ export function tsPatch(
                 fileName: string,
                 ...args: any[]
             ) {
-                if (fileName.endsWith(".astro")) {
+                if (fileName.endsWith(targetExt)) {
                     return ts.ScriptKind.TSX
                 }
                 return getScriptKindFromFileName.call(this, fileName, ...args)

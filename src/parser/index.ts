@@ -48,7 +48,7 @@ export function parseForESLint(
 }
 
 /** Extract tokens */
-function extractTokens(ast: ESLintExtendedProgram, ctx: Context) {
+export function extractTokens(ast: ESLintExtendedProgram, ctx: Context): void {
     if (!ast.ast.tokens) {
         return
     }

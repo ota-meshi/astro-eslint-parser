@@ -21,7 +21,7 @@ function parse(code: string, filePath: string) {
     })
 }
 
-describe("Check for AST.", () => {
+describe("Check for markdown AST.", () => {
     for (const {
         input,
         inputFileName,
@@ -29,7 +29,7 @@ describe("Check for AST.", () => {
         scopeFileName,
         meetRequirements,
     } of listupFixtures()) {
-        if (!inputFileName.endsWith(".astro")) {
+        if (!inputFileName.endsWith(".md")) {
             continue
         }
         describe(inputFileName, () => {
