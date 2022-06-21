@@ -35,6 +35,9 @@ export function deserializeState(serializedString) {
           state.rules[id] = json.rules[id] === 2 ? "error" : "off";
         }
       }
+      if (typeof json.filePath === "string") {
+        state.filePath = json.filePath;
+      }
     }
   } catch (error) {
     // eslint-disable-next-line no-console -- Demo

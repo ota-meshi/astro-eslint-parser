@@ -26,6 +26,9 @@ export default defineConfig({
         "@astrojs-compiler-service4b": resolve(
           "./build-system/shim/@astrojs-compiler-service4b/index.js"
         ),
+        "@mdast-util-from-markdown-service4b": resolve(
+          "./build-system/shim/@mdast-util-from-markdown-service4b.js"
+        ),
         globby: resolve("./build-system/shim/globby.js"),
         tslib: resolve("../node_modules/tslib/tslib.es6.js"),
         "escape-string-regexp": resolve(

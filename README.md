@@ -126,6 +126,48 @@ module.exports = {
 }
 ```
 
+### parserOptions.astroFeatures
+
+You can use `parserOptions.astroFeatures` property to specify how to parse related to Astro component features. For example:
+
+```json
+{
+    "parser": "astro-eslint-parser",
+    "parserOptions": {
+        "astroFeatures": {
+            "syntax": "auto",
+        }
+    }
+}
+```
+
+### parserOptions.vueFeatures.syntax
+
+You can use `parserOptions.vueFeatures.syntax` property to choose whether to parse as Astro Component (`*.astro`) or Astro Markdown Page (`*.md`).  
+If `"astro"` is specified, it will be parsed as `*.astro`. If `"markdown"` is specified, it will be parsed as `*.md`. If `"auto"` is specified, it will be automatically selected from the file extensions.  
+For example:
+
+```json
+{
+    "parser": "astro-eslint-parser",
+    "parserOptions": {
+        "astroFeatures": {
+            "syntax": "auto", // or "astro", or "markdown"
+        }
+    }
+}
+```
+
+#### Known Limitations on Markdown Pages
+
+There are some known limitations when parsing Markdown Pages for ESLint integration.
+
+- Incompatible with ESLint's [indent] rule. Turn off the [indent] rule in the markdown file. Otherwise the file syntax will be broken.
+- Incompatible with [eslint-plugin-markdown]. eslint-plugin-markdown separates the contents of markdown by the processor. So using this parser doesn't work because the parser doesn't know the whole markdown.
+
+[indent]: https://eslint.org/docs/rules/indent
+[eslint-plugin-markdown]: https://github.com/eslint/eslint-plugin-markdown
+
 ## :computer: Editor Integrations
 
 ### Visual Studio Code

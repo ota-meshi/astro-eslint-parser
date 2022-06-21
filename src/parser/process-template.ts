@@ -439,20 +439,19 @@ export function processTemplate(
                         const offset = calcContentEndOffset(node, ctx)
                         script.appendOriginal(offset)
                         script.appendScript(`</${node.name}>`)
-                        script.addRestoreNodeProcess(
-                            (scriptNode, _result, parent) => {
-                                if (
-                                    scriptNode.range[0] === offset &&
-                                    scriptNode.type ===
-                                        AST_NODE_TYPES.JSXClosingElement &&
-                                    parent.type === AST_NODE_TYPES.JSXElement
-                                ) {
-                                    parent.closingElement = null
-                                    return true
-                                }
-                                return false
-                            },
-                        )
+                        script.addRestoreNodeProcess((scriptNode, context) => {
+                            const parent = context.getParent(scriptNode)!
+                            if (
+                                scriptNode.range[0] === offset &&
+                                scriptNode.type ===
+                                    AST_NODE_TYPES.JSXClosingElement &&
+                                parent.type === AST_NODE_TYPES.JSXElement
+                            ) {
+                                parent.closingElement = null
+                                return true
+                            }
+                            return false
+                        })
                     }
                 }
             }

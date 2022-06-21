@@ -36,6 +36,7 @@ let b = 2;
 ---
 
 <p>{a} + {b} + {c} = {a + b + c}</p>`;
+  const DEFAULT_FILE_PATH = "Example.astro";
 
   const state = deserializeState(
     (typeof window !== "undefined" && window.location.hash.slice(1)) || ""
@@ -45,6 +46,7 @@ let b = 2;
   let messages = [];
   let time = "";
   let options = {};
+  let filePath = state.filePath || DEFAULT_FILE_PATH;
 
   $: {
     options = {};
@@ -55,9 +57,12 @@ let b = 2;
     const serializeRules = equalsRules(DEFAULT_RULES_CONFIG, rules)
       ? undefined
       : rules;
+    const serializeFilePath =
+      filePath === DEFAULT_FILE_PATH ? undefined : filePath;
     return serializeState({
       code: serializeCode,
       rules: serializeRules,
+      filePath: serializeFilePath,
     });
   })();
   $: {
@@ -108,6 +113,9 @@ let b = 2;
 
 <div class="playground-root">
   <div class="playground-tools">
+    <label style="margin-left: 16px"
+      >FileName<input bind:value={filePath} /></label
+    >
     <span style="margin-left: 16px">{time}</span>
   </div>
   <div class="playground-content">
@@ -116,6 +124,7 @@ let b = 2;
       <ESLintEditor
         {linter}
         bind:code
+        {filePath}
         config={{
           parser: "astro-eslint-parser",
           parserOptions: {

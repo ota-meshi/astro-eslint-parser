@@ -1,0 +1,14 @@
+[
+  {
+    "ruleId": "semi",
+    "code": "\n",
+    "line": 4,
+    "column": 53
+  },
+  {
+    "ruleId": "semi",
+    "code": "\n",
+    "line": 6,
+    "column": 13
+  }
+]

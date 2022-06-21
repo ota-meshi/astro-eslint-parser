@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import { Linter } from "eslint"
 import * as parser from "../src/index"
-import { parseForESLint } from "../src/parser"
+import { parseForESLint } from "../src/index"
 import {
     getBasicParserOptions,
     getMessageData,

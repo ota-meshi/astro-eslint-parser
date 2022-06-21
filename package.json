@@ -42,12 +42,14 @@
     },
     "homepage": "https://github.com/ota-meshi/astro-eslint-parser#readme",
     "dependencies": {
-        "@astrojs/compiler": "^0.16.0",
+        "@astrojs/compiler": "^0.16.1",
         "@typescript-eslint/types": "^5.25.0",
         "debug": "^4.3.4",
         "eslint-visitor-keys": "^3.0.0",
         "espree": "^9.0.0",
-        "synckit": "^0.7.1"
+        "mdast-util-from-markdown": "^1.2.0",
+        "synckit": "^0.7.1",
+        "yaml": "^2.1.1"
     },
     "devDependencies": {
         "@ota-meshi/eslint-plugin": "^0.10.0",

@@ -15,6 +15,7 @@ let b = 2;
 ---
 
 <p>{a} + {b} = {a + b}</p>`;
+  let filePath = "Example.astro";
   let astJson = {};
   let modeEditor = "";
   let time = "";
@@ -23,6 +24,7 @@ let b = 2;
 
   let waiting = true;
 
+  $: language = filePath?.endsWith(".md") ? "markdown" : "astro";
   if (typeof window !== "undefined")
     window.waitSetupForAstroCompilerWasm
       .then(async () => {
@@ -38,6 +40,8 @@ let b = 2;
   $: {
     // eslint-disable-next-line no-unused-expressions -- reactive
     waiting;
+    // eslint-disable-next-line no-unused-expressions -- reactive
+    filePath;
     refresh(options, astroValue);
   }
 
@@ -58,6 +62,7 @@ let b = 2;
     try {
       ast = astroEslintParser.parseForESLint(astroValue, {
         parser: "@typescript-eslint/parser",
+        filePath,
       }).ast;
     } catch (e) {
       // eslint-disable-next-line no-console -- Demo
@@ -208,12 +213,16 @@ let b = 2;
 </script>
 
 <div class="ast-explorer-root">
-  <div class="ast-tools">{time}<AstOptions bind:options /></div>
+  <div class="ast-tools">
+    <label>FileName<input bind:value={filePath} /></label>
+    <span style="margin-left: auto">{time}</span>
+    <AstOptions bind:options />
+  </div>
   <div class="ast-explorer">
     <MonacoEditor
       bind:this={sourceEditor}
       bind:code={astroValue}
-      language="astro"
+      {language}
       on:focusEditorText={() => handleFocus("source")}
       on:changeCursorPosition={(e) => handleCursor(e.detail, "source")}
     />
@@ -238,7 +247,8 @@ let b = 2;
     height: calc(100vh - 80px);
   }
   .ast-tools {
-    text-align: right;
+    display: flex;
+    padding: 0 16px;
   }
   .ast-explorer {
     min-width: 1px;

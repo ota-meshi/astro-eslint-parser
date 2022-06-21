@@ -1,0 +1,281 @@
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "AstroFragment",
+      "children": [
+        {
+          "type": "AstroRawText",
+          "value": "\n\nThis is my in-progress blog post.\n\nNo page will be built for this post.\n\nTo build and publish this post:\n\n- update the frontmatter to ",
+          "raw": "\n\nThis is my in-progress blog post.\n\nNo page will be built for this post.\n\nTo build and publish this post:\n\n- update the frontmatter to ",
+          "range": [
+            108,
+            244
+          ],
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "line": 14,
+              "column": 28
+            }
+          }
+        },
+        {
+          "type": "AstroRawText",
+          "value": "`draft: false`",
+          "raw": "`draft: false`",
+          "range": [
+            244,
+            258
+          ],
+          "loc": {
+            "start": {
+              "line": 14,
+              "column": 28
+            },
+            "end": {
+              "line": 14,
+              "column": 42
+            }
+          }
+        },
+        {
+          "type": "AstroRawText",
+          "value": " or\n- remove the ",
+          "raw": " or\n- remove the ",
+          "range": [
+            258,
+            275
+          ],
+          "loc": {
+            "start": {
+              "line": 14,
+              "column": 42
+            },
+            "end": {
+              "line": 15,
+              "column": 13
+            }
+          }
+        },
+        {
+          "type": "AstroRawText",
+          "value": "`draft`",
+          "raw": "`draft`",
+          "range": [
+            275,
+            282
+          ],
+          "loc": {
+            "start": {
+              "line": 15,
+              "column": 13
+            },
+            "end": {
+              "line": 15,
+              "column": 20
+            }
+          }
+        },
+        {
+          "type": "AstroRawText",
+          "value": " property entirely.\n",
+          "raw": " property entirely.\n",
+          "range": [
+            282,
+            302
+          ],
+          "loc": {
+            "start": {
+              "line": 15,
+              "column": 20
+            },
+            "end": {
+              "line": 16,
+              "column": 0
+            }
+          }
+        }
+      ],
+      "range": [
+        108,
+        302
+      ],
+      "loc": {
+        "start": {
+          "line": 6,
+          "column": 3
+        },
+        "end": {
+          "line": 16,
+          "column": 0
+        }
+      }
+    }
+  ],
+  "sourceType": "module",
+  "comments": [],
+  "tokens": [
+    {
+      "type": "Punctuator",
+      "value": "---",
+      "range": [
+        0,
+        3
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "YAMLToken",
+      "value": "# src/pages/post/blog-post.md\nlayout: ../../layouts/BaseLayout.astro\ntitle: My Blog Post\ndraft: true",
+      "range": [
+        4,
+        104
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "---",
+      "range": [
+        105,
+        108
+      ],
+      "loc": {
+        "start": {
+          "line": 6,
+          "column": 0
+        },
+        "end": {
+          "line": 6,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": "\n\nThis is my in-progress blog post.\n\nNo page will be built for this post.\n\nTo build and publish this post:\n\n- update the frontmatter to ",
+      "range": [
+        108,
+        244
+      ],
+      "loc": {
+        "start": {
+          "line": 6,
+          "column": 3
+        },
+        "end": {
+          "line": 14,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": "`draft: false`",
+      "range": [
+        244,
+        258
+      ],
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 28
+        },
+        "end": {
+          "line": 14,
+          "column": 42
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": " or\n- remove the ",
+      "range": [
+        258,
+        275
+      ],
+      "loc": {
+        "start": {
+          "line": 14,
+          "column": 42
+        },
+        "end": {
+          "line": 15,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": "`draft`",
+      "range": [
+        275,
+        282
+      ],
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 13
+        },
+        "end": {
+          "line": 15,
+          "column": 20
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": " property entirely.\n",
+      "range": [
+        282,
+        302
+      ],
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 20
+        },
+        "end": {
+          "line": 16,
+          "column": 0
+        }
+      }
+    }
+  ],
+  "range": [
+    0,
+    302
+  ],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 16,
+      "column": 0
+    }
+  }
+}

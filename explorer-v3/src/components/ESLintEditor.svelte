@@ -10,6 +10,7 @@
   export let config = {};
   export let options = {};
   export let fix = true;
+  export let filePath = "";
 
   let fixedValue = code;
   let leftMarkers = [];
@@ -20,11 +21,12 @@
   // eslint-disable-next-line no-use-before-define -- TODO
   $: showApplyFix = fix && fixedValue !== code;
   $: {
-    lint(linter, code, config, options);
+    lint(linter, code, config, { ...options, filename: filePath });
   }
+  $: language = filePath?.endsWith(".md") ? "markdown" : "astro";
 
   onMount(() => {
-    lint(linter, code, config, options);
+    lint(linter, code, config, { ...options, filename: filePath });
   });
 
   async function lint(linter, code, config, options) {
@@ -208,7 +210,7 @@
   <MonacoEditor
     bind:code
     bind:rightCode={fixedValue}
-    language="astro"
+    {language}
     diffEditor={fix}
     markers={leftMarkers}
     {rightMarkers}
