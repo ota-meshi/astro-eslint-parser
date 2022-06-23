@@ -41,7 +41,10 @@ npm install --save-dev eslint astro-eslint-parser
 
 ## 📖 Usage
 
-1. Write `overrides.parser` option into your `.eslintrc.*` file.
+**First, we recommend using [eslint-plugin-astro] rather than just the parser.**  
+The following usage it are for introducing only the parser. This is not useful for most people. It can be useful if you create your own plugin.
+
+1. Write `overrides[*].parser` option into your `.eslintrc.*` file.
 
     ```json
     {
