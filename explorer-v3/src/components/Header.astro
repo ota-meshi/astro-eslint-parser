@@ -1,105 +1,103 @@
 ---
-import SnsBar from "./SnsBar.svelte"
-const baseUrl = import.meta.env.BASE_URL
-const currentPage = new URL(Astro.request.url).pathname
+import SnsBar from "./SnsBar.svelte";
+const baseUrl = import.meta.env.BASE_URL;
+const currentPage = new URL(Astro.request.url).pathname;
 
 function isActive(path) {
-    return (
-        currentPage === path ||
-        currentPage === `${baseUrl}${path}` ||
-        (path.endsWith("/") ? false : isActive(`${path}/`))
-    )
+  return (
+    currentPage === path ||
+    currentPage === `${baseUrl}${path}` ||
+    (path.endsWith("/") ? false : isActive(`${path}/`))
+  );
 }
 ---
 
 <header class="header">
-    <span class="title">astro-eslint-parser</span>
-    <a class:list={["menu", { active: isActive(``) }]} href={`${baseUrl}`}
-        ><span>AST</span>
-    </a>
-    <a
-        class:list={["menu", { active: isActive(`playground`) }]}
-        href={`${baseUrl}playground/`}
-        ><span>Playgroud</span>
-    </a>
-    <a
-        class:list={["menu", { active: isActive(`astrojs-compiler`) }]}
-        href={`${baseUrl}astrojs-compiler/`}
-        ><span>@astrojs/compiler</span>
-    </a>
-    <div class="debug">
-        currentPage: {JSON.stringify(currentPage)}
-        baseUrl: {JSON.stringify(baseUrl)}
-    </div>
-    <SnsBar client:visible />
-    <a
-        href="https://github.com/ota-meshi/astro-eslint-parser"
-        class="github-link"
-        >View on GitHub
-    </a>
+  <span class="title">astro-eslint-parser</span>
+  <a class:list={["menu", { active: isActive(``) }]} href={`${baseUrl}`}
+    ><span>AST</span>
+  </a>
+  <a
+    class:list={["menu", { active: isActive(`playground`) }]}
+    href={`${baseUrl}playground/`}
+    ><span>Playgroud</span>
+  </a>
+  <a
+    class:list={["menu", { active: isActive(`astrojs-compiler`) }]}
+    href={`${baseUrl}astrojs-compiler/`}
+    ><span>@astrojs/compiler</span>
+  </a>
+  <div class="debug">
+    currentPage: {JSON.stringify(currentPage)}
+    baseUrl: {JSON.stringify(baseUrl)}
+  </div>
+  <SnsBar client:visible />
+  <a href="https://github.com/ota-meshi/astro-eslint-parser" class="github-link"
+    >View on GitHub
+  </a>
 </header>
 
 <style is:global>
-    :root {
-        --link-gradient: linear-gradient(
-            45deg,
-            #4f39fa,
-            #da62c4 30%,
-            var(--color-border) 60%
-        );
+  :root {
+    --link-gradient: linear-gradient(
+      45deg,
+      #4f39fa,
+      #da62c4 30%,
+      var(--color-border) 60%
+    );
 
-        --gradient-pop-1: linear-gradient(180deg, #1d5bfc 0%, #c238bd 115%);
-    }
-    .header {
-        height: 32px;
-        display: flex;
-        border-bottom: 1px #ddd solid;
-    }
-    .title {
-        font-size: 120%;
-        display: flex;
-        align-items: center;
-        padding-right: 16px;
-        padding-left: 8px;
-        background: var(--fill, var(--gradient-pop-1));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .menu {
-        padding: 2px 2px;
-        border-radius: 4px 4px 0 0;
-        border-color: #ddd #ddd transparent #ddd;
-        border-style: solid;
-        border-width: 1px;
+    --gradient-pop-1: linear-gradient(180deg, #1d5bfc 0%, #c238bd 115%);
+  }
+  .header {
+    height: 32px;
+    display: flex;
+    border-bottom: 1px #ddd solid;
+  }
+  .title {
+    font-size: 120%;
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+    padding-left: 8px;
+    background: var(--fill, var(--gradient-pop-1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .menu {
+    padding: 2px 2px;
+    border-radius: 4px 4px 0 0;
+    border-color: #ddd #ddd transparent #ddd;
+    border-style: solid;
+    border-width: 1px;
 
-        display: flex;
-        background-image: var(--link-gradient);
-        background-size: 400%;
-        background-position: 100%;
-        transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .menu > span {
-        padding: 2px 14px;
-        border-radius: 4px 4px 0 0;
+    display: flex;
+    background-image: var(--link-gradient);
+    background-size: 400%;
+    background-position: 100%;
+    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu > span {
+    padding: 2px 14px;
+    border-radius: 4px 4px 0 0;
 
-        background-color: white;
-        opacity: 0.8;
-    }
-    .menu:is(:hover, :focus-within) {
-        background-position: 0;
-    }
-    .menu:is(:hover, :focus-within) {
-        color: #4f39fa;
-    }
-    .menu.active {
-        padding: 2px 2px 0 2px;
-        border-bottom: 2px solid #ff5e00;
-    }
-    .github-link {
-        display: flex;
-        align-items: center;
-    }
-    .debug {
-        display: none;
-    }
+    background-color: white;
+    opacity: 0.8;
+  }
+  .menu:is(:hover, :focus-within) {
+    background-position: 0;
+  }
+  .menu:is(:hover, :focus-within) {
+    color: #4f39fa;
+  }
+  .menu.active {
+    padding: 2px 2px 0 2px;
+    border-bottom: 2px solid #ff5e00;
+  }
+  .github-link {
+    display: flex;
+    align-items: center;
+  }
+  .debug {
+    display: none;
+  }
 </style>

@@ -1,22 +1,22 @@
 {
-    "compilerOptions": {
-        "target": "es2020",
-        "strict": true,
-        "lib": ["es2020", "DOM"],
-        "module": "commonjs",
-        "declaration": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "esModuleInterop": true,
-        "allowJs": true
-    },
-    "include": [
-        "src/**/*.ts",
-        "tests/**/*.ts",
-        "tools/**/*.ts",
-        "benchmark/**/*.ts"
-    ]
+  "compilerOptions": {
+    "target": "es2020",
+    "strict": true,
+    "lib": ["es2020", "DOM"],
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "tools/**/*.ts",
+    "benchmark/**/*.ts"
+  ]
 }
