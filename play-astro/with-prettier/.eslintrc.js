@@ -1,10 +1,10 @@
 module.exports = {
-    overrides: [
-        {
-            files: ["*.astro"],
-            rules: {
-                "prettier/prettier": "error",
-            },
-        },
-    ],
-}
+  overrides: [
+    {
+      files: ["*.astro"],
+      rules: {
+        "prettier/prettier": "error",
+      },
+    },
+  ],
+};
