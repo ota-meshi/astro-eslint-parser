@@ -48,7 +48,7 @@
     "eslint-visitor-keys": "^3.0.0",
     "espree": "^9.0.0",
     "mdast-util-from-markdown": "^1.2.0",
-    "synckit": "^0.7.1",
+    "synckit": "^0.8.0",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
