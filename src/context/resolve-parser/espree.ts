@@ -1,8 +1,8 @@
 import { createRequire } from "module"
 import path from "path"
-import type { ESLintCustomParser } from "../../types"
+import type { BasicParserObject } from "./parser-object"
 
-let espreeCache: ESLintCustomParser | null = null
+let espreeCache: BasicParserObject | null = null
 
 /** Checks if given path is linter path */
 function isLinterPath(p: string): boolean {
@@ -20,7 +20,7 @@ function isLinterPath(p: string): boolean {
  * Load `espree` from the loaded ESLint.
  * If the loaded ESLint was not found, just returns `require("espree")`.
  */
-export function getEspree(): ESLintCustomParser {
+export function getEspree(): BasicParserObject {
     if (!espreeCache) {
         // Lookup the loaded eslint
         const linterPath = Object.keys(require.cache || {}).find(isLinterPath)

@@ -99,8 +99,8 @@ export default [
           test: /context\/resolve-parser\/index\.js$/u,
           loader: "string-replace-loader",
           options: {
-            search: /require\(name\)/gu.source,
-            replace: () => "__non_webpack_require__(name)",
+            search: /require\(parserValue\)/gu.source,
+            replace: () => "__non_webpack_require__(parserValue)",
             flags: "g",
           },
         },

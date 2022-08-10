@@ -23,15 +23,13 @@ let b = 2;
   let jsonEditor, sourceEditor;
 
   let waiting = true;
+  let tsParser = undefined;
 
   $: language = filePath?.endsWith(".md") ? "markdown" : "astro";
   if (typeof window !== "undefined")
     window.waitSetupForAstroCompilerWasm
       .then(async () => {
-        const parser = await import("@typescript-eslint/parser");
-        if (typeof window !== "undefined") {
-          window.require.define("@typescript-eslint/parser", parser);
-        }
+        tsParser = await import("@typescript-eslint/parser");
       })
       .then(() => {
         waiting = false;
@@ -61,7 +59,7 @@ let b = 2;
     const start = Date.now();
     try {
       ast = astroEslintParser.parseForESLint(astroValue, {
-        parser: "@typescript-eslint/parser",
+        parser: tsParser,
         filePath,
       }).ast;
     } catch (e) {

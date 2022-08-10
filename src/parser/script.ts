@@ -4,6 +4,7 @@ import type { ParserOptionsContext } from "../context/parser-options"
 import type { ESLintExtendedProgram } from "../types"
 import { tsPatch } from "./ts-patch"
 import type { ParserOptions } from "@typescript-eslint/types"
+import { isEnhancedParserObject } from "../context/resolve-parser/parser-object"
 /**
  * Parse for script
  */
@@ -31,9 +32,9 @@ export function parseScript(
         ) {
             patchResult = tsPatch(scriptParserOptions)
         }
-        const result =
-            parser.parseForESLint?.(code, scriptParserOptions) ??
-            parser.parse?.(code, scriptParserOptions)
+        const result = isEnhancedParserObject(parser)
+            ? parser.parseForESLint(code, scriptParserOptions)
+            : parser.parse(code, scriptParserOptions)
 
         if ("ast" in result && result.ast != null) {
             return result

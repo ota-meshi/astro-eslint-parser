@@ -16,10 +16,3 @@ export interface ESLintExtendedProgram {
 export type ESLintCustomParserResult =
     | ESLintExtendedProgram["ast"]
     | ESLintExtendedProgram
-//
-// The interface of ESLint custom parsers.
-//
-export interface ESLintCustomParser {
-    parse(code: string, options: any): ESLintCustomParserResult
-    parseForESLint?(code: string, options: any): ESLintCustomParserResult
-}

@@ -1,18 +1,26 @@
-import type { ESLintCustomParser } from "../../types"
 import { getEspree } from "./espree"
+import type { ParserObject } from "./parser-object"
+import { isParserObject } from "./parser-object"
 
-/** Get parser name */
-export function getParserName(
+type UserOptionParser =
+    | string
+    | ParserObject
+    | Record<string, string | ParserObject | undefined>
+    | undefined
+
+/** Get parser for script lang */
+export function getParserForLang(
     attrs: Record<string, string | undefined>,
-    parser: any,
-): string {
+    parser: UserOptionParser,
+): string | ParserObject {
     if (parser) {
-        if (typeof parser === "string" && parser !== "espree") {
+        if (typeof parser === "string" || isParserObject(parser)) {
             return parser
-        } else if (typeof parser === "object") {
-            const name = parser[attrs.lang || "js"]
-            if (typeof name === "string") {
-                return getParserName(attrs, name)
+        }
+        if (typeof parser === "object") {
+            const value = parser[attrs.lang || "js"]
+            if (typeof value === "string" || isParserObject(value)) {
+                return value
             }
         }
     }
@@ -23,11 +31,14 @@ export function getParserName(
 export function getParser(
     attrs: Record<string, string | undefined>,
     parser: any,
-): ESLintCustomParser {
-    const name = getParserName(attrs, parser)
-    if (name !== "espree") {
+): ParserObject {
+    const parserValue = getParserForLang(attrs, parser)
+    if (isParserObject(parserValue)) {
+        return parserValue
+    }
+    if (parserValue !== "espree") {
         // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
-        return require(name)
+        return require(parserValue)
     }
     return getEspree()
 }

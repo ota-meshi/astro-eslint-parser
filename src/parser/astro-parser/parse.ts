@@ -124,6 +124,9 @@ function fixLocations(node: ParentNode, ctx: Context): void {
                     "---",
                     start,
                 )
+                if (!node.position!.end) {
+                    node.position!.end = {} as any
+                }
                 start = node.position!.end!.offset =
                     tokenIndex(ctx, "---", start + 3 + node.value.length) + 3
             } else if (

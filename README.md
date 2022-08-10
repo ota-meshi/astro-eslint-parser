@@ -129,6 +129,19 @@ module.exports = {
 }
 ```
 
+When using JavaScript configuration (`.eslintrc.js`), you can also give the parser object directly.
+
+```js
+const tsParser = require("@typescript-eslint/parser")
+
+module.exports = {
+    parser: "astro-eslint-parser",
+    parserOptions: {
+        parser: tsParser,
+    },
+}
+```
+
 ## :computer: Editor Integrations
 
 ### Visual Studio Code
