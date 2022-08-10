@@ -1,7 +1,8 @@
 import path from "path"
 import fs from "fs"
-import { getParser, getParserName } from "./resolve-parser"
-import type { ESLintCustomParser } from "../types"
+import { getParser, getParserForLang } from "./resolve-parser"
+import type { ParserObject } from "./resolve-parser/parser-object"
+import { maybeTSESLintParserObject } from "./resolve-parser/parser-object"
 
 export class ParserOptionsContext {
     public readonly parserOptions: any
@@ -35,7 +36,7 @@ export class ParserOptionsContext {
         this.parserOptions = parserOptions
     }
 
-    public getParser(): ESLintCustomParser {
+    public getParser(): ParserObject {
         return getParser({}, this.parserOptions.parser)
     }
 
@@ -43,10 +44,17 @@ export class ParserOptionsContext {
         if (this.state.isTypeScript != null) {
             return this.state.isTypeScript
         }
-        const parserName = getParserName({}, this.parserOptions?.parser)
-        if (parserName === "@typescript-eslint/parser") {
+        const parserValue = getParserForLang({}, this.parserOptions?.parser)
+        if (
+            maybeTSESLintParserObject(parserValue) ||
+            parserValue === "@typescript-eslint/parser"
+        ) {
             return (this.state.isTypeScript = true)
         }
+        if (typeof parserValue !== "string") {
+            return (this.state.isTypeScript = false)
+        }
+        const parserName = parserValue
         if (parserName.includes("@typescript-eslint/parser")) {
             let targetPath = parserName
             while (targetPath) {

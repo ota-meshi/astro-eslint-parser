@@ -31,6 +31,7 @@ export default defineConfig({
         "escape-string-regexp": resolve(
           "./build-system/shim/escape-string-regexp/index.js"
         ),
+        resolve: resolve("./build-system/shim/resolve.js"),
       },
     },
     build: {

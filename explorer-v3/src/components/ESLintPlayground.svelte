@@ -9,12 +9,10 @@
   import { DEFAULT_RULES_CONFIG, getURL } from "./scripts/rules.js";
 
   let linter = null;
+  let tsParser;
 
   async function setupLinter() {
-    const parser = await import("@typescript-eslint/parser");
-    if (typeof window !== "undefined") {
-      window.require.define("@typescript-eslint/parser", parser);
-    }
+    tsParser = await import("@typescript-eslint/parser");
     const linter = new Linter();
     linter.defineParser("astro-eslint-parser", astroEslintParser);
     for (const [id, rule] of Object.entries(pluginReact.rules)) {
@@ -130,7 +128,7 @@ let b = 2;
           parserOptions: {
             ecmaVersion: 2020,
             sourceType: "module",
-            parser: "@typescript-eslint/parser",
+            parser: tsParser,
           },
           rules,
           env: {
