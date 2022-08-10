@@ -129,21 +129,6 @@ module.exports = {
 }
 ```
 
-### parserOptions.astroFeatures
-
-You can use `parserOptions.astroFeatures` property to specify how to parse related to Astro component features. For example:
-
-```json
-{
-    "parser": "astro-eslint-parser",
-    "parserOptions": {
-        "astroFeatures": {
-            "syntax": "auto",
-        }
-    }
-}
-```
-
 ## :computer: Editor Integrations
 
 ### Visual Studio Code

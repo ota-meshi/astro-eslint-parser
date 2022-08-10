@@ -20,8 +20,6 @@ const alias = {
   typescript: resolve("../shim/typescript.js"),
   [resolve("../../../lib/parser/astro-parser/astrojs-compiler-service.js")]:
     resolve("./astrojs-compiler-service4b-inject.js"),
-  [resolve("../../../lib/markdown/mdast-util-from-markdown-service.js")]:
-    resolve("./mdast-util-from-markdown-service4b-inject.js"),
 };
 
 function getBase(name) {
@@ -112,8 +110,6 @@ export default [
       espree: "$$inject_espree$$",
       pako: "$$inject_pako$$",
       "@astrojs-compiler-service4b": "$$inject_astrojs_compiler_service4b$$",
-      "@mdast-util-from-markdown-service4b":
-        "$$inject_mdast_util_from_markdown_service4b$$",
     },
     plugins: [
       new WrapperPlugin({
@@ -121,7 +117,6 @@ export default [
         header: `
 				import * as $$inject_espree$$ from 'espree';
 				import * as $$inject_astrojs_compiler_service4b$$ from '@astrojs-compiler-service4b';
-				import * as $$inject_mdast_util_from_markdown_service4b$$ from '@mdast-util-from-markdown-service4b';
 				const self = globalThis;
 				`,
       }),

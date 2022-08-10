@@ -1,5 +1,4 @@
 import { parseForESLint as parseAstro } from "./parser"
-import { parseForESLint as parseMarkdown } from "./markdown"
 import { parseTemplate, ParseTemplateResult } from "./astro-tools"
 import * as AST from "./ast"
 import { traverseNodes } from "./traverse"
@@ -14,14 +13,7 @@ export { AST, ParseError }
 export function parseForESLint(
     code: string,
     options?: any,
-): ReturnType<typeof parseAstro | typeof parseMarkdown> {
-    const syntax = options?.astroFeatures?.syntax ?? "auto"
-    if (
-        syntax === "markdown" ||
-        (syntax === "auto" && options?.filePath?.endsWith(".md"))
-    ) {
-        return parseMarkdown(code, options)
-    }
+): ReturnType<typeof parseAstro> {
     return parseAstro(code, options)
 }
 // Keys
