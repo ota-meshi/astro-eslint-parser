@@ -15,14 +15,16 @@
     "clean": "rimraf .nyc_output lib coverage",
     "lint": "eslint . --ext .js,.ts,.json,.astro,.svelte",
     "eslint-fix": "npm run lint -- --fix",
-    "test": "mocha --require ts-node/register \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "test": "npm run mocha -- \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "cover": "nyc --reporter=lcov npm run test",
-    "debug": "mocha --require ts-node/register/transpile-only \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
+    "debug": "npm run mocha -- \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "preversion": "npm run lint && npm test",
-    "update-fixtures": "DEBUG='astro-eslint-parser' ts-node --transpile-only ./tools/update-fixtures.ts",
-    "debug-parser": "ts-node --transpile-only ./tools/parser-test.ts",
+    "update-fixtures": "env-cmd -e update-fixtures npm run ts -- ./tools/update-fixtures.ts",
+    "debug-parser": "npm run ts -- ./tools/parser-test.ts",
     "eslint-playground": "eslint tests/fixtures --ext .astro --config .eslintrc-for-playground.js --format codeframe",
-    "benchmark": "ts-node --transpile-only benchmark/index.ts"
+    "benchmark": "npm run ts -- benchmark/index.ts",
+    "ts": "node -r esbuild-register",
+    "mocha": "env-cmd -e test npm run ts -- ./node_modules/mocha/bin/mocha.js"
   },
   "repository": {
     "type": "git",
@@ -66,6 +68,9 @@
     "benchmark": "^2.1.4",
     "chai": "^4.3.4",
     "code-red": "^0.2.3",
+    "env-cmd": "^10.1.0",
+    "esbuild": "^0.15.0",
+    "esbuild-register": "^3.3.3",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-formatter-codeframe": "^7.32.1",
@@ -92,7 +97,6 @@
     "semver": "^7.3.5",
     "string-replace-loader": "^3.0.3",
     "svelte": "^3.48.0",
-    "ts-node": "^10.4.0",
     "typescript": "~4.7.0"
   }
 }
