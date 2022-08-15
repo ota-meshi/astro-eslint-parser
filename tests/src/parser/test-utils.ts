@@ -21,7 +21,7 @@ export function getBasicParserOptions(
     return {
         ecmaVersion: 2020,
         parser,
-        project: require.resolve("../../fixtures/parser/tsconfig.test.json"),
+        project: require.resolve("../../fixtures/tsconfig.test.json"),
         extraFileExtensions: [".astro", ".md"],
         sourceType: "module",
     }

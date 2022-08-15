@@ -98,7 +98,7 @@
       ],
       "range": [
         20,
-        35
+        34
       ],
       "loc": {
         "start": {
@@ -106,8 +106,8 @@
           "column": 0
         },
         "end": {
-          "line": 4,
-          "column": 0
+          "line": 3,
+          "column": 14
         }
       }
     },
