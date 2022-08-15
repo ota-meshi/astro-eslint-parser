@@ -76,10 +76,20 @@ export function processTemplate(
                 script.appendOriginal(start)
                 script.skipOriginalOffset(3)
                 const end = getEndOffset(node, ctx)
-                script.appendOriginal(end - 3)
+                const scriptStart = start + 3
+                let scriptEnd = end - 3
+                let endChar: string
+                while (
+                    scriptStart < scriptEnd - 1 &&
+                    (endChar = script.originalCode[scriptEnd - 1]) &&
+                    !endChar.trim()
+                ) {
+                    scriptEnd--
+                }
+                script.appendOriginal(scriptEnd)
 
-                script.appendScript(";")
-                script.skipOriginalOffset(3)
+                script.appendScript("\n;")
+                script.skipOriginalOffset(end - scriptEnd)
 
                 script.addRestoreNodeProcess((_scriptNode, { result }) => {
                     for (
@@ -89,7 +99,10 @@ export function processTemplate(
                     ) {
                         const st = result.ast.body[index] as TSESTree.Node
                         if (st.type === AST_NODE_TYPES.EmptyStatement) {
-                            if (st.range[0] === end - 3 && st.range[1] <= end) {
+                            if (
+                                st.range[0] === scriptEnd &&
+                                st.range[1] <= end
+                            ) {
                                 result.ast.body.splice(index, 1)
                                 break
                             }

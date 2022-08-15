@@ -1,0 +1,9 @@
+[
+  {
+    "ruleId": "simple-import-sort/imports",
+    "code": "import Layout from '@/layouts/page.layout.astro'\nimport Card from '@/components/card.astro'",
+    "line": 2,
+    "column": 1,
+    "message": "Run autofix to sort these imports!"
+  }
+]
