@@ -9,8 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "pre-build": "cd build-system/pre-build && webpack && npm run copy-eslint-package-json",
-    "copy-eslint-package-json": "cp ./node_modules/eslint/package.json ./build-system/shim/eslint/package.json",
-    "postinstall": "patch-package"
+    "copy-eslint-package-json": "cp ./node_modules/eslint/package.json ./build-system/shim/eslint/package.json"
   },
   "devDependencies": {
     "@astrojs/compiler": "^0.23.0",
@@ -20,7 +19,6 @@
     "eslint": "^8.15.0",
     "eslint-plugin-react": "^7.29.4",
     "pako": "^2.0.4",
-    "patch-package": "^6.4.7",
     "svelte": "^3.48.0",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
