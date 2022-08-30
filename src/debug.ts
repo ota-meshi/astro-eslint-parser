@@ -1,2 +1,2 @@
-import debugFactory from "debug"
-export const debug = debugFactory("astro-eslint-parser")
+import debugFactory from "debug";
+export const debug = debugFactory("astro-eslint-parser");
