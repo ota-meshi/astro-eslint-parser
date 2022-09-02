@@ -18,11 +18,20 @@
     for (const [id, rule] of Object.entries(pluginReact.rules)) {
       linter.defineRule(`react/${id}`, rule);
     }
+    if (typeof globalThis.process === "undefined") {
+      globalThis.process = {};
+    }
+    if (!process.env) {
+      process.env = {};
+    }
+    if (!process.cwd) {
+      process.cwd = () => "/";
+    }
     return linter;
   }
 
   if (typeof window !== "undefined") {
-    linter = window.waitSetupForAstroCompilerWasm.then(() => setupLinter());
+    linter = astroEslintParser.setup().then(() => setupLinter());
   } else {
     linter = setupLinter();
   }
