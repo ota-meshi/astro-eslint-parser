@@ -18,8 +18,6 @@ const alias = {
   url: resolve("../shim/url.js"),
   util: resolve("../shim/util.js"),
   typescript: resolve("../shim/typescript.js"),
-  [resolve("../../../lib/parser/astro-parser/astrojs-compiler-service.js")]:
-    resolve("./astrojs-compiler-service4b-inject.js"),
 };
 
 function getBase(name) {
@@ -96,46 +94,20 @@ export default [
     externals: {
       espree: "$$inject_espree$$",
       pako: "$$inject_pako$$",
-      "@astrojs-compiler-service4b": "$$inject_astrojs_compiler_service4b$$",
+    },
+    module: {
+      rules: [
+        {
+          test: /\.wasm/,
+          loader: resolve("./binary-loader.cjs"),
+        },
+      ],
     },
     plugins: [
       new WrapperPlugin({
         test: /^index\.js/,
         header: `
 				import * as $$inject_espree$$ from 'espree';
-				import * as $$inject_astrojs_compiler_service4b$$ from '@astrojs-compiler-service4b';
-				const self = globalThis;
-				`,
-      }),
-      new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 1,
-      }),
-    ],
-  },
-  {
-    ...getBase("@astrojs-compiler-service4b"),
-    entry: {
-      "@astrojs-compiler-service4b": resolve(
-        "./@astrojs-compiler-service4b.js"
-      ),
-    },
-    module: {
-      rules: [
-        {
-          test: /\.wasm/,
-          // type: 'asset/inline'
-          loader: resolve("./binary-loader.cjs"),
-        },
-      ],
-    },
-    externals: {
-      pako: "$$inject_pako$$",
-    },
-    plugins: [
-      new WrapperPlugin({
-        test: /^index\.js/,
-        header: `
-				import $$inject_pako$$ from 'pako';
 				const self = globalThis;
 				`,
       }),

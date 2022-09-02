@@ -4,7 +4,7 @@
   import MonacoEditor from "./MonacoEditor.svelte";
   import AstOptions from "./AstOptions.svelte";
   import { processJsonValue } from "./scripts/json-astro";
-  import * as astro from "@astrojs-compiler-service4b";
+  import * as astroEslintParser from "astro-eslint-parser";
 
   let options = {
     showLocations: false,
@@ -24,7 +24,7 @@ let b = 2;
   let waiting = true;
 
   if (typeof window !== "undefined")
-    window.waitSetupForAstroCompilerWasm.then(() => {
+    astroEslintParser.setup().then(() => {
       waiting = false;
     });
   $: {
@@ -40,7 +40,9 @@ let b = 2;
     let ast;
     const start = Date.now();
     try {
-      ast = (await astro.parse(astroValue, { position: true })).ast;
+      ast = (
+        await astroEslintParser.parseByCompiler(astroValue, { position: true })
+      ).ast;
     } catch (e) {
       ast = {
         message: e.message,

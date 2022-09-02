@@ -27,7 +27,8 @@ let b = 2;
 
   $: language = filePath?.endsWith(".md") ? "markdown" : "astro";
   if (typeof window !== "undefined")
-    window.waitSetupForAstroCompilerWasm
+    astroEslintParser
+      .setup()
       .then(async () => {
         tsParser = await import("@typescript-eslint/parser");
       })
@@ -52,6 +53,9 @@ let b = 2;
     }
     if (!process.env) {
       process.env = {};
+    }
+    if (!process.cwd) {
+      process.cwd = () => "/";
     }
     // process.cwd = () => '';
     // process.hrtime = () => Date.now();

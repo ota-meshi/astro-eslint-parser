@@ -7,7 +7,6 @@
 /explorer-v3/dist
 /explorer-v3/build
 /explorer-v3/build-system/shim/astro-eslint-parser/*.*
-/explorer-v3/build-system/shim/@astrojs-compiler-service4b/*.*
 /explorer-v3/build-system/shim/escape-string-regexp/*.*
 /explorer-v3/build-system/shim/eslint-scope/*.*
 /explorer-v3/build-system/shim/eslint/*.*

@@ -6,7 +6,7 @@ import type {
   RootNode,
 } from "@astrojs/compiler/types";
 import type { ParseResult } from "@astrojs/compiler";
-import * as service from "./astrojs-compiler-service";
+import * as service from "astrojs-compiler-sync";
 import {
   calcAttributeEndOffset,
   calcCommentEndOffset,
