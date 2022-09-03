@@ -22,6 +22,7 @@
     "src/**/*.ts",
     "tests/**/*.ts",
     "tools/**/*.ts",
-    "benchmark/**/*.ts"
+    "benchmark/**/*.ts",
+    "tsup.config.ts"
   ]
 }
