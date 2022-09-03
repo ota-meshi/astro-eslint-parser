@@ -46,7 +46,7 @@
   "dependencies": {
     "@astrojs/compiler": "0.18.0 - 0.23.0 || ^0.23.0",
     "@typescript-eslint/types": "^5.25.0",
-    "astrojs-compiler-sync": "^0.1.0",
+    "astrojs-compiler-sync": "^0.2.0",
     "debug": "^4.3.4",
     "eslint-visitor-keys": "^3.0.0",
     "espree": "^9.0.0"
