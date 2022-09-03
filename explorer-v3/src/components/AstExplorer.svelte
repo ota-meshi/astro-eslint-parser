@@ -6,6 +6,16 @@
   import * as astroEslintParser from "astro-eslint-parser";
   import { processJsonValue } from "./scripts/json";
 
+  if (typeof globalThis.process === "undefined") {
+    globalThis.process = {};
+  }
+  if (!process.env) {
+    process.env = {};
+  }
+  if (!process.cwd) {
+    process.cwd = () => "/";
+  }
+
   let options = {
     showLocations: false,
   };
@@ -47,15 +57,6 @@ let b = 2;
   function refresh(options, astroValue) {
     if (waiting) {
       return;
-    }
-    if (typeof globalThis.process === "undefined") {
-      globalThis.process = {};
-    }
-    if (!process.env) {
-      process.env = {};
-    }
-    if (!process.cwd) {
-      process.cwd = () => "/";
     }
     // process.cwd = () => '';
     // process.hrtime = () => Date.now();

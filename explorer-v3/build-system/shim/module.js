@@ -1,3 +1,6 @@
 export default {
-  createRequire: () => () => null,
+  createRequire,
 };
+export function createRequire() {
+  return () => null;
+}

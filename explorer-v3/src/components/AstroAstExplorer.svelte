@@ -6,6 +6,16 @@
   import { processJsonValue } from "./scripts/json-astro";
   import * as astroEslintParser from "astro-eslint-parser";
 
+  if (typeof globalThis.process === "undefined") {
+    globalThis.process = {};
+  }
+  if (!process.env) {
+    process.env = {};
+  }
+  if (!process.cwd) {
+    process.cwd = () => "/";
+  }
+
   let options = {
     showLocations: false,
   };

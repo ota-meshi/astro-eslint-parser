@@ -8,6 +8,16 @@
   import { deserializeState, serializeState } from "./scripts/state";
   import { DEFAULT_RULES_CONFIG, getURL } from "./scripts/rules.js";
 
+  if (typeof globalThis.process === "undefined") {
+    globalThis.process = {};
+  }
+  if (!process.env) {
+    process.env = {};
+  }
+  if (!process.cwd) {
+    process.cwd = () => "/";
+  }
+
   let linter = null;
   let tsParser;
 
@@ -17,15 +27,6 @@
     linter.defineParser("astro-eslint-parser", astroEslintParser);
     for (const [id, rule] of Object.entries(pluginReact.rules)) {
       linter.defineRule(`react/${id}`, rule);
-    }
-    if (typeof globalThis.process === "undefined") {
-      globalThis.process = {};
-    }
-    if (!process.env) {
-      process.env = {};
-    }
-    if (!process.cwd) {
-      process.cwd = () => "/";
     }
     return linter;
   }
