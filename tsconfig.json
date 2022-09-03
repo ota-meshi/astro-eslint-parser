@@ -11,7 +11,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+
+    "paths": {
+      // Since multiple type definitions are provided, specify the definition here to avoid an error.
+      "responselike": ["./node_modules/@types/responselike"]
+    }
   },
   "include": [
     "src/**/*.ts",
