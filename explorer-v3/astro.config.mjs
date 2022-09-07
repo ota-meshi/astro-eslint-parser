@@ -6,6 +6,7 @@ import { resolve } from "path";
 export default defineConfig({
   base: "/astro-eslint-parser",
   integrations: [svelte()],
+  outDir: resolve("./dist/astro-eslint-parser"),
   vite: {
     server: {
       fs: { strict: false },
