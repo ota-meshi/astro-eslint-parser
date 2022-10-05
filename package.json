@@ -25,7 +25,9 @@
     "eslint-playground": "eslint tests/fixtures --ext .astro --config .eslintrc-for-playground.js --format codeframe",
     "benchmark": "npm run ts -- benchmark/index.ts",
     "ts": "env-cmd -e basic node -r esbuild-register",
-    "mocha": "npm run ts -- ./node_modules/mocha/bin/mocha.js"
+    "mocha": "npm run ts -- ./node_modules/mocha/bin/mocha.js",
+    "prerelease": "npm run clean && npm run build",
+    "release": "changeset publish"
   },
   "repository": {
     "type": "git",
@@ -53,6 +55,8 @@
     "espree": "^9.0.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "^2.24.2",
     "@ota-meshi/eslint-plugin": "^0.13.0",
     "@types/benchmark": "^2.1.1",
     "@types/chai": "^4.3.0",
@@ -101,5 +105,8 @@
     "svelte": "^3.48.0",
     "tsup": "^6.2.3",
     "typescript": "~4.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
