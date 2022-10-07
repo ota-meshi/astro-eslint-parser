@@ -24,9 +24,11 @@ import { ParseError } from "../../errors";
 export function parse(code: string, ctx: Context): ParseResult {
   const result = service.parse(code, { position: true });
 
-  for (const { code, text, location } of result.diagnostics || []) {
-    ctx.originalAST = result.ast;
-    throw new ParseError(`[${code}]: ${text}`, location.length, ctx);
+  for (const { code, text, location, severity } of result.diagnostics || []) {
+    if (severity === 1 /* Error */) {
+      ctx.originalAST = result.ast;
+      throw new ParseError(`${text} [${code}]`, location.length, ctx);
+    }
   }
   if (!result.ast.children) {
     // If the source code is empty, the children property may not be available.
