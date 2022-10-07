@@ -2,6 +2,79 @@
   "type": "Program",
   "body": [
     {
+      "type": "VariableDeclaration",
+      "kind": "const",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "HeavyImageCarousel",
+            "range": [
+              10,
+              28
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 24
+              }
+            }
+          },
+          "init": {
+            "type": "ObjectExpression",
+            "properties": [],
+            "range": [
+              31,
+              33
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 27
+              },
+              "end": {
+                "line": 2,
+                "column": 29
+              }
+            }
+          },
+          "range": [
+            10,
+            33
+          ],
+          "loc": {
+            "start": {
+              "line": 2,
+              "column": 6
+            },
+            "end": {
+              "line": 2,
+              "column": 29
+            }
+          }
+        }
+      ],
+      "range": [
+        4,
+        34
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 30
+        }
+      }
+    },
+    {
       "type": "AstroFragment",
       "children": [
         {
@@ -14,16 +87,16 @@
               "type": "JSXIdentifier",
               "name": "HeavyImageCarousel",
               "range": [
-                1,
-                19
+                87,
+                105
               ],
               "loc": {
                 "start": {
-                  "line": 1,
+                  "line": 4,
                   "column": 1
                 },
                 "end": {
-                  "line": 1,
+                  "line": 4,
                   "column": 19
                 }
               }
@@ -37,16 +110,16 @@
                     "type": "JSXIdentifier",
                     "name": "client",
                     "range": [
-                      20,
-                      26
+                      106,
+                      112
                     ],
                     "loc": {
                       "start": {
-                        "line": 1,
+                        "line": 4,
                         "column": 20
                       },
                       "end": {
-                        "line": 1,
+                        "line": 4,
                         "column": 26
                       }
                     }
@@ -55,47 +128,47 @@
                     "type": "JSXIdentifier",
                     "name": "visible",
                     "range": [
-                      27,
-                      34
+                      113,
+                      120
                     ],
                     "loc": {
                       "start": {
-                        "line": 1,
+                        "line": 4,
                         "column": 27
                       },
                       "end": {
-                        "line": 1,
+                        "line": 4,
                         "column": 34
                       }
                     }
                   },
                   "range": [
-                    20,
-                    34
+                    106,
+                    120
                   ],
                   "loc": {
                     "start": {
-                      "line": 1,
+                      "line": 4,
                       "column": 20
                     },
                     "end": {
-                      "line": 1,
+                      "line": 4,
                       "column": 34
                     }
                   }
                 },
                 "value": null,
                 "range": [
-                  20,
-                  34
+                  106,
+                  120
                 ],
                 "loc": {
                   "start": {
-                    "line": 1,
+                    "line": 4,
                     "column": 20
                   },
                   "end": {
-                    "line": 1,
+                    "line": 4,
                     "column": 34
                   }
                 }
@@ -103,31 +176,31 @@
             ],
             "selfClosing": true,
             "range": [
-              0,
-              37
+              86,
+              123
             ],
             "loc": {
               "start": {
-                "line": 1,
+                "line": 4,
                 "column": 0
               },
               "end": {
-                "line": 1,
+                "line": 4,
                 "column": 37
               }
             }
           },
           "range": [
-            0,
-            37
+            86,
+            123
           ],
           "loc": {
             "start": {
-              "line": 1,
+              "line": 4,
               "column": 0
             },
             "end": {
-              "line": 1,
+              "line": 4,
               "column": 37
             }
           }
@@ -137,46 +210,65 @@
           "raw": "\n",
           "value": "\n",
           "range": [
-            37,
-            38
+            123,
+            124
           ],
           "loc": {
             "start": {
-              "line": 1,
+              "line": 4,
               "column": 37
             },
             "end": {
-              "line": 2,
+              "line": 5,
               "column": 0
             }
           }
         }
       ],
       "range": [
-        0,
-        38
+        86,
+        124
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 0
         },
         "end": {
-          "line": 2,
+          "line": 5,
           "column": 0
         }
       }
     }
   ],
   "sourceType": "module",
-  "comments": [],
+  "comments": [
+    {
+      "type": "Line",
+      "value": " Avoid parse error by @astrojs/compiler@0.27",
+      "range": [
+        35,
+        81
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 31
+        },
+        "end": {
+          "line": 2,
+          "column": 77
+        }
+      }
+    }
+  ],
   "tokens": [
     {
       "type": "Punctuator",
-      "value": "<",
+      "value": "---",
       "range": [
         0,
-        1
+        3
       ],
       "loc": {
         "start": {
@@ -185,6 +277,150 @@
         },
         "end": {
           "line": 1,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "Keyword",
+      "value": "const",
+      "range": [
+        4,
+        9
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": "Identifier",
+      "value": "HeavyImageCarousel",
+      "range": [
+        10,
+        28
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 6
+        },
+        "end": {
+          "line": 2,
+          "column": 24
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "=",
+      "range": [
+        29,
+        30
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 25
+        },
+        "end": {
+          "line": 2,
+          "column": 26
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "{",
+      "range": [
+        31,
+        32
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 27
+        },
+        "end": {
+          "line": 2,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "}",
+      "range": [
+        32,
+        33
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 28
+        },
+        "end": {
+          "line": 2,
+          "column": 29
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": ";",
+      "range": [
+        33,
+        34
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 29
+        },
+        "end": {
+          "line": 2,
+          "column": 30
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "---",
+      "range": [
+        82,
+        85
+      ],
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 3,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "<",
+      "range": [
+        86,
+        87
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 0
+        },
+        "end": {
+          "line": 4,
           "column": 1
         }
       }
@@ -193,16 +429,16 @@
       "type": "JSXIdentifier",
       "value": "HeavyImageCarousel",
       "range": [
-        1,
-        19
+        87,
+        105
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 1
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 19
         }
       }
@@ -211,16 +447,16 @@
       "type": "JSXIdentifier",
       "value": "client",
       "range": [
-        20,
-        26
+        106,
+        112
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 20
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 26
         }
       }
@@ -229,16 +465,16 @@
       "type": "Punctuator",
       "value": ":",
       "range": [
-        26,
-        27
+        112,
+        113
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 26
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 27
         }
       }
@@ -247,16 +483,16 @@
       "type": "JSXIdentifier",
       "value": "visible",
       "range": [
-        27,
-        34
+        113,
+        120
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 27
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 34
         }
       }
@@ -265,16 +501,16 @@
       "type": "Punctuator",
       "value": "/",
       "range": [
-        35,
-        36
+        121,
+        122
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 35
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 36
         }
       }
@@ -283,16 +519,16 @@
       "type": "Punctuator",
       "value": ">",
       "range": [
-        36,
-        37
+        122,
+        123
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 36
         },
         "end": {
-          "line": 1,
+          "line": 4,
           "column": 37
         }
       }
@@ -301,16 +537,16 @@
       "type": "JSXText",
       "value": "\n",
       "range": [
-        37,
-        38
+        123,
+        124
       ],
       "loc": {
         "start": {
-          "line": 1,
+          "line": 4,
           "column": 37
         },
         "end": {
-          "line": 2,
+          "line": 5,
           "column": 0
         }
       }
@@ -318,7 +554,7 @@
   ],
   "range": [
     0,
-    38
+    124
   ],
   "loc": {
     "start": {
@@ -326,7 +562,7 @@
       "column": 0
     },
     "end": {
-      "line": 2,
+      "line": 5,
       "column": 0
     }
   }

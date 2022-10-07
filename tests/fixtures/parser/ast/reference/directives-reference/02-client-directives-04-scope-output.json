@@ -8322,83 +8322,274 @@
   "childScopes": [
     {
       "type": "module",
-      "variables": [],
+      "variables": [
+        {
+          "name": "SidebarToggle",
+          "identifiers": [
+            {
+              "type": "Identifier",
+              "name": "SidebarToggle",
+              "range": [
+                10,
+                23
+              ],
+              "loc": {
+                "start": {
+                  "line": 2,
+                  "column": 6
+                },
+                "end": {
+                  "line": 2,
+                  "column": 19
+                }
+              }
+            }
+          ],
+          "defs": [
+            {
+              "type": "Variable",
+              "name": {
+                "type": "Identifier",
+                "name": "SidebarToggle",
+                "range": [
+                  10,
+                  23
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 19
+                  }
+                }
+              },
+              "node": {
+                "type": "VariableDeclarator",
+                "id": {
+                  "type": "Identifier",
+                  "name": "SidebarToggle",
+                  "range": [
+                    10,
+                    23
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 2,
+                      "column": 6
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 19
+                    }
+                  }
+                },
+                "init": {
+                  "type": "ObjectExpression",
+                  "properties": [],
+                  "range": [
+                    26,
+                    28
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 2,
+                      "column": 22
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 24
+                    }
+                  }
+                },
+                "range": [
+                  10,
+                  28
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 24
+                  }
+                }
+              }
+            }
+          ],
+          "references": [
+            {
+              "identifier": {
+                "type": "Identifier",
+                "name": "SidebarToggle",
+                "range": [
+                  10,
+                  23
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 19
+                  }
+                }
+              },
+              "from": "module",
+              "init": true,
+              "resolved": {
+                "type": "Identifier",
+                "name": "SidebarToggle",
+                "range": [
+                  10,
+                  23
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 19
+                  }
+                }
+              }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "SidebarToggle",
+                "range": [
+                  82,
+                  95
+                ],
+                "loc": {
+                  "start": {
+                    "line": 4,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 4,
+                    "column": 14
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "SidebarToggle",
+                "range": [
+                  10,
+                  23
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 19
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
       "references": [
         {
           "identifier": {
-            "type": "JSXIdentifier",
+            "type": "Identifier",
             "name": "SidebarToggle",
             "range": [
-              1,
-              14
+              10,
+              23
             ],
             "loc": {
               "start": {
-                "line": 1,
-                "column": 1
+                "line": 2,
+                "column": 6
               },
               "end": {
-                "line": 1,
-                "column": 14
+                "line": 2,
+                "column": 19
               }
             }
           },
           "from": "module",
-          "init": null,
-          "resolved": null
-        }
-      ],
-      "childScopes": [],
-      "through": [
+          "init": true,
+          "resolved": {
+            "type": "Identifier",
+            "name": "SidebarToggle",
+            "range": [
+              10,
+              23
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 19
+              }
+            }
+          }
+        },
         {
           "identifier": {
             "type": "JSXIdentifier",
             "name": "SidebarToggle",
             "range": [
-              1,
-              14
+              82,
+              95
             ],
             "loc": {
               "start": {
-                "line": 1,
+                "line": 4,
                 "column": 1
               },
               "end": {
-                "line": 1,
+                "line": 4,
                 "column": 14
               }
             }
           },
           "from": "module",
           "init": null,
-          "resolved": null
-        }
-      ]
-    }
-  ],
-  "through": [
-    {
-      "identifier": {
-        "type": "JSXIdentifier",
-        "name": "SidebarToggle",
-        "range": [
-          1,
-          14
-        ],
-        "loc": {
-          "start": {
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "line": 1,
-            "column": 14
+          "resolved": {
+            "type": "Identifier",
+            "name": "SidebarToggle",
+            "range": [
+              10,
+              23
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 19
+              }
+            }
           }
         }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
+      ],
+      "childScopes": [],
+      "through": []
     }
-  ]
+  ],
+  "through": []
 }
