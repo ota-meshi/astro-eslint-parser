@@ -30,6 +30,10 @@ export class Context {
     };
   }
 
+  public getIndexFromLoc(loc: { line: number; column: number }): number {
+    return this.locs.getIndexFromLoc(loc);
+  }
+
   /**
    * Get the location information of the given indexes.
    */
