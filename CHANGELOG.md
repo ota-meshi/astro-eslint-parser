@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.7.1
+
+### Patch Changes
+
+- [#107](https://github.com/ota-meshi/astro-eslint-parser/pull/107) [`75d2901`](https://github.com/ota-meshi/astro-eslint-parser/commit/75d2901574e5d472d8d84f8c61bd393d7b61cddb) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: parsing error in info message
+
 ## 0.7.0
 
 ### Minor Changes
