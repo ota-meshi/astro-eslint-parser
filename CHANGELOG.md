@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.7.2
+
+### Patch Changes
+
+- [#110](https://github.com/ota-meshi/astro-eslint-parser/pull/110) [`b5c6a4d`](https://github.com/ota-meshi/astro-eslint-parser/commit/b5c6a4d212c485b6fa5b738953b2b93b9a61fdc4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: wrong error location
+
 ## 0.7.1
 
 ### Patch Changes
