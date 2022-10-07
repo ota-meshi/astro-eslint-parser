@@ -1,3 +1,11 @@
+---
+// Avoid parse error by @astrojs/compiler@0.27
+const SomeReactComponent = {};
+const SomePreactComponent = {};
+const SomeSvelteComponent = {};
+const SomeVueComponent = {};
+const SomeSolidComponent = {};
+---
 <SomeReactComponent client:only="react" />
 <SomePreactComponent client:only="preact" />
 <SomeSvelteComponent client:only="svelte" />

@@ -8322,83 +8322,274 @@
   "childScopes": [
     {
       "type": "module",
-      "variables": [],
+      "variables": [
+        {
+          "name": "HeavyImageCarousel",
+          "identifiers": [
+            {
+              "type": "Identifier",
+              "name": "HeavyImageCarousel",
+              "range": [
+                10,
+                28
+              ],
+              "loc": {
+                "start": {
+                  "line": 2,
+                  "column": 6
+                },
+                "end": {
+                  "line": 2,
+                  "column": 24
+                }
+              }
+            }
+          ],
+          "defs": [
+            {
+              "type": "Variable",
+              "name": {
+                "type": "Identifier",
+                "name": "HeavyImageCarousel",
+                "range": [
+                  10,
+                  28
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 24
+                  }
+                }
+              },
+              "node": {
+                "type": "VariableDeclarator",
+                "id": {
+                  "type": "Identifier",
+                  "name": "HeavyImageCarousel",
+                  "range": [
+                    10,
+                    28
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 2,
+                      "column": 6
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 24
+                    }
+                  }
+                },
+                "init": {
+                  "type": "ObjectExpression",
+                  "properties": [],
+                  "range": [
+                    31,
+                    33
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 2,
+                      "column": 27
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 29
+                    }
+                  }
+                },
+                "range": [
+                  10,
+                  33
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 29
+                  }
+                }
+              }
+            }
+          ],
+          "references": [
+            {
+              "identifier": {
+                "type": "Identifier",
+                "name": "HeavyImageCarousel",
+                "range": [
+                  10,
+                  28
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 24
+                  }
+                }
+              },
+              "from": "module",
+              "init": true,
+              "resolved": {
+                "type": "Identifier",
+                "name": "HeavyImageCarousel",
+                "range": [
+                  10,
+                  28
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 24
+                  }
+                }
+              }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "HeavyImageCarousel",
+                "range": [
+                  87,
+                  105
+                ],
+                "loc": {
+                  "start": {
+                    "line": 4,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 4,
+                    "column": 19
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "HeavyImageCarousel",
+                "range": [
+                  10,
+                  28
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 24
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
       "references": [
         {
           "identifier": {
-            "type": "JSXIdentifier",
+            "type": "Identifier",
             "name": "HeavyImageCarousel",
             "range": [
-              1,
-              19
+              10,
+              28
             ],
             "loc": {
               "start": {
-                "line": 1,
-                "column": 1
+                "line": 2,
+                "column": 6
               },
               "end": {
-                "line": 1,
-                "column": 19
+                "line": 2,
+                "column": 24
               }
             }
           },
           "from": "module",
-          "init": null,
-          "resolved": null
-        }
-      ],
-      "childScopes": [],
-      "through": [
+          "init": true,
+          "resolved": {
+            "type": "Identifier",
+            "name": "HeavyImageCarousel",
+            "range": [
+              10,
+              28
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 24
+              }
+            }
+          }
+        },
         {
           "identifier": {
             "type": "JSXIdentifier",
             "name": "HeavyImageCarousel",
             "range": [
-              1,
-              19
+              87,
+              105
             ],
             "loc": {
               "start": {
-                "line": 1,
+                "line": 4,
                 "column": 1
               },
               "end": {
-                "line": 1,
+                "line": 4,
                 "column": 19
               }
             }
           },
           "from": "module",
           "init": null,
-          "resolved": null
-        }
-      ]
-    }
-  ],
-  "through": [
-    {
-      "identifier": {
-        "type": "JSXIdentifier",
-        "name": "HeavyImageCarousel",
-        "range": [
-          1,
-          19
-        ],
-        "loc": {
-          "start": {
-            "line": 1,
-            "column": 1
-          },
-          "end": {
-            "line": 1,
-            "column": 19
+          "resolved": {
+            "type": "Identifier",
+            "name": "HeavyImageCarousel",
+            "range": [
+              10,
+              28
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 6
+              },
+              "end": {
+                "line": 2,
+                "column": 24
+              }
+            }
           }
         }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
+      ],
+      "childScopes": [],
+      "through": []
     }
-  ]
+  ],
+  "through": []
 }
