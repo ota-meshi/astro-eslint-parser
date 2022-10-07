@@ -22,20 +22,28 @@ import { ParseError } from "../../errors";
  * Parse code by `@astrojs/compiler`
  */
 export function parse(code: string, ctx: Context): ParseResult {
-  const ast = service.parse(code, { position: true }).ast;
-  if (!ast.children) {
+  const result = service.parse(code, { position: true });
+
+  for (const { code, text, location } of result.diagnostics || []) {
+    ctx.originalAST = result.ast;
+    throw new ParseError(`[${code}]: ${text}`, location.length, ctx);
+  }
+  if (!result.ast.children) {
     // If the source code is empty, the children property may not be available.
-    ast.children = [];
+    result.ast.children = [];
   }
 
-  const htmlElement = ast.children.find(
+  const htmlElement = result.ast.children.find(
     (n): n is ElementNode => n.type === "element" && n.name === "html"
   );
-  if (htmlElement) {
-    adjustHTML(ast, htmlElement, ctx);
+  if (!(result as any)._adjusted) {
+    if (htmlElement) {
+      adjustHTML(result.ast, htmlElement, ctx);
+    }
+    fixLocations(result.ast, ctx);
+    (result as any)._adjusted = true;
   }
-  fixLocations(ast, ctx);
-  return { ast };
+  return result;
 }
 
 /**
