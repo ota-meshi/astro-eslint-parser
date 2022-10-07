@@ -15,12 +15,22 @@ export class ParseError extends SyntaxError {
   /**
    * Initialize this ParseError instance.
    */
-  public constructor(message: string, offset: number, ctx: Context) {
+  public constructor(
+    message: string,
+    offset: number | { line: number; column: number },
+    ctx: Context
+  ) {
     super(message);
-    this.index = offset;
-    const loc = ctx.getLocFromIndex(offset);
-    this.lineNumber = loc.line;
-    this.column = loc.column;
+    if (typeof offset === "number") {
+      this.index = offset;
+      const loc = ctx.getLocFromIndex(offset);
+      this.lineNumber = loc.line;
+      this.column = loc.column;
+    } else {
+      this.index = ctx.getIndexFromLoc(offset);
+      this.lineNumber = offset.line;
+      this.column = offset.column;
+    }
     this.originalAST = ctx.originalAST;
   }
 }

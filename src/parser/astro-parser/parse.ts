@@ -27,7 +27,7 @@ export function parse(code: string, ctx: Context): ParseResult {
   for (const { code, text, location, severity } of result.diagnostics || []) {
     if (severity === 1 /* Error */) {
       ctx.originalAST = result.ast;
-      throw new ParseError(`${text} [${code}]`, location.length, ctx);
+      throw new ParseError(`${text} [${code}]`, location, ctx);
     }
   }
   if (!result.ast.children) {
