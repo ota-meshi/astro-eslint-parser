@@ -1,3 +1,7 @@
+!/.devcontainer
+!/.changeset
+!/.github
+!/.vscode
 /.nyc_output
 /coverage
 /lib
