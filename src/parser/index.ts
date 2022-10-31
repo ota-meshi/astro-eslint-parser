@@ -28,7 +28,8 @@ export function parseForESLint(
   ast: AstroProgram;
   services: Record<string, any> & {
     isAstro: true;
-    getAstroAst: () => ParseResult;
+    getAstroAst: () => ParseResult["ast"];
+    getAstroResult: () => ParseResult;
   };
   visitorKeys: { [type: string]: string[] };
   scopeManager: ScopeManager;
@@ -92,6 +93,9 @@ export function parseForESLint(
     isAstro: true,
     getAstroAst() {
       return resultTemplate.ast;
+    },
+    getAstroResult() {
+      return resultTemplate;
     },
   });
   resultScript.visitorKeys = Object.assign({}, KEYS, resultScript.visitorKeys);
