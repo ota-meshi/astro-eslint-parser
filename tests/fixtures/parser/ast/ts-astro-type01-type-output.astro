@@ -1,0 +1,9 @@
+---
+interface Props { // Props: Props
+  aProp: string; // aProp: string
+  bProp: number; // bProp: number
+}
+const { aProp, bProp } = Astro.props; // aProp: string, aProp: string, bProp: number, bProp: number, Astro.props: Props
+---
+
+{aProp}{bProp} <!-- aProp: string, bProp: number -->

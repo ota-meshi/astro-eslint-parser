@@ -8316,6 +8316,158 @@
       "identifiers": [],
       "defs": [],
       "references": []
+    },
+    {
+      "name": "Fragment",
+      "identifiers": [],
+      "defs": [],
+      "references": [
+        {
+          "identifier": {
+            "type": "Identifier",
+            "name": "Fragment",
+            "range": [
+              370,
+              378
+            ],
+            "loc": {
+              "start": {
+                "line": 14,
+                "column": 27
+              },
+              "end": {
+                "line": 14,
+                "column": 35
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              495,
+              503
+            ],
+            "loc": {
+              "start": {
+                "line": 20,
+                "column": 9
+              },
+              "end": {
+                "line": 20,
+                "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              690,
+              698
+            ],
+            "loc": {
+              "start": {
+                "line": 25,
+                "column": 9
+              },
+              "end": {
+                "line": 25,
+                "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              495,
+              503
+            ],
+            "loc": {
+              "start": {
+                "line": 20,
+                "column": 9
+              },
+              "end": {
+                "line": 20,
+                "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              690,
+              698
+            ],
+            "loc": {
+              "start": {
+                "line": 25,
+                "column": 9
+              },
+              "end": {
+                "line": 25,
+                "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        }
+      ]
+    },
+    {
+      "name": "Astro",
+      "identifiers": [],
+      "defs": [],
+      "references": [
+        {
+          "identifier": {
+            "type": "Identifier",
+            "name": "Astro",
+            "range": [
+              417,
+              422
+            ],
+            "loc": {
+              "start": {
+                "line": 14,
+                "column": 74
+              },
+              "end": {
+                "line": 14,
+                "column": 79
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        }
+      ]
     }
   ],
   "references": [],
@@ -9253,7 +9405,48 @@
               }
             }
           ],
-          "references": []
+          "references": [
+            {
+              "identifier": {
+                "type": "Identifier",
+                "name": "Props",
+                "range": [
+                  241,
+                  246
+                ],
+                "loc": {
+                  "start": {
+                    "line": 7,
+                    "column": 17
+                  },
+                  "end": {
+                    "line": 7,
+                    "column": 22
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Props",
+                "range": [
+                  241,
+                  246
+                ],
+                "loc": {
+                  "start": {
+                    "line": 7,
+                    "column": 17
+                  },
+                  "end": {
+                    "line": 7,
+                    "column": 22
+                  }
+                }
+              }
+            }
+          ]
         },
         {
           "name": "Wrapper",
@@ -12063,194 +12256,8 @@
         }
       ],
       "childScopes": [],
-      "through": [
-        {
-          "identifier": {
-            "type": "Identifier",
-            "name": "Fragment",
-            "range": [
-              370,
-              378
-            ],
-            "loc": {
-              "start": {
-                "line": 14,
-                "column": 27
-              },
-              "end": {
-                "line": 14,
-                "column": 35
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        },
-        {
-          "identifier": {
-            "type": "Identifier",
-            "name": "Astro",
-            "range": [
-              417,
-              422
-            ],
-            "loc": {
-              "start": {
-                "line": 14,
-                "column": 74
-              },
-              "end": {
-                "line": 14,
-                "column": 79
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        },
-        {
-          "identifier": {
-            "type": "JSXIdentifier",
-            "name": "Fragment",
-            "range": [
-              495,
-              503
-            ],
-            "loc": {
-              "start": {
-                "line": 20,
-                "column": 9
-              },
-              "end": {
-                "line": 20,
-                "column": 17
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        },
-        {
-          "identifier": {
-            "type": "JSXIdentifier",
-            "name": "Fragment",
-            "range": [
-              690,
-              698
-            ],
-            "loc": {
-              "start": {
-                "line": 25,
-                "column": 9
-              },
-              "end": {
-                "line": 25,
-                "column": 17
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        }
-      ]
+      "through": []
     }
   ],
-  "through": [
-    {
-      "identifier": {
-        "type": "Identifier",
-        "name": "Fragment",
-        "range": [
-          370,
-          378
-        ],
-        "loc": {
-          "start": {
-            "line": 14,
-            "column": 27
-          },
-          "end": {
-            "line": 14,
-            "column": 35
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    },
-    {
-      "identifier": {
-        "type": "Identifier",
-        "name": "Astro",
-        "range": [
-          417,
-          422
-        ],
-        "loc": {
-          "start": {
-            "line": 14,
-            "column": 74
-          },
-          "end": {
-            "line": 14,
-            "column": 79
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    },
-    {
-      "identifier": {
-        "type": "JSXIdentifier",
-        "name": "Fragment",
-        "range": [
-          495,
-          503
-        ],
-        "loc": {
-          "start": {
-            "line": 20,
-            "column": 9
-          },
-          "end": {
-            "line": 20,
-            "column": 17
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    },
-    {
-      "identifier": {
-        "type": "JSXIdentifier",
-        "name": "Fragment",
-        "range": [
-          690,
-          698
-        ],
-        "loc": {
-          "start": {
-            "line": 25,
-            "column": 9
-          },
-          "end": {
-            "line": 25,
-            "column": 17
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    }
-  ]
+  "through": []
 }

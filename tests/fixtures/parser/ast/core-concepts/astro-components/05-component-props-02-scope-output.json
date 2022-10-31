@@ -8316,6 +8316,36 @@
       "identifiers": [],
       "defs": [],
       "references": []
+    },
+    {
+      "name": "Astro",
+      "identifiers": [],
+      "defs": [],
+      "references": [
+        {
+          "identifier": {
+            "type": "Identifier",
+            "name": "Astro",
+            "range": [
+              147,
+              152
+            ],
+            "loc": {
+              "start": {
+                "line": 8,
+                "column": 37
+              },
+              "end": {
+                "line": 8,
+                "column": 42
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        }
+      ]
     }
   ],
   "references": [],
@@ -8564,6 +8594,46 @@
             }
           ],
           "references": [
+            {
+              "identifier": {
+                "type": "Identifier",
+                "name": "Props",
+                "range": [
+                  62,
+                  67
+                ],
+                "loc": {
+                  "start": {
+                    "line": 3,
+                    "column": 17
+                  },
+                  "end": {
+                    "line": 3,
+                    "column": 22
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Props",
+                "range": [
+                  62,
+                  67
+                ],
+                "loc": {
+                  "start": {
+                    "line": 3,
+                    "column": 17
+                  },
+                  "end": {
+                    "line": 3,
+                    "column": 22
+                  }
+                }
+              }
+            },
             {
               "identifier": {
                 "type": "Identifier",
@@ -9755,56 +9825,8 @@
         }
       ],
       "childScopes": [],
-      "through": [
-        {
-          "identifier": {
-            "type": "Identifier",
-            "name": "Astro",
-            "range": [
-              147,
-              152
-            ],
-            "loc": {
-              "start": {
-                "line": 8,
-                "column": 37
-              },
-              "end": {
-                "line": 8,
-                "column": 42
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        }
-      ]
+      "through": []
     }
   ],
-  "through": [
-    {
-      "identifier": {
-        "type": "Identifier",
-        "name": "Astro",
-        "range": [
-          147,
-          152
-        ],
-        "loc": {
-          "start": {
-            "line": 8,
-            "column": 37
-          },
-          "end": {
-            "line": 8,
-            "column": 42
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    }
-  ]
+  "through": []
 }

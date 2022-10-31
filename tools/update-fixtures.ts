@@ -13,7 +13,6 @@ import {
 } from "../tests/src/parser/test-utils";
 import type ts from "typescript";
 import type { TSESTree } from "@typescript-eslint/types";
-import { AST_NODE_TYPES } from "@typescript-eslint/types";
 
 const ERROR_FIXTURE_ROOT = path.resolve(
   __dirname,
@@ -141,10 +140,7 @@ function buildTypes(
 ): string {
   const scriptLineRange: [number, number][] = [];
   for (const body of result.ast.body) {
-    if (
-      body.type !== AST_NODE_TYPES.ExpressionStatement ||
-      body.expression.type !== ("AstroFragment" as AST_NODE_TYPES)
-    ) {
+    if (body.type !== "AstroFragment") {
       scriptLineRange.push([body.loc.start.line - 1, body.loc.end.line - 1]);
     }
   }
@@ -161,7 +157,17 @@ function buildTypes(
 
   // eslint-disable-next-line require-jsdoc -- X
   function addType(node: TSESTree.Expression) {
-    const tsNode = tsNodeMap.get(node)!;
+    const tsNode = tsNodeMap.get(node);
+    if (!tsNode) {
+      throw new Error(
+        `Expression node does not exist in esTreeNodeToTSNodeMap. ${JSON.stringify(
+          {
+            type: node.type,
+            loc: node.loc,
+          }
+        )}`
+      );
+    }
     const type = checker.getTypeAtLocation(tsNode);
     const typeText = checker.typeToString(type);
     const lineTypes = (types[node.loc.start.line - 1] ??= []);

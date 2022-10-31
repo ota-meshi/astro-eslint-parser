@@ -10,6 +10,13 @@ import { processTemplate } from "./process-template";
 import { parseTemplate } from "./template";
 import { ParserOptionsContext } from "../context/parser-options";
 import type { ESLintExtendedProgram } from "../types";
+import {
+  addGlobalVariable,
+  addVirtualReference,
+  getProgramScope,
+  removeAllScopeAndVariableAndReference,
+  removeReferenceFromThrough,
+} from "./scope";
 
 /**
  * Parse source code
@@ -26,12 +33,57 @@ export function parseForESLint(
   visitorKeys: { [type: string]: string[] };
   scopeManager: ScopeManager;
 } {
-  const { result: resultTemplate, context: ctx } = parseTemplate(code);
+  const { result: resultTemplate, context: ctx } = parseTemplate(
+    code,
+    options?.filePath ?? "<input>"
+  );
   const scriptContext = processTemplate(ctx, resultTemplate);
-
   const parserOptions = new ParserOptionsContext(options);
+  if (parserOptions.isTypeScript() && /\bAstro\b/u.test(code)) {
+    scriptContext.appendVirtualScript(
+      `declare const Astro: Readonly<import('astro').AstroGlobal<Props>>;`
+    );
+    scriptContext.restoreContext.addRestoreNodeProcess(
+      (_scriptNode, { result }) => {
+        const declareNode = result.ast.body.pop()!;
+        const scopeManager = result.scopeManager;
+        if (scopeManager) {
+          // remove declare scope
+          removeAllScopeAndVariableAndReference(declareNode, {
+            visitorKeys: result.visitorKeys,
+            scopeManager,
+          });
+
+          // analyze Props references
+          const scope = getProgramScope(scopeManager);
+          const propsVariable = scope.set.get("Props");
+          if (propsVariable) {
+            addVirtualReference(
+              propsVariable.identifiers[0],
+              propsVariable,
+              scope,
+              {}
+            );
+          }
+          // analyze Astro, and Fragment references
+          const astroGlobalReferences = scope.through.filter(
+            (ref) =>
+              ref.identifier.name === "Astro" ||
+              ref.identifier.name === "Fragment"
+          );
+          for (const astroGlobalReference of astroGlobalReferences) {
+            addGlobalVariable(astroGlobalReference, scopeManager);
+            removeReferenceFromThrough(astroGlobalReference, scope);
+          }
+        }
+        return true;
+      }
+    );
+  }
+
   const resultScript = parseScript(scriptContext.script, ctx, parserOptions);
-  scriptContext.restore(resultScript);
+
+  scriptContext.restoreContext.restore(resultScript);
   sort(resultScript.ast.comments!);
   sort(resultScript.ast.tokens!);
   extractTokens(resultScript, ctx);

@@ -1,5 +1,5 @@
 import type { TSESTree } from "@typescript-eslint/types";
-import type { ScopeManager } from "eslint-scope";
+import type { ScopeManager } from "@typescript-eslint/scope-manager";
 /**
  * The parsing result of ESLint custom parsers.
  */
