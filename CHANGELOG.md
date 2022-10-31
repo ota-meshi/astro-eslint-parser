@@ -1,5 +1,13 @@
 # astro-eslint-parser
 
+## 0.8.0
+
+### Minor Changes
+
+- [#120](https://github.com/ota-meshi/astro-eslint-parser/pull/120) [`219db41`](https://github.com/ota-meshi/astro-eslint-parser/commit/219db413f9f08c95dfbd7d25372118558b2180d1) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: support Astro.props type
+
+- [#120](https://github.com/ota-meshi/astro-eslint-parser/pull/120) [`219db41`](https://github.com/ota-meshi/astro-eslint-parser/commit/219db413f9f08c95dfbd7d25372118558b2180d1) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: support scope analysis with typescript-eslint/parser
+
 ## 0.7.4
 
 ### Patch Changes
