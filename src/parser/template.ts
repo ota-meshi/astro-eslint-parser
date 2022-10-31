@@ -22,7 +22,7 @@ const lruCache = new LruCache<string, TemplateResult>(5);
 /**
  * Parse the astro component template.
  */
-export function parseTemplate(code: string, filePath: string): TemplateResult {
+export function parseTemplate(code: string, filePath?: string): TemplateResult {
   const cache = lruCache.get(code);
   if (cache) {
     return cache;

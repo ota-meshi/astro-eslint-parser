@@ -8,7 +8,7 @@ type RangeAndLoc = {
 export class Context {
   public readonly code: string;
 
-  public readonly filePath: string;
+  public readonly filePath?: string;
 
   public readonly locs: LinesAndColumns;
 
@@ -16,7 +16,7 @@ export class Context {
 
   private readonly state: { isTypeScript?: boolean; originalAST?: any } = {};
 
-  public constructor(code: string, filePath: string) {
+  public constructor(code: string, filePath?: string) {
     this.locs = new LinesAndColumns(code);
     this.code = code;
     this.filePath = filePath;
