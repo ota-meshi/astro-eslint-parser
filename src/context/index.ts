@@ -1,4 +1,5 @@
 import type { TSESTree } from "@typescript-eslint/types";
+import { sortedLastIndex } from "../util";
 
 type RangeAndLoc = {
   range: TSESTree.Range;
@@ -7,15 +8,18 @@ type RangeAndLoc = {
 export class Context {
   public readonly code: string;
 
+  public readonly filePath: string;
+
   public readonly locs: LinesAndColumns;
 
   private readonly locsMap = new Map<number, TSESTree.Position>();
 
   private readonly state: { isTypeScript?: boolean; originalAST?: any } = {};
 
-  public constructor(code: string) {
+  public constructor(code: string, filePath: string) {
     this.locs = new LinesAndColumns(code);
     this.code = code;
+    this.filePath = filePath;
   }
 
   public getLocFromIndex(index: number): { line: number; column: number } {
@@ -113,7 +117,10 @@ export class LinesAndColumns {
   }
 
   public getLocFromIndex(index: number): { line: number; column: number } {
-    const lineNumber = sortedLastIndex(this.lineStartIndices, index);
+    const lineNumber = sortedLastIndex(
+      this.lineStartIndices,
+      (target) => target - index
+    );
     return {
       line: lineNumber,
       column: index - this.lineStartIndices[lineNumber - 1],
@@ -170,26 +177,4 @@ export class NormalizedLineFeed {
       this.remapIndex = (i) => i;
     }
   }
-}
-
-/**
- * Uses a binary search to determine the highest index at which value should be inserted into array in order to maintain its sort order.
- */
-function sortedLastIndex(array: number[], value: number): number {
-  let lower = 0;
-  let upper = array.length;
-
-  while (lower < upper) {
-    const mid = Math.floor(lower + (upper - lower) / 2);
-    const target = array[mid];
-    if (target < value) {
-      lower = mid + 1;
-    } else if (target > value) {
-      upper = mid;
-    } else {
-      return mid + 1;
-    }
-  }
-
-  return upper;
 }

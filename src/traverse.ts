@@ -1,4 +1,4 @@
-import type { VisitorKeys } from "eslint-visitor-keys";
+import type { VisitorKeys } from "@typescript-eslint/visitor-keys";
 import { KEYS } from "./visitor-keys";
 import type { TSESTree } from "@typescript-eslint/types";
 import type { AstroNode } from "./ast";
@@ -42,7 +42,7 @@ export function getFallbackKeys(node: any): string[] {
 export function getKeys(node: any, visitorKeys?: VisitorKeys): string[] {
   const keys = (visitorKeys || KEYS)[node.type] || getFallbackKeys(node);
 
-  return keys.filter((key) => !getNodes(node, key).next().done);
+  return keys.filter((key: any) => !getNodes(node, key).next().done);
 }
 
 /**

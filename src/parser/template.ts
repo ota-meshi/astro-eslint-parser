@@ -22,14 +22,16 @@ const lruCache = new LruCache<string, TemplateResult>(5);
 /**
  * Parse the astro component template.
  */
-export function parseTemplate(code: string): TemplateResult {
+export function parseTemplate(code: string, filePath: string): TemplateResult {
   const cache = lruCache.get(code);
   if (cache) {
     return cache;
   }
-  const ctx = new Context(code);
+  const ctx = new Context(code, filePath);
   const normalized = ctx.locs.getNormalizedLineFeed();
-  const ctxForAstro = normalized.needRemap ? new Context(normalized.code) : ctx;
+  const ctxForAstro = normalized.needRemap
+    ? new Context(normalized.code, filePath)
+    : ctx;
   try {
     const result = parseAstro(normalized?.code ?? code, ctxForAstro);
 

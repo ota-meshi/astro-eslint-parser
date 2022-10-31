@@ -12,7 +12,7 @@ import {
   getEndOffset,
 } from "../astro";
 import type { Context } from "../context";
-import { ScriptContext } from "../context/script";
+import { VirtualScriptContext } from "../context/script";
 import type {
   AstroDoctype,
   AstroFragment,
@@ -30,19 +30,19 @@ import type {
 export function processTemplate(
   ctx: Context,
   resultTemplate: ParseResult
-): ScriptContext {
+): VirtualScriptContext {
   let uniqueIdSeq = 0;
   const usedUniqueIds = new Set<string>();
 
-  const script = new ScriptContext(ctx);
+  const script = new VirtualScriptContext(ctx);
 
   let fragmentOpened = false;
 
   /** Open astro root fragment */
   function openRootFragment(startOffset: number) {
-    script.appendScript("<>");
+    script.appendVirtualScript("<>");
     fragmentOpened = true;
-    script.addRestoreNodeProcess((scriptNode, { result }) => {
+    script.restoreContext.addRestoreNodeProcess((scriptNode, { result }) => {
       if (
         scriptNode.type === AST_NODE_TYPES.ExpressionStatement &&
         scriptNode.expression.type === AST_NODE_TYPES.JSXFragment &&
@@ -70,7 +70,7 @@ export function processTemplate(
       if (node.type === "frontmatter") {
         const start = node.position!.start.offset;
         if (fragmentOpened) {
-          script.appendScript("</>;");
+          script.appendVirtualScript("</>;");
           fragmentOpened = false;
         }
         script.appendOriginal(start);
@@ -81,34 +81,39 @@ export function processTemplate(
         let endChar: string;
         while (
           scriptStart < scriptEnd - 1 &&
-          (endChar = script.originalCode[scriptEnd - 1]) &&
+          (endChar = ctx.code[scriptEnd - 1]) &&
           !endChar.trim()
         ) {
           scriptEnd--;
         }
         script.appendOriginal(scriptEnd);
 
-        script.appendScript("\n;");
+        script.appendVirtualScript("\n;");
         script.skipOriginalOffset(end - scriptEnd);
 
-        script.addRestoreNodeProcess((_scriptNode, { result }) => {
-          for (let index = 0; index < result.ast.body.length; index++) {
-            const st = result.ast.body[index] as TSESTree.Node;
-            if (st.type === AST_NODE_TYPES.EmptyStatement) {
-              if (st.range[0] === scriptEnd && st.range[1] <= end) {
-                result.ast.body.splice(index, 1);
-                break;
+        script.restoreContext.addRestoreNodeProcess(
+          (_scriptNode, { result }) => {
+            for (let index = 0; index < result.ast.body.length; index++) {
+              const st = result.ast.body[index] as TSESTree.Node;
+              if (st.type === AST_NODE_TYPES.EmptyStatement) {
+                if (st.range[0] === scriptEnd && st.range[1] === scriptEnd) {
+                  result.ast.body.splice(index, 1);
+                  break;
+                }
               }
             }
+            return true;
           }
-          return true;
-        });
+        );
 
-        script.addToken(AST_TOKEN_TYPES.Punctuator, [
+        script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
           node.position!.start.offset,
           node.position!.start.offset + 3,
         ]);
-        script.addToken(AST_TOKEN_TYPES.Punctuator, [end - 3, end]);
+        script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
+          end - 3,
+          end,
+        ]);
       } else if (isTag(node)) {
         // Process for multiple tag
         if (parent.type === "expression") {
@@ -119,8 +124,8 @@ export function processTemplate(
             if (after && (isTag(after) || after.type === "comment")) {
               const start = node.position!.start.offset;
               script.appendOriginal(start);
-              script.appendScript("<>");
-              script.addRestoreNodeProcess((scriptNode) => {
+              script.appendVirtualScript("<>");
+              script.restoreContext.addRestoreNodeProcess((scriptNode) => {
                 if (
                   scriptNode.range[0] === start &&
                   scriptNode.type === AST_NODE_TYPES.JSXFragment
@@ -165,59 +170,61 @@ export function processTemplate(
               const start = attr.position!.start.offset;
               script.appendOriginal(start + colonIndex);
               script.skipOriginalOffset(1);
-              script.appendScript(`_`);
+              script.appendVirtualScript(`_`);
 
-              script.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+              script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
                 start,
                 start + colonIndex,
               ]);
-              script.addToken(AST_TOKEN_TYPES.Punctuator, [
+              script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
                 start + colonIndex,
                 start + colonIndex + 1,
               ]);
-              script.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+              script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
                 start + colonIndex + 1,
                 start + attr.name.length,
               ]);
-              script.addRestoreNodeProcess((scriptNode, context) => {
-                if (
-                  scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                  scriptNode.range[0] === start
-                ) {
-                  const baseNameNode = scriptNode.name;
-                  const nsn: TSESTree.JSXNamespacedName = {
-                    ...baseNameNode,
-                    type: AST_NODE_TYPES.JSXNamespacedName,
-                    namespace: {
-                      type: AST_NODE_TYPES.JSXIdentifier,
-                      name: attr.name.slice(0, colonIndex),
-                      ...ctx.getLocations(
-                        baseNameNode.range[0],
-                        baseNameNode.range[0] + colonIndex
-                      ),
-                    },
-                    name: {
-                      type: AST_NODE_TYPES.JSXIdentifier,
-                      name: attr.name.slice(colonIndex + 1),
-                      ...ctx.getLocations(
-                        baseNameNode.range[0] + colonIndex + 1,
-                        baseNameNode.range[1]
-                      ),
-                    },
-                  };
-                  scriptNode.name = nsn;
-                  nsn.namespace.parent = nsn;
-                  nsn.name.parent = nsn;
+              script.restoreContext.addRestoreNodeProcess(
+                (scriptNode, context) => {
+                  if (
+                    scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                    scriptNode.range[0] === start
+                  ) {
+                    const baseNameNode = scriptNode.name;
+                    const nsn: TSESTree.JSXNamespacedName = {
+                      ...baseNameNode,
+                      type: AST_NODE_TYPES.JSXNamespacedName,
+                      namespace: {
+                        type: AST_NODE_TYPES.JSXIdentifier,
+                        name: attr.name.slice(0, colonIndex),
+                        ...ctx.getLocations(
+                          baseNameNode.range[0],
+                          baseNameNode.range[0] + colonIndex
+                        ),
+                      },
+                      name: {
+                        type: AST_NODE_TYPES.JSXIdentifier,
+                        name: attr.name.slice(colonIndex + 1),
+                        ...ctx.getLocations(
+                          baseNameNode.range[0] + colonIndex + 1,
+                          baseNameNode.range[1]
+                        ),
+                      },
+                    };
+                    scriptNode.name = nsn;
+                    nsn.namespace.parent = nsn;
+                    nsn.name.parent = nsn;
 
-                  context.addRemoveToken(
-                    (token) =>
-                      token.range[0] === baseNameNode.range[0] &&
-                      token.range[1] === baseNameNode.range[1]
-                  );
-                  return true;
+                    context.addRemoveToken(
+                      (token) =>
+                        token.range[0] === baseNameNode.range[0] &&
+                        token.range[1] === baseNameNode.range[1]
+                    );
+                    return true;
+                  }
+                  return false;
                 }
-                return false;
-              });
+              );
             }
           }
           if (attr.kind === "shorthand") {
@@ -226,9 +233,9 @@ export function processTemplate(
             const jsxName = /[\s"'[\]{}]/u.test(attr.name)
               ? generateUniqueId(attr.name)
               : attr.name;
-            script.appendScript(`${jsxName}=`);
+            script.appendVirtualScript(`${jsxName}=`);
 
-            script.addRestoreNodeProcess((scriptNode) => {
+            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
               if (
                 scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
                 scriptNode.range[0] === start
@@ -254,11 +261,11 @@ export function processTemplate(
             const start = calcAttributeValueStartOffset(attr, ctx);
             const end = calcAttributeEndOffset(attr, ctx);
             script.appendOriginal(start);
-            script.appendScript("{");
+            script.appendVirtualScript("{");
             script.appendOriginal(end);
-            script.appendScript("}");
+            script.appendVirtualScript("}");
 
-            script.addRestoreNodeProcess((scriptNode) => {
+            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
               if (
                 scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
                 scriptNode.range[0] === attrStart
@@ -277,7 +284,7 @@ export function processTemplate(
         const closing = getSelfClosingTag(node, ctx);
         if (closing && closing.end === ">") {
           script.appendOriginal(closing.offset - 1);
-          script.appendScript("/");
+          script.appendVirtualScript("/");
         }
 
         // Process for raw text
@@ -289,7 +296,7 @@ export function processTemplate(
             script.appendOriginal(start);
             script.skipOriginalOffset(text.value.length);
 
-            script.addRestoreNodeProcess((scriptNode) => {
+            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
               if (
                 scriptNode.type === AST_NODE_TYPES.JSXElement &&
                 scriptNode.range[0] === styleNodeStart
@@ -306,7 +313,7 @@ export function processTemplate(
               }
               return false;
             });
-            script.addToken(AST_TOKEN_TYPES.JSXText, [
+            script.restoreContext.addToken(AST_TOKEN_TYPES.JSXText, [
               start,
               start + text.value.length,
             ]);
@@ -321,11 +328,11 @@ export function processTemplate(
           openRootFragment(start);
         }
         script.appendOriginal(start + 1);
-        script.appendScript(`></`);
+        script.appendVirtualScript(`></`);
         script.skipOriginalOffset(length - 2);
         script.appendOriginal(end);
 
-        script.addRestoreNodeProcess((scriptNode, context) => {
+        script.restoreContext.addRestoreNodeProcess((scriptNode, context) => {
           if (
             scriptNode.range[0] === start &&
             scriptNode.type === AST_NODE_TYPES.JSXFragment
@@ -350,7 +357,7 @@ export function processTemplate(
           }
           return false;
         });
-        script.addToken("HTMLComment" as AST_TOKEN_TYPES, [
+        script.restoreContext.addToken("HTMLComment" as AST_TOKEN_TYPES, [
           start,
           start + length,
         ]);
@@ -363,11 +370,11 @@ export function processTemplate(
           openRootFragment(start);
         }
         script.appendOriginal(start + 1);
-        script.appendScript(`></`);
+        script.appendVirtualScript(`></`);
         script.skipOriginalOffset(length - 2);
         script.appendOriginal(end);
 
-        script.addRestoreNodeProcess((scriptNode, context) => {
+        script.restoreContext.addRestoreNodeProcess((scriptNode, context) => {
           if (
             scriptNode.range[0] === start &&
             scriptNode.type === AST_NODE_TYPES.JSXFragment
@@ -391,7 +398,10 @@ export function processTemplate(
           }
           return false;
         });
-        script.addToken("HTMLDocType" as AST_TOKEN_TYPES, [start, end]);
+        script.restoreContext.addToken("HTMLDocType" as AST_TOKEN_TYPES, [
+          start,
+          end,
+        ]);
       } else {
         const start = node.position!.start.offset;
         script.appendOriginal(start);
@@ -408,19 +418,21 @@ export function processTemplate(
           if (!end) {
             const offset = calcContentEndOffset(node, ctx);
             script.appendOriginal(offset);
-            script.appendScript(`</${node.name}>`);
-            script.addRestoreNodeProcess((scriptNode, context) => {
-              const parent = context.getParent(scriptNode)!;
-              if (
-                scriptNode.range[0] === offset &&
-                scriptNode.type === AST_NODE_TYPES.JSXClosingElement &&
-                parent.type === AST_NODE_TYPES.JSXElement
-              ) {
-                parent.closingElement = null;
-                return true;
+            script.appendVirtualScript(`</${node.name}>`);
+            script.restoreContext.addRestoreNodeProcess(
+              (scriptNode, context) => {
+                const parent = context.getParent(scriptNode)!;
+                if (
+                  scriptNode.range[0] === offset &&
+                  scriptNode.type === AST_NODE_TYPES.JSXClosingElement &&
+                  parent.type === AST_NODE_TYPES.JSXElement
+                ) {
+                  parent.closingElement = null;
+                  return true;
+                }
+                return false;
               }
-              return false;
-            });
+            );
           }
         }
       }
@@ -436,7 +448,7 @@ export function processTemplate(
           if (before && (isTag(before) || before.type === "comment")) {
             const end = getEndOffset(node, ctx);
             script.appendOriginal(end);
-            script.appendScript("</>");
+            script.appendVirtualScript("</>");
           }
         }
       }
@@ -447,7 +459,7 @@ export function processTemplate(
       resultTemplate.ast.children[resultTemplate.ast.children.length - 1];
     const end = getEndOffset(last, ctx);
     script.appendOriginal(end);
-    script.appendScript("</>");
+    script.appendVirtualScript("</>;");
   }
 
   script.appendOriginal(ctx.code.length);

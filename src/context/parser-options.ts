@@ -2,7 +2,13 @@ import path from "path";
 import fs from "fs";
 import { getParser, getParserForLang } from "./resolve-parser";
 import type { ParserObject } from "./resolve-parser/parser-object";
+import { isTSESLintParserObject } from "./resolve-parser/parser-object";
 import { maybeTSESLintParserObject } from "./resolve-parser/parser-object";
+
+const TS_PARSER_NAMES = [
+  "@typescript-eslint/parser",
+  "typescript-eslint-parser-for-extra-files",
+];
 
 export class ParserOptionsContext {
   public readonly parserOptions: any;
@@ -42,25 +48,25 @@ export class ParserOptionsContext {
       return this.state.isTypeScript;
     }
     const parserValue = getParserForLang({}, this.parserOptions?.parser);
-    if (
-      maybeTSESLintParserObject(parserValue) ||
-      parserValue === "@typescript-eslint/parser"
-    ) {
+    if (typeof parserValue !== "string") {
+      return (this.state.isTypeScript =
+        maybeTSESLintParserObject(parserValue) ||
+        isTSESLintParserObject(parserValue));
+    }
+
+    const parserName = parserValue;
+    if (TS_PARSER_NAMES.includes(parserName)) {
       return (this.state.isTypeScript = true);
     }
-    if (typeof parserValue !== "string") {
-      return (this.state.isTypeScript = false);
-    }
-    const parserName = parserValue;
-    if (parserName.includes("@typescript-eslint/parser")) {
+    if (TS_PARSER_NAMES.some((nm) => parserName.includes(nm))) {
       let targetPath = parserName;
       while (targetPath) {
         const pkgPath = path.join(targetPath, "package.json");
         if (fs.existsSync(pkgPath)) {
           try {
-            return (this.state.isTypeScript =
-              JSON.parse(fs.readFileSync(pkgPath, "utf-8"))?.name ===
-              "@typescript-eslint/parser");
+            return (this.state.isTypeScript = TS_PARSER_NAMES.includes(
+              JSON.parse(fs.readFileSync(pkgPath, "utf-8"))?.name
+            ));
           } catch {
             return (this.state.isTypeScript = false);
           }
