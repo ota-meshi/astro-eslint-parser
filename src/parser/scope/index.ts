@@ -196,10 +196,8 @@ function removeReference(reference: Reference, baseScope: Scope): void {
   }
 }
 
-/* eslint-disable complexity -- ignore X( */
 /** Remove variable */
 function removeIdentifierVariable(
-  /* eslint-enable complexity -- ignore X( */
   node: TSESTree.Identifier,
   scope: Scope
 ): void {
