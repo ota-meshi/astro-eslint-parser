@@ -1,5 +1,15 @@
 # astro-eslint-parser
 
+## 0.9.0
+
+### Minor Changes
+
+- [#122](https://github.com/ota-meshi/astro-eslint-parser/pull/122) [`c34a77f`](https://github.com/ota-meshi/astro-eslint-parser/commit/c34a77fddbae25a0072aa66a4472ac19e998b084) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add services.getAstroResult
+
+### Patch Changes
+
+- [#122](https://github.com/ota-meshi/astro-eslint-parser/pull/122) [`c34a77f`](https://github.com/ota-meshi/astro-eslint-parser/commit/c34a77fddbae25a0072aa66a4472ac19e998b084) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: services type
+
 ## 0.8.0
 
 ### Minor Changes
