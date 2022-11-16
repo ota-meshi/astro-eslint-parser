@@ -3333,11 +3333,30 @@
               "column": 7
             }
           }
+        },
+        {
+          "type": "JSXText",
+          "raw": "\n",
+          "value": "\n",
+          "range": [
+            1843,
+            1844
+          ],
+          "loc": {
+            "start": {
+              "line": 84,
+              "column": 7
+            },
+            "end": {
+              "line": 85,
+              "column": 0
+            }
+          }
         }
       ],
       "range": [
         507,
-        1843
+        1844
       ],
       "loc": {
         "start": {
@@ -3345,8 +3364,8 @@
           "column": 0
         },
         "end": {
-          "line": 84,
-          "column": 7
+          "line": 85,
+          "column": 0
         }
       }
     }
@@ -7492,6 +7511,24 @@
         "end": {
           "line": 84,
           "column": 7
+        }
+      }
+    },
+    {
+      "type": "JSXText",
+      "value": "\n",
+      "range": [
+        1843,
+        1844
+      ],
+      "loc": {
+        "start": {
+          "line": 84,
+          "column": 7
+        },
+        "end": {
+          "line": 85,
+          "column": 0
         }
       }
     }
