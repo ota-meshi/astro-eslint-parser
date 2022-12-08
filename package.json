@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/ota-meshi/astro-eslint-parser#readme",
   "dependencies": {
-    "@astrojs/compiler": "^0.27.0 || ^0.28.0 || ^0.29.0 || ^0.30.0",
+    "@astrojs/compiler": "^0.31.0",
     "@typescript-eslint/types": "^5.25.0",
     "astrojs-compiler-sync": "^0.3.0",
     "debug": "^4.3.4",
