@@ -40,7 +40,7 @@ export interface AstroProgram extends Omit<ES.Program, "type" | "body"> {
 /** Node of Astro fragment */
 export interface AstroFragment extends BaseNode {
   type: "AstroFragment";
-  children: AstroChild[];
+  children: (AstroChild | AstroDoctype)[];
   parent?: AstroParentNode;
 }
 /** Node of Astro html comment */
