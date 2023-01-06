@@ -23,6 +23,7 @@ import type {
   AstroTemplateLiteralAttribute,
   JSXElement,
 } from "../ast";
+import type { AttributeNode } from "@astrojs/compiler/types";
 
 /**
  * Process the template to generate a ScriptContext.
@@ -159,72 +160,18 @@ export function processTemplate(
         // Process for attributes
         for (const attr of node.attributes) {
           if (
-            (node.type === "component" || node.type === "fragment") &&
-            (attr.kind === "quoted" ||
-              attr.kind === "empty" ||
-              attr.kind === "expression" ||
-              attr.kind === "template-literal")
+            attr.kind === "quoted" ||
+            attr.kind === "empty" ||
+            attr.kind === "expression" ||
+            attr.kind === "template-literal"
           ) {
-            const colonIndex = attr.name.indexOf(":");
-            if (colonIndex >= 0) {
-              const start = attr.position!.start.offset;
-              script.appendOriginal(start + colonIndex);
-              script.skipOriginalOffset(1);
-              script.appendVirtualScript(`_`);
+            const needPunctuatorsProcess =
+              node.type === "component" || node.type === "fragment"
+                ? /[.:@]/u.test(attr.name)
+                : /[.@]/u.test(attr.name) || attr.name.startsWith(":");
 
-              script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
-                start,
-                start + colonIndex,
-              ]);
-              script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
-                start + colonIndex,
-                start + colonIndex + 1,
-              ]);
-              script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
-                start + colonIndex + 1,
-                start + attr.name.length,
-              ]);
-              script.restoreContext.addRestoreNodeProcess(
-                (scriptNode, context) => {
-                  if (
-                    scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                    scriptNode.range[0] === start
-                  ) {
-                    const baseNameNode = scriptNode.name;
-                    const nsn: TSESTree.JSXNamespacedName = {
-                      ...baseNameNode,
-                      type: AST_NODE_TYPES.JSXNamespacedName,
-                      namespace: {
-                        type: AST_NODE_TYPES.JSXIdentifier,
-                        name: attr.name.slice(0, colonIndex),
-                        ...ctx.getLocations(
-                          baseNameNode.range[0],
-                          baseNameNode.range[0] + colonIndex
-                        ),
-                      },
-                      name: {
-                        type: AST_NODE_TYPES.JSXIdentifier,
-                        name: attr.name.slice(colonIndex + 1),
-                        ...ctx.getLocations(
-                          baseNameNode.range[0] + colonIndex + 1,
-                          baseNameNode.range[1]
-                        ),
-                      },
-                    };
-                    scriptNode.name = nsn;
-                    nsn.namespace.parent = nsn;
-                    nsn.name.parent = nsn;
-
-                    context.addRemoveToken(
-                      (token) =>
-                        token.range[0] === baseNameNode.range[0] &&
-                        token.range[1] === baseNameNode.range[1]
-                    );
-                    return true;
-                  }
-                  return false;
-                }
-              );
+            if (needPunctuatorsProcess) {
+              processAttributePunctuators(attr);
             }
           }
           if (attr.kind === "shorthand") {
@@ -465,6 +412,121 @@ export function processTemplate(
   script.appendOriginal(ctx.code.length);
 
   return script;
+
+  /**
+   * Process for attribute punctuators
+   */
+  function processAttributePunctuators(attr: AttributeNode) {
+    const start = attr.position!.start.offset;
+    let targetIndex = start;
+    let colonOffset: number | undefined;
+    for (let index = 0; index < attr.name.length; index++) {
+      const char = attr.name[index];
+      if (char !== ":" && char !== "." && char !== "@") {
+        continue;
+      }
+      if (index === 0) {
+        targetIndex++;
+      }
+      const punctuatorIndex = start + index;
+      script.appendOriginal(punctuatorIndex);
+      script.skipOriginalOffset(1);
+      script.appendVirtualScript(`_`);
+
+      if (char === ":" && index !== 0 && colonOffset == null) {
+        colonOffset = index;
+      }
+    }
+    if (colonOffset != null) {
+      const punctuatorIndex = start + colonOffset;
+      script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+        start,
+        punctuatorIndex,
+      ]);
+      script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
+        punctuatorIndex,
+        punctuatorIndex + 1,
+      ]);
+      script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+        punctuatorIndex + 1,
+        start + attr.name.length,
+      ]);
+    } else {
+      script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
+        start,
+        start + attr.name.length,
+      ]);
+    }
+    script.restoreContext.addRestoreNodeProcess((scriptNode, context) => {
+      if (
+        scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+        scriptNode.range[0] === targetIndex
+      ) {
+        const baseNameNode = scriptNode.name;
+        if (colonOffset != null) {
+          const nameNode: TSESTree.JSXNamespacedName = {
+            ...baseNameNode,
+            type: AST_NODE_TYPES.JSXNamespacedName,
+            namespace: {
+              type: AST_NODE_TYPES.JSXIdentifier,
+              name: attr.name.slice(0, colonOffset),
+              ...ctx.getLocations(
+                baseNameNode.range[0],
+                baseNameNode.range[0] + colonOffset
+              ),
+            },
+            name: {
+              type: AST_NODE_TYPES.JSXIdentifier,
+              name: attr.name.slice(colonOffset + 1),
+              ...ctx.getLocations(
+                baseNameNode.range[0] + colonOffset + 1,
+                baseNameNode.range[1]
+              ),
+            },
+          };
+          scriptNode.name = nameNode;
+          nameNode.namespace.parent = nameNode;
+          nameNode.name.parent = nameNode;
+        } else {
+          if (baseNameNode.type === AST_NODE_TYPES.JSXIdentifier) {
+            const nameNode: TSESTree.JSXIdentifier = {
+              ...baseNameNode,
+              name: attr.name,
+            };
+            scriptNode.name = nameNode;
+          } else {
+            const nameNode: TSESTree.JSXNamespacedName = {
+              ...baseNameNode,
+              namespace: {
+                ...baseNameNode.namespace,
+                name: attr.name.slice(
+                  baseNameNode.namespace.range[0] - start,
+                  baseNameNode.namespace.range[1] - start
+                ),
+              },
+              name: {
+                ...baseNameNode.name,
+                name: attr.name.slice(
+                  baseNameNode.name.range[0] - start,
+                  baseNameNode.name.range[1] - start
+                ),
+              },
+            };
+            scriptNode.name = nameNode;
+            nameNode.namespace.parent = nameNode;
+            nameNode.name.parent = nameNode;
+          }
+        }
+        context.addRemoveToken(
+          (token) =>
+            token.range[0] === baseNameNode.range[0] &&
+            token.range[1] === baseNameNode.range[1]
+        );
+        return true;
+      }
+      return false;
+    });
+  }
 
   /**
    * Generate unique id
