@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.9.3
+
+### Patch Changes
+
+- [#137](https://github.com/ota-meshi/astro-eslint-parser/pull/137) [`446563a`](https://github.com/ota-meshi/astro-eslint-parser/commit/446563a9825a9af1c8b99b1a6f497b35de2bcc1a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: parsing error for `@`, `.`, and `:` in attribute names
+
 ## 0.9.2
 
 ### Patch Changes
