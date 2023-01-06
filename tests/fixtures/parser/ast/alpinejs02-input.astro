@@ -1,0 +1,5 @@
+<Button @click.outside="console.log('hi')">x</Button>
+
+<Button x-on:click.outside="console.log('hi')">x</Button>
+
+<Button :class="open ? '' : 'hidden'">x</Button>
