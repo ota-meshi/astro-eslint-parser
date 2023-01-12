@@ -2,4 +2,4 @@
 "astro-eslint-parser": patch
 ---
 
-fix(deps): update dependency @astrojs/compiler to ^0.32.0
+Update dependency @astrojs/compiler to 0.27.0 - 0.32.0 || ^0.32.0
