@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.9.5
+
+### Patch Changes
+
+- [#141](https://github.com/ota-meshi/astro-eslint-parser/pull/141) [`abc6315`](https://github.com/ota-meshi/astro-eslint-parser/commit/abc63156672630ccd945d2ec0f73b1e6021959f2) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: no-unused-vars rule false positives for Props interfaces
+
 ## 0.9.4
 
 ### Patch Changes
