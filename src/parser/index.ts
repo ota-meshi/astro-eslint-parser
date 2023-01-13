@@ -63,7 +63,9 @@ export function parseForESLint(
               propsVariable.identifiers[0],
               propsVariable,
               scope,
-              {}
+              {
+                read: true,
+              }
             );
           }
           // analyze Astro, and Fragment references
