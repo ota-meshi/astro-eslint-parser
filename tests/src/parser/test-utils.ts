@@ -2,22 +2,27 @@
 import path from "path";
 import fs from "fs";
 import semver from "semver";
-import type { Linter, Scope as ESLintScope } from "eslint";
+import type { Linter } from "eslint";
 import type { TSESTree } from "@typescript-eslint/types";
 import { LinesAndColumns } from "../../../src/context";
-import type { Reference, Scope, ScopeManager, Variable } from "eslint-scope";
+import type {
+  Reference,
+  Scope,
+  ScopeManager,
+  Variable,
+  Definition,
+} from "@typescript-eslint/scope-manager";
 import type { AstroNode } from "../../../src/ast";
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
-  _filePath = "<input>"
+  filePath = "<input>"
 ): Linter.BaseConfig["parserOptions"] {
-  const parser = "@typescript-eslint/parser";
+  let parser = "@typescript-eslint/parser";
 
-  // if (filePath.endsWith("03-the-component-template-01-input.astro")) {
-  //     // typescript-eslint cannot parse JSXNamespacedName attributes.
-  //     parser = "espree"
-  // }
+  if (path.basename(filePath).startsWith("js-")) {
+    parser = "espree";
+  }
   return {
     ecmaVersion: 2020,
     parser,
@@ -163,7 +168,7 @@ export function getMessageData(
 }
 
 export function scopeToJSON(scopeManager: ScopeManager): string {
-  const scope = normalizeScope(scopeManager.globalScope);
+  const scope = normalizeScope(scopeManager.globalScope!);
   return JSON.stringify(scope, nodeReplacer, 2);
 }
 
@@ -195,7 +200,7 @@ function normalizeReference(reference: Reference) {
   };
 }
 
-function normalizeDef(reference: ESLintScope.Definition) {
+function normalizeDef(reference: Definition) {
   return {
     type: reference.type,
     node: reference.node,

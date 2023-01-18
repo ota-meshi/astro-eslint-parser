@@ -1,8 +1,8 @@
 import { createRequire } from "module";
-import type { ParserOptions } from "@typescript-eslint/types";
 import path from "path";
 import fs from "fs";
 import type { ScriptKind } from "typescript";
+import type { ParserOptions } from "../context/parser-options";
 type TS = {
   ScriptKind: typeof ScriptKind;
   ensureScriptKind?: (fileName: string, ...args: any[]) => ScriptKind;
