@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.11.0
+
+### Minor Changes
+
+- [#152](https://github.com/ota-meshi/astro-eslint-parser/pull/152) [`ff66b51`](https://github.com/ota-meshi/astro-eslint-parser/commit/ff66b519e396e08380f6ba55d0ec1706e57d543b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency @astrojs/compiler to v1
+
 ## 0.10.1
 
 ### Patch Changes
