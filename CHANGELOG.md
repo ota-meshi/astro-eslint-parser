@@ -1,5 +1,13 @@
 # astro-eslint-parser
 
+## 0.10.0
+
+### Minor Changes
+
+- [#147](https://github.com/ota-meshi/astro-eslint-parser/pull/147) [`f7ae285`](https://github.com/ota-meshi/astro-eslint-parser/commit/f7ae2859f577721d02d9dba85889cfa81e9d04d1) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: change to generate scope manager
+
+- [#145](https://github.com/ota-meshi/astro-eslint-parser/pull/145) [`8ac3e6c`](https://github.com/ota-meshi/astro-eslint-parser/commit/8ac3e6c9259ace8cf5de06c5c0173cd499ac8928) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency @astrojs/compiler to ^0.33.0
+
 ## 0.9.5
 
 ### Patch Changes
