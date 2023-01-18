@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.10.1
+
+### Patch Changes
+
+- [#148](https://github.com/ota-meshi/astro-eslint-parser/pull/148) [`9926a11`](https://github.com/ota-meshi/astro-eslint-parser/commit/9926a1166100a71617729550ca857d1117fd8d58) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: import path
+
 ## 0.10.0
 
 ### Minor Changes
