@@ -12,7 +12,12 @@ import type {
 import type { VisitorKeys } from "@typescript-eslint/visitor-keys";
 import { traverseNodes } from "../../traverse";
 import { addElementsToSortedArray, addElementToSortedArray } from "../../util";
-import { ReferenceFlag } from "@typescript-eslint/scope-manager/dist/referencer/Reference";
+import type { ReferenceFlag } from "@typescript-eslint/scope-manager/dist/referencer/Reference";
+
+const READ_FLAG = 1 as ReferenceFlag;
+const WRITE_FLAG = 2 as ReferenceFlag;
+const READ_WRITE_FLAG = 3 as ReferenceFlag;
+
 /**
  * Gets the scope for the Program node
  */
@@ -80,10 +85,10 @@ export function addVirtualReference(
     node,
     scope,
     readWrite.write && readWrite.read
-      ? ReferenceFlag.ReadWrite
+      ? READ_WRITE_FLAG
       : readWrite.write
-      ? ReferenceFlag.Write
-      : ReferenceFlag.Read
+      ? WRITE_FLAG
+      : READ_FLAG
   );
   (reference as any).astroVirtualReference = true;
 
