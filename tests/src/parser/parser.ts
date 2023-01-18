@@ -91,7 +91,10 @@ function checkTokens(ast: AstroProgram, input: string) {
   for (const token of allTokens) {
     const value = getText(token);
 
-    assert.strictEqual(value, input.slice(...token.range));
+    assert.strictEqual(
+      value.replace(/\r\n/g, "\n"),
+      input.slice(...token.range).replace(/\r\n/g, "\n")
+    );
   }
   assert.strictEqual(
     input

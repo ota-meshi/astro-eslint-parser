@@ -3,7 +3,7 @@ import type { Reference } from "@typescript-eslint/scope-manager";
 import {
   Reference as ReferenceClass,
   Variable as VariableClass,
-} from "eslint-scope";
+} from "@typescript-eslint/scope-manager";
 import type {
   ScopeManager,
   Scope,
@@ -12,6 +12,7 @@ import type {
 import type { VisitorKeys } from "@typescript-eslint/visitor-keys";
 import { traverseNodes } from "../../traverse";
 import { addElementsToSortedArray, addElementToSortedArray } from "../../util";
+import { ReferenceFlag } from "@typescript-eslint/scope-manager/dist/referencer/Reference";
 /**
  * Gets the scope for the Program node
  */
@@ -75,15 +76,16 @@ export function addVirtualReference(
   scope: Scope,
   readWrite: { read?: boolean; write?: boolean }
 ): Reference {
-  const reference = new ReferenceClass() as Reference;
+  const reference = new ReferenceClass(
+    node,
+    scope,
+    readWrite.write && readWrite.read
+      ? ReferenceFlag.ReadWrite
+      : readWrite.write
+      ? ReferenceFlag.Write
+      : ReferenceFlag.Read
+  );
   (reference as any).astroVirtualReference = true;
-  (reference as ReferenceClass).from = scope as never;
-  (reference as ReferenceClass).identifier = node;
-  reference.isWrite = () => Boolean(readWrite.write);
-  reference.isWriteOnly = () => Boolean(readWrite.write) && !readWrite.read;
-  reference.isRead = () => Boolean(readWrite.read);
-  reference.isReadOnly = () => Boolean(readWrite.read) && !readWrite.write;
-  reference.isReadWrite = () => Boolean(readWrite.read && readWrite.write);
 
   addReference(variable.references, reference);
   reference.resolved = variable;
@@ -102,9 +104,7 @@ export function addGlobalVariable(
   const name = reference.identifier.name;
   let variable = globalScope.set.get(name);
   if (!variable) {
-    variable = new VariableClass() as Variable;
-    (variable as VariableClass).name = name;
-    (variable as VariableClass).scope = globalScope as never;
+    variable = new VariableClass(name, globalScope);
     globalScope.variables.push(variable);
     globalScope.set.set(name, variable);
   }

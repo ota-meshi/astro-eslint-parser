@@ -2,7 +2,7 @@ import { KEYS } from "../visitor-keys";
 import type { Context } from "../context";
 import type { AstroProgram } from "../ast";
 import { AST_TOKEN_TYPES } from "@typescript-eslint/types";
-import type { ScopeManager } from "eslint-scope";
+import type { ScopeManager } from "@typescript-eslint/scope-manager";
 import { parseScript } from "./script";
 import { sort } from "./sort";
 import type { ParseResult } from "@astrojs/compiler";

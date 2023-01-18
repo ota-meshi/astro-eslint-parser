@@ -1,12 +1,7 @@
+import type { UserOptionParser } from "../parser-options";
 import { getEspree } from "./espree";
 import type { ParserObject } from "./parser-object";
 import { isParserObject } from "./parser-object";
-
-type UserOptionParser =
-  | string
-  | ParserObject
-  | Record<string, string | ParserObject | undefined>
-  | undefined;
 
 /** Get parser for script lang */
 export function getParserForLang(

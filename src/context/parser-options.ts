@@ -4,6 +4,14 @@ import { getParser, getParserForLang } from "./resolve-parser";
 import type { ParserObject } from "./resolve-parser/parser-object";
 import { isTSESLintParserObject } from "./resolve-parser/parser-object";
 import { maybeTSESLintParserObject } from "./resolve-parser/parser-object";
+import type { ParserOptions as CommonParserOptions } from "@typescript-eslint/types";
+
+export type UserOptionParser =
+  | string
+  | ParserObject
+  | Record<string, string | ParserObject | undefined>
+  | undefined;
+export type ParserOptions = CommonParserOptions & { parser?: UserOptionParser };
 
 const TS_PARSER_NAMES = [
   "@typescript-eslint/parser",
@@ -11,7 +19,7 @@ const TS_PARSER_NAMES = [
 ];
 
 export class ParserOptionsContext {
-  public readonly parserOptions: any;
+  public readonly parserOptions: ParserOptions;
 
   private readonly state: { isTypeScript?: boolean; originalAST?: any } = {};
 
@@ -25,7 +33,7 @@ export class ParserOptionsContext {
       tokens: true,
       comment: true,
       eslintVisitorKeys: true,
-      eslintScopeManager: true,
+      // eslintScopeManager: true,
       ...(options || {}),
     };
     parserOptions.ecmaFeatures = {
