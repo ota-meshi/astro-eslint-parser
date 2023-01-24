@@ -70,7 +70,7 @@
     "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "~5.49.0",
     "@typescript-eslint/parser": "~5.49.0",
-    "astro": "^1.6.1",
+    "astro": "^2.0.0",
     "astro-eslint-parser": ">=0.1.0",
     "benchmark": "^2.1.4",
     "chai": "^4.3.4",
