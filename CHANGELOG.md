@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.12.0
+
+### Minor Changes
+
+- [#172](https://github.com/ota-meshi/astro-eslint-parser/pull/172) [`b8ba390`](https://github.com/ota-meshi/astro-eslint-parser/commit/b8ba3901bcdf08517526a625f1694b7bc970e5be) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: export name property
+
 ## 0.11.0
 
 ### Minor Changes
