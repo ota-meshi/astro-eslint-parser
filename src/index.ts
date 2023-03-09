@@ -7,6 +7,8 @@ import { ParseError } from "./errors";
 
 export { AST, ParseError };
 
+export const name = "astro-eslint-parser";
+
 /**
  * Parse source code
  */
