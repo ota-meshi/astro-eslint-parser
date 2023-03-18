@@ -54,11 +54,31 @@ export function maybeTSESLintParserObject(
   );
 }
 
+/** Get typescript parser name */
+export function getTSParserNameFromObject(
+  value: unknown
+):
+  | "@typescript-eslint/parser"
+  | "typescript-eslint-parser-for-extra-files"
+  | null {
+  if (!isEnhancedParserObject(value)) {
+    return null;
+  }
+  if ((value as any).name === "typescript-eslint-parser-for-extra-files")
+    return "typescript-eslint-parser-for-extra-files";
+  if ((value as any).meta?.name === "typescript-eslint/parser")
+    return "@typescript-eslint/parser";
+  return null;
+}
+
 /** Checks whether given object is "@typescript-eslint/parser" */
 export function isTSESLintParserObject(
   value: unknown
 ): value is TSESLintParser {
   if (!isEnhancedParserObject(value)) return false;
+  if ((value as any).name === "typescript-eslint-parser-for-extra-files")
+    return true;
+  if ((value as any).meta?.name === "typescript-eslint/parser") return true;
   try {
     const result = (value as unknown as TSESLintParser).parseForESLint("", {});
     const services = result.services;

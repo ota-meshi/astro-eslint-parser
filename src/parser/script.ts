@@ -49,10 +49,12 @@ function parseScriptInternal(
       parserOptions.filePath &&
       parserOptions.project
     ) {
-      patchResult = tsPatch(parserOptions);
+      patchResult = tsPatch(parserOptions, parserOptionsCtx.getTSParserName()!);
     }
     const result = isEnhancedParserObject(parser)
-      ? parser.parseForESLint(code, parserOptions)
+      ? patchResult?.parse
+        ? patchResult.parse(code, parser)
+        : parser.parseForESLint(code, parserOptions)
       : parser.parse(code, parserOptions);
 
     if ("ast" in result && result.ast != null) {
