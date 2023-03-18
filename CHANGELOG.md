@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.13.0
+
+### Minor Changes
+
+- [#180](https://github.com/ota-meshi/astro-eslint-parser/pull/180) [`b08edae`](https://github.com/ota-meshi/astro-eslint-parser/commit/b08edae50787cb8725d77ab0c5c703c651d11fe6) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: support for typescript v5
+
 ## 0.12.0
 
 ### Minor Changes
