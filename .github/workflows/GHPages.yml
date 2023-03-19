@@ -44,4 +44,4 @@ jobs:
         path: ./explorer-v3/dist/astro-eslint-parser
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v1
+      uses: actions/deploy-pages@v2
