@@ -84,6 +84,8 @@ export class Context {
 export class LinesAndColumns {
   private readonly lineStartIndices: number[];
 
+  private readonly code: string;
+
   private readonly normalizedLineFeed: NormalizedLineFeed;
 
   public constructor(origCode: string) {
@@ -112,6 +114,7 @@ export class LinesAndColumns {
     }
 
     this.lineStartIndices = lineStartIndices;
+    this.code = origCode;
     //
     this.normalizedLineFeed = new NormalizedLineFeed(normalizedCode, crs);
   }
@@ -128,10 +131,15 @@ export class LinesAndColumns {
   }
 
   public getIndexFromLoc(loc: { line: number; column: number }): number {
-    const lineStartIndex = this.lineStartIndices[loc.line - 1];
-    const positionIndex = lineStartIndex + loc.column;
-
-    return positionIndex;
+    const lineIndex = loc.line - 1;
+    if (this.lineStartIndices.length > lineIndex) {
+      const lineStartIndex = this.lineStartIndices[lineIndex];
+      const positionIndex = lineStartIndex + loc.column;
+      return positionIndex;
+    } else if (this.lineStartIndices.length === lineIndex) {
+      return this.code.length + loc.column;
+    }
+    return this.code.length + loc.column;
   }
 
   public getNormalizedLineFeed(): NormalizedLineFeed {
