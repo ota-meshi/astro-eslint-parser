@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.13.1
+
+### Patch Changes
+
+- [#185](https://github.com/ota-meshi/astro-eslint-parser/pull/185) [`e395c2a`](https://github.com/ota-meshi/astro-eslint-parser/commit/e395c2a84bc7f73cc9a9f9791ef8a2c85ef734bc) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: getIndexFromLoc of ParseTemplateResult
+
 ## 0.13.0
 
 ### Minor Changes
