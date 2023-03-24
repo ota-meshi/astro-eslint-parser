@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.13.2
+
+### Patch Changes
+
+- [#187](https://github.com/ota-meshi/astro-eslint-parser/pull/187) [`1d81c1d`](https://github.com/ota-meshi/astro-eslint-parser/commit/1d81c1d2925bee0fd72e924bb04b17a4b7a41063) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: always generate same AST with ts v5
+
 ## 0.13.1
 
 ### Patch Changes
