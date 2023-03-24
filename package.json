@@ -106,7 +106,7 @@
     "svelte": "^3.48.0",
     "tsup": "^6.2.3",
     "typescript": "~5.0.0",
-    "typescript-eslint-parser-for-extra-files": "^0.2.0"
+    "typescript-eslint-parser-for-extra-files": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"
