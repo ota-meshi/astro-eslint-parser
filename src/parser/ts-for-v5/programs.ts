@@ -75,6 +75,88 @@ export class TSService {
     tsconfigPath: string
   ): typescript.WatchOfConfigFile<typescript.BuilderProgram> {
     const { ts } = this;
+    type CreateProgram = typescript.CreateProgram<typescript.BuilderProgram>;
+
+    const createAbstractBuilder = (
+      ...args: Parameters<CreateProgram>
+    ): ReturnType<CreateProgram> => {
+      const [
+        rootNames,
+        options,
+        argHost,
+        oldProgram,
+        configFileParsingDiagnostics,
+        projectReferences,
+      ] = args;
+
+      const host: typescript.CompilerHost = argHost!;
+      if (!this.patchedHostSet.has(host)) {
+        this.patchedHostSet.add(host);
+
+        const getTargetSourceFile = (
+          fileName: string,
+          languageVersionOrOptions:
+            | typescript.ScriptTarget
+            | typescript.CreateSourceFileOptions
+        ) => {
+          if (this.currTarget.filePath === normalizeFileName(ts, fileName)) {
+            return (this.currTarget.sourceFile ??= ts.createSourceFile(
+              this.currTarget.filePath,
+              this.currTarget.code,
+              languageVersionOrOptions,
+              true,
+              ts.ScriptKind.TSX
+            ));
+          }
+          return null;
+        };
+
+        /* eslint-disable @typescript-eslint/unbound-method -- ignore */
+        const original = {
+          getSourceFile: host.getSourceFile,
+          getSourceFileByPath: host.getSourceFileByPath!,
+        };
+        /* eslint-enable @typescript-eslint/unbound-method -- ignore */
+        host.getSourceFile = (fileName, languageVersionOrOptions, ...args) => {
+          const originalSourceFile = original.getSourceFile.call(
+            host,
+            fileName,
+            languageVersionOrOptions,
+            ...args
+          );
+          return (
+            getTargetSourceFile(fileName, languageVersionOrOptions) ??
+            originalSourceFile
+          );
+        };
+        host.getSourceFileByPath = (
+          fileName,
+          path,
+          languageVersionOrOptions,
+          ...args
+        ) => {
+          const originalSourceFile = original.getSourceFileByPath.call(
+            host,
+            fileName,
+            path,
+            languageVersionOrOptions,
+            ...args
+          );
+          return (
+            getTargetSourceFile(fileName, languageVersionOrOptions) ??
+            originalSourceFile
+          );
+        };
+      }
+      return ts.createAbstractBuilder(
+        rootNames,
+        options,
+        host,
+        oldProgram,
+        configFileParsingDiagnostics,
+        projectReferences
+      );
+    };
     const watchCompilerHost = ts.createWatchCompilerHost(
       tsconfigPath,
       {
@@ -87,83 +169,7 @@ export class TSService {
         allowNonTsExtensions: true,
       },
       ts.sys,
-      (
-        rootNames,
-        options,
-        argHost,
-        oldProgram,
-        configFileParsingDiagnostics,
-        projectReferences
-      ) => {
-        const host: typescript.CompilerHost = argHost!;
-        if (!this.patchedHostSet.has(host)) {
-          this.patchedHostSet.add(host);
-
-          const getTargetSourceFile = (
-            fileName: string,
-            languageVersionOrOptions:
-              | typescript.ScriptTarget
-              | typescript.CreateSourceFileOptions
-          ) => {
-            if (this.currTarget.filePath === normalizeFileName(ts, fileName)) {
-              return (this.currTarget.sourceFile ??= ts.createSourceFile(
-                this.currTarget.filePath,
-                this.currTarget.code,
-                languageVersionOrOptions,
-                true,
-                ts.ScriptKind.TSX
-              ));
-            }
-            return null;
-          };
-          /* eslint-disable @typescript-eslint/unbound-method -- ignore */
-          const original = {
-            getSourceFile: host.getSourceFile,
-            getSourceFileByPath: host.getSourceFileByPath!,
-          };
-          /* eslint-enable @typescript-eslint/unbound-method -- ignore */
-          host.getSourceFile = (
-            fileName,
-            languageVersionOrOptions,
-            ...args
-          ) => {
-            return (
-              getTargetSourceFile(fileName, languageVersionOrOptions) ??
-              original.getSourceFile.call(
-                host,
-                fileName,
-                languageVersionOrOptions,
-                ...args
-              )
-            );
-          };
-          host.getSourceFileByPath = (
-            fileName,
-            path,
-            languageVersionOrOptions,
-            ...args
-          ) => {
-            return (
-              getTargetSourceFile(fileName, languageVersionOrOptions) ??
-              original.getSourceFileByPath.call(
-                host,
-                fileName,
-                path,
-                languageVersionOrOptions,
-                ...args
-              )
-            );
-          };
-        }
-        return ts.createAbstractBuilder(
-          rootNames,
-          options,
-          host,
-          oldProgram,
-          configFileParsingDiagnostics,
-          projectReferences
-        );
-      },
+      createAbstractBuilder,
       (diagnostic) => {
         throw new Error(formatDiagnostics(ts, [diagnostic]));
       },
