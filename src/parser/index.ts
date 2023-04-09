@@ -65,6 +65,8 @@ export function parseForESLint(
               scope,
               {
                 read: true,
+                typeRef: true,
+                forceUsed: true,
               }
             );
           }
