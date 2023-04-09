@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.13.3
+
+### Patch Changes
+
+- [#191](https://github.com/ota-meshi/astro-eslint-parser/pull/191) [`f84dde1`](https://github.com/ota-meshi/astro-eslint-parser/commit/f84dde17b30c4e68b2886cb19ff90f1c8b038e88) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: false positives for `@typescript-eslint/no-unused-vars` rule
+
 ## 0.13.2
 
 ### Patch Changes
