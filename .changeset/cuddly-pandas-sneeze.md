@@ -2,4 +2,4 @@
 "astro-eslint-parser": patch
 ---
 
-fix: false positives for ts no-unused-vars
+fix: false positives for `@typescript-eslint/no-unused-vars` rule
