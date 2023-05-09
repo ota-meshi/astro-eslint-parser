@@ -12,6 +12,7 @@
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "allowJs": true,
+    "resolveJsonModule": true,
 
     "paths": {
       // Since multiple type definitions are provided, specify the definition here to avoid an error.

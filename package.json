@@ -12,7 +12,8 @@
   },
   "scripts": {
     "prebuild": "npm run -s clean",
-    "build": "tsup",
+    "build": "npm run build:tsup",
+    "build:tsup": "tsup",
     "clean": "rimraf .nyc_output lib coverage",
     "lint": "eslint . --ext .js,.ts,.json,.astro,.svelte",
     "eslint-fix": "npm run lint -- --fix",
