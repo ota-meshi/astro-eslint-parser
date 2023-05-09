@@ -29,7 +29,7 @@ body:
   - type: textarea
     id: eslint-plugin-astro-version
     attributes:
-      label: What version of `eslint-plugin-astro` and ` astro-eslint-parser` are you using?
+      label: What version of `eslint-plugin-astro` and `astro-eslint-parser` are you using?
       value: |
         - astro-eslint-parser@0.0.0
         - eslint-plugin-astro@0.0.0
