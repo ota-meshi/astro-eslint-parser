@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.14.0
+
+### Minor Changes
+
+- [#198](https://github.com/ota-meshi/astro-eslint-parser/pull/198) [`739168a`](https://github.com/ota-meshi/astro-eslint-parser/commit/739168a8462e14d2c6eba20a48a05470eade65a1) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: export meta object
+
 ## 0.13.3
 
 ### Patch Changes
