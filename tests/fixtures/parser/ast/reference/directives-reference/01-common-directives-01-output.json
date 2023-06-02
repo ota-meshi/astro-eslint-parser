@@ -765,16 +765,52 @@
       }
     },
     {
-      "type": "JSXIdentifier",
-      "value": "class:list",
+      "type": "Keyword",
+      "value": "class",
       "range": [
         20,
-        30
+        25
       ],
       "loc": {
         "start": {
           "line": 2,
           "column": 6
+        },
+        "end": {
+          "line": 2,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": ":",
+      "range": [
+        25,
+        26
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 11
+        },
+        "end": {
+          "line": 2,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": "Identifier",
+      "value": "list",
+      "range": [
+        26,
+        30
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 12
         },
         "end": {
           "line": 2,

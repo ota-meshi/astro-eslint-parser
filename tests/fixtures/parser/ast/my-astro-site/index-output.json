@@ -5121,16 +5121,52 @@
       }
     },
     {
-      "type": "JSXIdentifier",
-      "value": "is:global",
+      "type": "Identifier",
+      "value": "is",
       "range": [
         1129,
-        1138
+        1131
       ],
       "loc": {
         "start": {
           "line": 49,
           "column": 8
+        },
+        "end": {
+          "line": 49,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": ":",
+      "range": [
+        1131,
+        1132
+      ],
+      "loc": {
+        "start": {
+          "line": 49,
+          "column": 10
+        },
+        "end": {
+          "line": 49,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": "Identifier",
+      "value": "global",
+      "range": [
+        1132,
+        1138
+      ],
+      "loc": {
+        "start": {
+          "line": 49,
+          "column": 11
         },
         "end": {
           "line": 49,
