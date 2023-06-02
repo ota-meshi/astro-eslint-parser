@@ -277,16 +277,52 @@
       }
     },
     {
-      "type": "JSXIdentifier",
-      "value": "set:text",
+      "type": "Identifier",
+      "value": "set",
       "range": [
         4,
-        12
+        7
       ],
       "loc": {
         "start": {
           "line": 2,
           "column": 3
+        },
+        "end": {
+          "line": 2,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": ":",
+      "range": [
+        7,
+        8
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 6
+        },
+        "end": {
+          "line": 2,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": "Identifier",
+      "value": "text",
+      "range": [
+        8,
+        12
+      ],
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 7
         },
         "end": {
           "line": 2,
