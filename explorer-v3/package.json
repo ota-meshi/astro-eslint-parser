@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@astrojs/compiler": "^1.0.0",
-    "@astrojs/svelte": "^2.0.0",
+    "@astrojs/svelte": "^3.0.0",
     "astro": "^2.0.0",
     "astro-eslint-parser": "file:..",
     "eslint": "^8.15.0",
