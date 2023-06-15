@@ -95,7 +95,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-svelte": "^2.0.0",
     "estree-walker": "^3.0.0",
-    "locate-character": "^2.0.5",
+    "locate-character": "^3.0.0",
     "magic-string": "^0.30.0",
     "mocha": "^10.0.0",
     "mocha-chai-jest-snapshot": "^1.1.3",
