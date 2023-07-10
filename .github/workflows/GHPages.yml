@@ -39,7 +39,7 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v3
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v2
       with:
         path: ./explorer-v3/dist/astro-eslint-parser
     - name: Deploy to GitHub Pages
