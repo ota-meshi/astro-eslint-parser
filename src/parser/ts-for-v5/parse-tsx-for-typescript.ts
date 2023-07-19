@@ -12,7 +12,7 @@ export function parseTsxForTypeScript(
   code: string,
   options: ParserOptions,
   tsEslintParser: typeof tsParserAll,
-  ts: TS
+  ts: TS,
 ): ESLintExtendedProgram {
   const programs = [];
   for (const option of iterateOptions(options)) {
@@ -41,7 +41,7 @@ function* iterateOptions(options: ParserOptions): Iterable<ProgramOptions> {
   }
   if (!options.project) {
     throw new Error(
-      "Specify `parserOptions.project`. Otherwise there is no point in using this parser."
+      "Specify `parserOptions.project`. Otherwise there is no point in using this parser.",
     );
   }
   for (const project of getProjectConfigFiles(options)) {

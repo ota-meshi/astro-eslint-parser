@@ -23,7 +23,7 @@ import {
  */
 export function parseForESLint(
   code: string,
-  options?: any
+  options?: any,
 ): {
   ast: AstroProgram;
   services: Record<string, any> & {
@@ -36,13 +36,13 @@ export function parseForESLint(
 } {
   const { result: resultTemplate, context: ctx } = parseTemplate(
     code,
-    options?.filePath ?? "<input>"
+    options?.filePath ?? "<input>",
   );
   const scriptContext = processTemplate(ctx, resultTemplate);
   const parserOptions = new ParserOptionsContext(options);
   if (parserOptions.isTypeScript() && /\bAstro\b/u.test(code)) {
     scriptContext.appendVirtualScript(
-      `declare const Astro: Readonly<import('astro').AstroGlobal<Props>>;`
+      `declare const Astro: Readonly<import('astro').AstroGlobal<Props>>;`,
     );
     scriptContext.restoreContext.addRestoreNodeProcess(
       (_scriptNode, { result }) => {
@@ -67,14 +67,14 @@ export function parseForESLint(
                 read: true,
                 typeRef: true,
                 forceUsed: true,
-              }
+              },
             );
           }
           // analyze Astro, and Fragment references
           const astroGlobalReferences = scope.through.filter(
             (ref) =>
               ref.identifier.name === "Astro" ||
-              ref.identifier.name === "Fragment"
+              ref.identifier.name === "Fragment",
           );
           for (const astroGlobalReference of astroGlobalReferences) {
             addGlobalVariable(astroGlobalReference, scopeManager);
@@ -82,7 +82,7 @@ export function parseForESLint(
           }
         }
         return true;
-      }
+      },
     );
   }
 
@@ -113,7 +113,7 @@ export function extractTokens(ast: ESLintExtendedProgram, ctx: Context): void {
     return;
   }
   const useRanges = sort([...ast.ast.tokens, ...(ast.ast.comments || [])]).map(
-    (t) => t.range
+    (t) => t.range,
   );
   let range = useRanges.shift();
   for (let index = 0; index < ctx.code.length; index++) {
@@ -130,13 +130,13 @@ export function extractTokens(ast: ESLintExtendedProgram, ctx: Context): void {
     }
     if (isPunctuator(c)) {
       ast.ast.tokens.push(
-        ctx.buildToken(AST_TOKEN_TYPES.Punctuator, [index, index + 1])
+        ctx.buildToken(AST_TOKEN_TYPES.Punctuator, [index, index + 1]),
       );
     } else {
       // unknown
       // It is may be a bug.
       ast.ast.tokens.push(
-        ctx.buildToken(AST_TOKEN_TYPES.Identifier, [index, index + 1])
+        ctx.buildToken(AST_TOKEN_TYPES.Identifier, [index, index + 1]),
       );
     }
   }

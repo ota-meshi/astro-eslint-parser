@@ -14,7 +14,7 @@ export { AST, ParseError };
  */
 export function parseForESLint(
   code: string,
-  options?: any
+  options?: any,
 ): ReturnType<typeof parseAstro> {
   return parseAstro(code, options);
 }

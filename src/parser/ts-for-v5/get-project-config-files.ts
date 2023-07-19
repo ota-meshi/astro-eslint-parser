@@ -28,6 +28,6 @@ export function getProjectConfigFiles(options: ParserOptions): string[] {
   } while (directory.length > 1 && directory.length >= tsconfigRootDir.length);
 
   throw new Error(
-    `project was set to \`true\` but couldn't find any tsconfig.json relative to '${options.filePath}' within '${tsconfigRootDir}'.`
+    `project was set to \`true\` but couldn't find any tsconfig.json relative to '${options.filePath}' within '${tsconfigRootDir}'.`,
   );
 }

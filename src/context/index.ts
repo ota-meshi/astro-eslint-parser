@@ -56,7 +56,7 @@ export class Context {
    */
   public buildToken(
     type: TSESTree.Token["type"],
-    range: TSESTree.Range
+    range: TSESTree.Range,
   ): TSESTree.Token {
     return {
       type,
@@ -122,7 +122,7 @@ export class LinesAndColumns {
   public getLocFromIndex(index: number): { line: number; column: number } {
     const lineNumber = sortedLastIndex(
       this.lineStartIndices,
-      (target) => target - index
+      (target) => target - index,
     );
     return {
       line: lineNumber,

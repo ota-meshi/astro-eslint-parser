@@ -5,7 +5,7 @@ async function setupMonaco() {
         (script) =>
           script.src &&
           script.src.includes("monaco") &&
-          script.src.includes("vs/loader")
+          script.src.includes("vs/loader"),
       ) || (await appendMonacoEditorScript());
     window.require.config({
       paths: {

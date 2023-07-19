@@ -30,20 +30,20 @@ export function isParserObject(value: unknown): value is ParserObject {
 }
 /** Checks whether given object is EnhancedParserObject */
 export function isEnhancedParserObject(
-  value: unknown
+  value: unknown,
 ): value is EnhancedParserObject {
   return Boolean(value && typeof (value as any).parseForESLint === "function");
 }
 /** Checks whether given object is BasicParserObject */
 export function isBasicParserObject(
-  value: unknown
+  value: unknown,
 ): value is BasicParserObject {
   return Boolean(value && typeof (value as any).parse === "function");
 }
 
 /** Checks whether given object is "@typescript-eslint/parser" */
 export function maybeTSESLintParserObject(
-  value: unknown
+  value: unknown,
 ): value is TSESLintParser {
   return (
     isEnhancedParserObject(value) &&
@@ -56,7 +56,7 @@ export function maybeTSESLintParserObject(
 
 /** Get typescript parser name */
 export function getTSParserNameFromObject(
-  value: unknown
+  value: unknown,
 ):
   | "@typescript-eslint/parser"
   | "typescript-eslint-parser-for-extra-files"
@@ -73,7 +73,7 @@ export function getTSParserNameFromObject(
 
 /** Checks whether given object is "@typescript-eslint/parser" */
 export function isTSESLintParserObject(
-  value: unknown
+  value: unknown,
 ): value is TSESLintParser {
   if (!isEnhancedParserObject(value)) return false;
   if ((value as any).name === "typescript-eslint-parser-for-extra-files")
@@ -86,7 +86,7 @@ export function isTSESLintParserObject(
       services &&
         services.esTreeNodeToTSNodeMap &&
         services.tsNodeToESTreeNodeMap &&
-        services.program
+        services.program,
     );
   } catch {
     return false;

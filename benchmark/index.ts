@@ -7,9 +7,9 @@ import { parseForESLint as parseOld } from "../node_modules/astro-eslint-parser"
 
 const contents = `${fs.readFileSync(
   require.resolve(
-    "../tests/fixtures/parser/ast/withastro/astro.build/src/components/landing/Sponsors-input.astro"
+    "../tests/fixtures/parser/ast/withastro/astro.build/src/components/landing/Sponsors-input.astro",
   ),
-  "utf-8"
+  "utf-8",
 )}`;
 
 type Result = { name: string; hz: number };
@@ -36,8 +36,8 @@ function onComplete(): void {
   for (const name of Object.keys(map)) {
     console.log(
       `${name.padEnd(15)} ${format(
-        map[name].reduce((p, a) => p + a, 0) / map[name].length
-      )} ops/sec`
+        map[name].reduce((p, a) => p + a, 0) / map[name].length,
+      )} ops/sec`,
     );
   }
   for (let i = 0; i < results.length; ++i) {

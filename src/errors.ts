@@ -18,7 +18,7 @@ export class ParseError extends SyntaxError {
   public constructor(
     message: string,
     offset: number | { line: number; column: number },
-    ctx: Context
+    ctx: Context,
   ) {
     super(message);
     if (typeof offset === "number") {

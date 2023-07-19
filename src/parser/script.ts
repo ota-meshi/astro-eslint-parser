@@ -11,7 +11,7 @@ import { analyze } from "@typescript-eslint/scope-manager";
 export function parseScript(
   code: string,
   ctx: Context,
-  parserOptionsCtx: ParserOptionsContext
+  parserOptionsCtx: ParserOptionsContext,
 ): ESLintExtendedProgram {
   const result = parseScriptInternal(code, ctx, parserOptionsCtx);
 
@@ -36,7 +36,7 @@ export function parseScript(
 function parseScriptInternal(
   code: string,
   _ctx: Context,
-  parserOptionsCtx: ParserOptionsContext
+  parserOptionsCtx: ParserOptionsContext,
 ): ESLintExtendedProgram {
   const parser = parserOptionsCtx.getParser();
 
@@ -67,7 +67,7 @@ function parseScriptInternal(
       (e as any).message,
       `@ ${JSON.stringify(code)}
 
-${code}`
+${code}`,
     );
     throw e;
   } finally {

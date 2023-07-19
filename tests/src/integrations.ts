@@ -22,13 +22,13 @@ function createLinter() {
 
 describe("Integration tests.", () => {
   for (const { input, inputFileName, outputFileName } of listupFixtures(
-    FIXTURE_ROOT
+    FIXTURE_ROOT,
   )) {
     it(inputFileName, () => {
       const setupFileName = inputFileName.replace(/input\.astro$/u, "setup.ts");
       const fixedOutputFileName = inputFileName.replace(
         /input\.astro$/u,
-        "output.astro"
+        "output.astro",
       );
       const setup = fs.existsSync(setupFileName)
         ? // eslint-disable-next-line @typescript-eslint/no-require-imports -- test
@@ -46,7 +46,7 @@ describe("Integration tests.", () => {
             es2021: true,
           },
         },
-        inputFileName
+        inputFileName,
       );
       const messagesJson = JSON.stringify(
         messages.map((m) => {
@@ -56,7 +56,7 @@ describe("Integration tests.", () => {
           };
         }),
         null,
-        2
+        2,
       );
 
       if (fs.existsSync(outputFileName)) {
@@ -75,7 +75,7 @@ describe("Integration tests.", () => {
             es2021: true,
           },
         },
-        inputFileName
+        inputFileName,
       );
       if (input !== output) {
         if (fs.existsSync(fixedOutputFileName)) {

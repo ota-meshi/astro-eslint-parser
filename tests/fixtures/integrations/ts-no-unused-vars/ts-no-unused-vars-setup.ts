@@ -5,7 +5,7 @@ import { rules } from "@typescript-eslint/eslint-plugin";
 export function setupLinter(linter: Linter) {
   linter.defineRule(
     "@typescript-eslint/no-unused-vars",
-    rules["no-unused-vars"] as never
+    rules["no-unused-vars"] as never,
   );
 }
 

@@ -47,7 +47,7 @@ let b = 2;
   const DEFAULT_FILE_PATH = "Example.astro";
 
   const state = deserializeState(
-    (typeof window !== "undefined" && window.location.hash.slice(1)) || ""
+    (typeof window !== "undefined" && window.location.hash.slice(1)) || "",
   );
   let code = state.code || DEFAULT_CODE;
   let rules = state.rules || Object.assign({}, DEFAULT_RULES_CONFIG);

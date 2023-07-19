@@ -213,7 +213,7 @@
     monaco.editor.setModelMarkers(
       model,
       id,
-      JSON.parse(JSON.stringify(markers))
+      JSON.parse(JSON.stringify(markers)),
     );
   }
 

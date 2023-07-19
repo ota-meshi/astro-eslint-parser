@@ -115,7 +115,7 @@ describe("eslint custom parser", () => {
               column: m.column,
             };
           }),
-          messages
+          messages,
         );
 
         assert.strictEqual(result.output, output ?? code);

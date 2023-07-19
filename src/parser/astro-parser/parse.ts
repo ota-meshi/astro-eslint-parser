@@ -36,7 +36,7 @@ export function parse(code: string, ctx: Context): ParseResult {
   }
 
   const htmlElement = result.ast.children.find(
-    (n): n is ElementNode => n.type === "element" && n.name === "html"
+    (n): n is ElementNode => n.type === "element" && n.name === "html",
   );
   if (!(result as any)._adjusted) {
     if (htmlElement) {
@@ -81,7 +81,7 @@ function adjustHTMLBody(
   htmlEnd: number,
   hasTokenAfterHtmlEnd: boolean,
   bodyElement: ElementNode,
-  ctx: Context
+  ctx: Context,
 ) {
   const bodyEnd = ctx.code.indexOf("</body");
   if (bodyEnd == null) {
@@ -219,7 +219,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
           const closeTagStart = tokenIndexSafe(
             ctx.code,
             `</${node.name}`,
-            start
+            start,
           );
           if (closeTagStart != null) {
             start = closeTagStart + 2 + node.name.length;
@@ -232,7 +232,7 @@ function fixLocations(node: ParentNode, ctx: Context): void {
       if (node.position!.end) {
         node.position!.end.offset = start;
       }
-    }
+    },
   );
 }
 
@@ -256,7 +256,7 @@ function fixLocationForAttr(node: AttributeNode, ctx: Context, start: number) {
     throw new ParseError(
       `Unknown attr kind: ${node.kind}`,
       node.position!.start.offset,
-      ctx
+      ctx,
     );
   }
 }
@@ -271,10 +271,10 @@ function tokenIndex(ctx: Context, token: string, position: number): number {
       token.trim() === token ? skipSpaces(ctx.code, position) : position;
     throw new ParseError(
       `Unknown token at ${start}, expected: ${JSON.stringify(
-        token
+        token,
       )}, actual: ${JSON.stringify(ctx.code.slice(start, start + 10))}`,
       start,
-      ctx
+      ctx,
     );
   }
   return index;
@@ -286,7 +286,7 @@ function tokenIndex(ctx: Context, token: string, position: number): number {
 function tokenIndexSafe(
   string: string,
   token: string,
-  position: number
+  position: number,
 ): number | null {
   const index =
     token.trim() === token ? skipSpaces(string, position) : position;
