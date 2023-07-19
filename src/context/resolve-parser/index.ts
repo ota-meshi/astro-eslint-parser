@@ -6,7 +6,7 @@ import { isParserObject } from "./parser-object";
 /** Get parser for script lang */
 export function getParserForLang(
   attrs: Record<string, string | undefined>,
-  parser: UserOptionParser
+  parser: UserOptionParser,
 ): string | ParserObject {
   if (parser) {
     if (typeof parser === "string" || isParserObject(parser)) {
@@ -25,7 +25,7 @@ export function getParserForLang(
 /** Get parser */
 export function getParser(
   attrs: Record<string, string | undefined>,
-  parser: any
+  parser: any,
 ): ParserObject {
   const parserValue = getParserForLang(attrs, parser);
   if (isParserObject(parserValue)) {

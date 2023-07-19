@@ -10,7 +10,7 @@
           close: true,
         },
       ];
-    })
+    }),
   );
   function onAllClick(category, e) {
     const newRules = Object.assign({}, rules);
@@ -55,7 +55,7 @@
                       close: category.title === c.title ? !close : close,
                     },
                   ];
-                })
+                }),
               );
             }}
           >
@@ -73,13 +73,13 @@
               <input
                 type="checkbox"
                 checked={category.rules.every((rule) =>
-                  isErrorState(rules, rule.ruleId)
+                  isErrorState(rules, rule.ruleId),
                 )}
                 indeterminate={!category.rules.every((rule) =>
-                  isErrorState(rules, rule.ruleId)
+                  isErrorState(rules, rule.ruleId),
                 ) &&
                   !category.rules.every(
-                    (rule) => !isErrorState(rules, rule.ruleId)
+                    (rule) => !isErrorState(rules, rule.ruleId),
                   )}
                 on:input={(e) => onAllClick(category, e)}
               />

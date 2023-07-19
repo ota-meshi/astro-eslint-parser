@@ -11,7 +11,7 @@ const tsServices = new Map<string, TSService>();
 export function getTSProgram(
   code: string,
   options: ProgramOptions,
-  ts: TS
+  ts: TS,
 ): typescript.Program {
   const tsconfigPath = options.project;
 
@@ -72,7 +72,7 @@ export class TSService {
   }
 
   private createWatch(
-    tsconfigPath: string
+    tsconfigPath: string,
   ): typescript.WatchOfConfigFile<typescript.BuilderProgram> {
     const { ts } = this;
     type CreateProgram = typescript.CreateProgram<typescript.BuilderProgram>;
@@ -97,7 +97,7 @@ export class TSService {
           fileName: string,
           languageVersionOrOptions:
             | typescript.ScriptTarget
-            | typescript.CreateSourceFileOptions
+            | typescript.CreateSourceFileOptions,
         ) => {
           if (this.currTarget.filePath === normalizeFileName(ts, fileName)) {
             return (this.currTarget.sourceFile ??= ts.createSourceFile(
@@ -105,7 +105,7 @@ export class TSService {
               this.currTarget.code,
               languageVersionOrOptions,
               true,
-              ts.ScriptKind.TSX
+              ts.ScriptKind.TSX,
             ));
           }
           return null;
@@ -122,7 +122,7 @@ export class TSService {
             host,
             fileName,
             languageVersionOrOptions,
-            ...args
+            ...args,
           );
           return (
             getTargetSourceFile(fileName, languageVersionOrOptions) ??
@@ -140,7 +140,7 @@ export class TSService {
             fileName,
             path,
             languageVersionOrOptions,
-            ...args
+            ...args,
           );
           return (
             getTargetSourceFile(fileName, languageVersionOrOptions) ??
@@ -154,7 +154,7 @@ export class TSService {
         host,
         oldProgram,
         configFileParsingDiagnostics,
-        projectReferences
+        projectReferences,
       );
     };
     const watchCompilerHost = ts.createWatchCompilerHost(
@@ -183,7 +183,7 @@ export class TSService {
           isMixedContent: true,
           scriptKind: ts.ScriptKind.Deferred,
         },
-      ]
+      ],
     );
     /* eslint-disable @typescript-eslint/unbound-method -- ignore */
     const original = {
@@ -230,7 +230,7 @@ export class TSService {
       const originalDiagnostics = program.getConfigFileParsingDiagnostics();
       const configFileDiagnostics = originalDiagnostics.filter(
         (diag) =>
-          diag.category === ts.DiagnosticCategory.Error && diag.code !== 18003
+          diag.category === ts.DiagnosticCategory.Error && diag.code !== 18003,
       );
       if (configFileDiagnostics.length > 0) {
         throw new Error(formatDiagnostics(ts, configFileDiagnostics));

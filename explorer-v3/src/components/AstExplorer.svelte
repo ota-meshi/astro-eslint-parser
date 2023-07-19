@@ -104,13 +104,13 @@ let b = 2;
 
     function findLoc(astJson, locName) {
       let locData = astJson.locations.find((l) =>
-        locInPoint(l[locName], position)
+        locInPoint(l[locName], position),
       );
       let nextLocData;
       while (
         locData &&
         (nextLocData = locData.locations.find((l) =>
-          locInPoint(l[locName], position)
+          locInPoint(l[locName], position),
         ))
       ) {
         locData = nextLocData;

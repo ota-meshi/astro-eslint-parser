@@ -35,7 +35,7 @@ export function walkElements(
   code: string,
   enter: (n: Node, parents: ParentNode[]) => void,
   leave: (n: Node, parents: ParentNode[]) => void,
-  parents: ParentNode[] = []
+  parents: ParentNode[] = [],
 ): void {
   const children = getSortedChildren(parent, code);
   const currParents = [parent, ...parents];
@@ -53,7 +53,7 @@ export function walk(
   parent: ParentNode,
   code: string,
   enter: (n: Node | AttributeNode, parents: ParentNode[]) => void,
-  leave: (n: Node | AttributeNode, parents: ParentNode[]) => void
+  leave: (n: Node | AttributeNode, parents: ParentNode[]) => void,
 ): void {
   walkElements(
     parent,
@@ -68,7 +68,7 @@ export function walk(
         }
       }
     },
-    leave
+    leave,
   );
 }
 
@@ -84,7 +84,7 @@ export function calcStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
     const info = getTokenInfo(
       ctx,
       [`<${node.name}`],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
     beforeCloseIndex = info.index + info.match.length;
   }
@@ -97,7 +97,7 @@ export function calcStartTagEndOffset(node: TagLikeNode, ctx: Context): number {
  */
 export function calcAttributeEndOffset(
   node: AttributeNode,
-  ctx: Context
+  ctx: Context,
 ): number {
   let info;
   if (node.kind === "empty") {
@@ -106,37 +106,37 @@ export function calcAttributeEndOffset(
     info = getTokenInfo(
       ctx,
       [[`"${node.value}"`, `'${node.value}'`, node.value]],
-      calcAttributeValueStartOffset(node, ctx)
+      calcAttributeValueStartOffset(node, ctx),
     );
   } else if (node.kind === "expression") {
     info = getTokenInfo(
       ctx,
       ["{", node.value, "}"],
-      calcAttributeValueStartOffset(node, ctx)
+      calcAttributeValueStartOffset(node, ctx),
     );
   } else if (node.kind === "shorthand") {
     info = getTokenInfo(
       ctx,
       ["{", node.name, "}"],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
   } else if (node.kind === "spread") {
     info = getTokenInfo(
       ctx,
       ["{", "...", node.name, "}"],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
   } else if (node.kind === "template-literal") {
     info = getTokenInfo(
       ctx,
       [`\`${node.value}\``],
-      calcAttributeValueStartOffset(node, ctx)
+      calcAttributeValueStartOffset(node, ctx),
     );
   } else {
     throw new ParseError(
       `Unknown attr kind: ${node.kind}`,
       node.position!.start.offset,
-      ctx
+      ctx,
     );
   }
   return info.index + info.match.length;
@@ -147,32 +147,32 @@ export function calcAttributeEndOffset(
  */
 export function calcAttributeValueStartOffset(
   node: AttributeNode,
-  ctx: Context
+  ctx: Context,
 ): number {
   let info;
   if (node.kind === "quoted") {
     info = getTokenInfo(
       ctx,
       [node.name, "=", [`"`, `'`, node.value]],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
   } else if (node.kind === "expression") {
     info = getTokenInfo(
       ctx,
       [node.name, "=", "{"],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
   } else if (node.kind === "template-literal") {
     info = getTokenInfo(
       ctx,
       [node.name, "=", "`"],
-      node.position!.start.offset
+      node.position!.start.offset,
     );
   } else {
     throw new ParseError(
       `Unknown attr kind: ${node.kind}`,
       node.position!.start.offset,
-      ctx
+      ctx,
     );
   }
   return info.index;
@@ -236,7 +236,7 @@ export function calcContentEndOffset(parent: ParentNode, ctx: Context): number {
  */
 export function getSelfClosingTag(
   node: TagLikeNode,
-  ctx: Context
+  ctx: Context,
 ): null | {
   offset: number;
   end: "/>" | ">";
@@ -265,7 +265,7 @@ export function getSelfClosingTag(
  */
 export function getEndTag(
   node: TagLikeNode,
-  ctx: Context
+  ctx: Context,
 ): null | {
   offset: number;
   tag: string;
@@ -299,7 +299,7 @@ export function calcCommentEndOffset(node: CommentNode, ctx: Context): number {
   const info = getTokenInfo(
     ctx,
     ["<!--", node.value, "-->"],
-    node.position!.start.offset
+    node.position!.start.offset,
   );
 
   return info.index + info.match.length;
@@ -346,7 +346,7 @@ function calcExpressionEndOffset(node: ExpressionNode, ctx: Context): number {
 function getTokenInfo(
   ctx: Context,
   tokens: (string | string[])[],
-  position: number
+  position: number,
 ): {
   match: string;
   index: number;
@@ -366,10 +366,10 @@ function getTokenInfo(
     if (m == null) {
       throw new ParseError(
         `Unknown token at ${index}, expected: ${JSON.stringify(
-          t
+          t,
         )}, actual: ${JSON.stringify(ctx.code.slice(index, index + 10))}`,
         index,
-        ctx
+        ctx,
       );
     }
     lastMatch = m;
@@ -427,7 +427,7 @@ function getSortedChildren(parent: ParentNode, code: string) {
     const children = [...parent.children];
     if (children.every((n) => n.position)) {
       return children.sort(
-        (a, b) => a.position!.start.offset - b.position!.start.offset
+        (a, b) => a.position!.start.offset - b.position!.start.offset,
       );
     }
     let start = skipSpaces(code, 0);

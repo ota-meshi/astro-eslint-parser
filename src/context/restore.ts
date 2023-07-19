@@ -15,7 +15,7 @@ import type { ESLintExtendedProgram } from "../types";
  */
 type RestoreNodeProcess = (
   node: TSESTree.Node,
-  context: RestoreNodeProcessContext
+  context: RestoreNodeProcessContext,
 ) => boolean;
 
 class RestoreNodeProcessContext {
@@ -27,7 +27,7 @@ class RestoreNodeProcessContext {
 
   public constructor(
     result: ESLintExtendedProgram,
-    nodeMap: Map<TSESTree.Node, TSESTree.Node | null>
+    nodeMap: Map<TSESTree.Node, TSESTree.Node | null>,
   ) {
     this.result = result;
     this.nodeMap = nodeMap;
@@ -89,7 +89,7 @@ export class RestoreContext {
       remapLocation: (n) => this.remapLocation(n),
       removeToken: (token) =>
         this.virtualFragments.some(
-          (f) => f.start <= token.range[0] && token.range[1] <= f.end
+          (f) => f.start <= token.range[0] && token.range[1] <= f.end,
         ),
     });
 
@@ -99,7 +99,7 @@ export class RestoreContext {
     const firstOffset = Math.min(
       ...[result.ast.body[0], result.ast.tokens?.[0], result.ast.comments?.[0]]
         .filter((t): t is NonNullable<typeof t> => Boolean(t))
-        .map((t) => t.range[0])
+        .map((t) => t.range[0]),
     );
     if (firstOffset < result.ast.range[0]) {
       result.ast.range[0] = firstOffset;
@@ -110,13 +110,13 @@ export class RestoreContext {
   private remapLocation(node: TSESTree.Node | TSESTree.Token): void {
     let [start, end] = node.range;
     const startFragment = this.virtualFragments.find(
-      (f) => f.start <= start && start < f.end
+      (f) => f.start <= start && start < f.end,
     );
     if (startFragment) {
       start = startFragment.end;
     }
     const endFragment = this.virtualFragments.find(
-      (f) => f.start < end && end <= f.end
+      (f) => f.start < end && end <= f.end,
     );
     if (endFragment) {
       end = endFragment.start;
@@ -183,7 +183,7 @@ function remapLocationsAndGetNodeMap(
   }: {
     remapLocation: (node: TSESTree.Node | TSESTree.Token) => void;
     removeToken: (node: TSESTree.Token) => boolean;
-  }
+  },
 ) {
   const traversed = new Map<TSESTree.Node, TSESTree.Node | null>();
   // remap locations
@@ -220,7 +220,7 @@ function remapLocationsAndGetNodeMap(
 function restoreNodes(
   result: ESLintExtendedProgram,
   nodeMap: Map<TSESTree.Node, TSESTree.Node | null>,
-  restoreNodeProcesses: RestoreNodeProcess[]
+  restoreNodeProcesses: RestoreNodeProcess[],
 ) {
   const context = new RestoreNodeProcessContext(result, nodeMap);
   const restoreNodeProcessesSet = new Set(restoreNodeProcesses);

@@ -58,10 +58,10 @@
     });
 
     leftMarkers = await Promise.all(
-      messages.map((m) => messageToMarker(m, messageMap))
+      messages.map((m) => messageToMarker(m, messageMap)),
     );
     rightMarkers = await Promise.all(
-      fixResult.messages.map((m) => messageToMarker(m))
+      fixResult.messages.map((m) => messageToMarker(m)),
     );
   }
 
@@ -129,8 +129,8 @@
             `Fix this ${message.ruleId} problem`,
             marker,
             model,
-            message.fix
-          )
+            message.fix,
+          ),
         );
       }
       if (message.suggestions) {
@@ -140,8 +140,8 @@
               `${suggestion.desc} (${message.ruleId})`,
               marker,
               model,
-              suggestion.fix
-            )
+              suggestion.fix,
+            ),
           );
         }
       }

@@ -17,7 +17,7 @@ export type PatchTerminate = {
  */
 export function tsPatch(
   scriptParserOptions: ParserOptions,
-  tsParserName: TSParserName
+  tsParserName: TSParserName,
 ): PatchTerminate | null {
   if (tsParserName === "typescript-eslint-parser-for-extra-files") {
     return {
@@ -75,7 +75,7 @@ export function tsPatch(
  */
 function tsPatchForV5(
   ts: TS,
-  scriptParserOptions: ParserOptions
+  scriptParserOptions: ParserOptions,
 ): PatchTerminate | null {
   // Change the parser options passed to the `@typescript-eslint/parser`
   // to allow parsing `*.astro` files as TSX.
@@ -88,7 +88,7 @@ function tsPatchForV5(
         code,
         scriptParserOptions,
         parser as any,
-        ts
+        ts,
       );
     },
   };

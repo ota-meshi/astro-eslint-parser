@@ -8,7 +8,7 @@ async function main() {
 
   const contents = readFileSync(
     "./tests/fixtures/parser/ast/escape-bug02-input.astro",
-    "utf8"
+    "utf8",
   );
   const result = await parse(contents);
   // eslint-disable-next-line no-console -- test

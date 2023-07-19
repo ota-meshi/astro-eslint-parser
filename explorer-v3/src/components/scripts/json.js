@@ -43,7 +43,7 @@ export function processJsonValue(options, ctx, value) {
           !(
             (key === "start" || key === "end") &&
             typeof value.start === "number"
-          )
+          ),
       );
       if (typeEntry) entries.unshift(typeEntry);
       entries.push(...locEntries);

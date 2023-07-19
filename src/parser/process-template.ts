@@ -30,7 +30,7 @@ import type { AttributeNode } from "@astrojs/compiler/types";
  */
 export function processTemplate(
   ctx: Context,
-  resultTemplate: ParseResult
+  resultTemplate: ParseResult,
 ): VirtualScriptContext {
   let uniqueIdSeq = 0;
   const usedUniqueIds = new Set<string>();
@@ -104,7 +104,7 @@ export function processTemplate(
               }
             }
             return true;
-          }
+          },
         );
 
         script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
@@ -140,7 +140,7 @@ export function processTemplate(
                   if (fragmentNode.range[1] < last.range[1]) {
                     fragmentNode.range[1] = last.range[1];
                     fragmentNode.loc.end = ctx.getLocFromIndex(
-                      fragmentNode.range[1]
+                      fragmentNode.range[1],
                     );
                   }
                   return true;
@@ -192,7 +192,7 @@ export function processTemplate(
                 attrNode.type = "AstroShorthandAttribute";
 
                 const locs = ctx.getLocations(
-                  ...attrNode.value.expression.range
+                  ...attrNode.value.expression.range,
                 );
                 if (jsxName !== attr.name) {
                   attrNode.name.name = attr.name;
@@ -294,11 +294,11 @@ export function processTemplate(
 
             context.addRemoveToken(
               (token: TSESTree.Token) =>
-                token.value === "<" && token.range[0] === scriptNode.range[0]
+                token.value === "<" && token.range[0] === scriptNode.range[0],
             );
             context.addRemoveToken(
               (token: TSESTree.Token) =>
-                token.value === ">" && token.range[1] === scriptNode.range[1]
+                token.value === ">" && token.range[1] === scriptNode.range[1],
             );
             return true;
           }
@@ -335,11 +335,11 @@ export function processTemplate(
 
             context.addRemoveToken(
               (token: TSESTree.Token) =>
-                token.value === "<" && token.range[0] === scriptNode.range[0]
+                token.value === "<" && token.range[0] === scriptNode.range[0],
             );
             context.addRemoveToken(
               (token: TSESTree.Token) =>
-                token.value === ">" && token.range[1] === scriptNode.range[1]
+                token.value === ">" && token.range[1] === scriptNode.range[1],
             );
             return true;
           }
@@ -378,7 +378,7 @@ export function processTemplate(
                   return true;
                 }
                 return false;
-              }
+              },
             );
           }
         }
@@ -399,7 +399,7 @@ export function processTemplate(
           }
         }
       }
-    }
+    },
   );
   if (fragmentOpened) {
     const last =
@@ -472,7 +472,7 @@ export function processTemplate(
               name: attr.name.slice(0, colonOffset),
               ...ctx.getLocations(
                 baseNameNode.range[0],
-                baseNameNode.range[0] + colonOffset
+                baseNameNode.range[0] + colonOffset,
               ),
             },
             name: {
@@ -480,7 +480,7 @@ export function processTemplate(
               name: attr.name.slice(colonOffset + 1),
               ...ctx.getLocations(
                 baseNameNode.range[0] + colonOffset + 1,
-                baseNameNode.range[1]
+                baseNameNode.range[1],
               ),
             },
           };
@@ -501,14 +501,14 @@ export function processTemplate(
                 ...baseNameNode.namespace,
                 name: attr.name.slice(
                   baseNameNode.namespace.range[0] - start,
-                  baseNameNode.namespace.range[1] - start
+                  baseNameNode.namespace.range[1] - start,
                 ),
               },
               name: {
                 ...baseNameNode.name,
                 name: attr.name.slice(
                   baseNameNode.name.range[0] - start,
-                  baseNameNode.name.range[1] - start
+                  baseNameNode.name.range[1] - start,
                 ),
               },
             };
@@ -520,7 +520,7 @@ export function processTemplate(
         context.addRemoveToken(
           (token) =>
             token.range[0] === baseNameNode.range[0] &&
-            token.range[1] === baseNameNode.range[1]
+            token.range[1] === baseNameNode.range[1],
         );
         return true;
       }

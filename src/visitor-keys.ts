@@ -20,5 +20,5 @@ const astroKeys: AstroKeysType = {
 };
 
 export const KEYS: SourceCode.VisitorKeys = unionWith(
-  astroKeys
+  astroKeys,
 ) as SourceCode.VisitorKeys;

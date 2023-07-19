@@ -60,7 +60,7 @@ function remap(
   result: ParseResult,
   normalized: NormalizedLineFeed,
   originalCode: string,
-  ctxForAstro: Context
+  ctxForAstro: Context,
 ): void {
   const remapDataMap = new Map<
     Node | AttributeNode,
@@ -86,12 +86,12 @@ function remap(
       if (node.type === "text") {
         value = originalCode.slice(
           start,
-          normalized.remapIndex(getEndOffset(node, ctxForAstro))
+          normalized.remapIndex(getEndOffset(node, ctxForAstro)),
         );
       } else if (node.type === "comment") {
         value = originalCode.slice(
           start + 4,
-          normalized.remapIndex(getEndOffset(node, ctxForAstro)) - 3
+          normalized.remapIndex(getEndOffset(node, ctxForAstro)) - 3,
         );
       } else if (node.type === "attribute") {
         if (
@@ -100,10 +100,10 @@ function remap(
           node.kind !== "spread"
         ) {
           let valueStart = normalized.remapIndex(
-            calcAttributeValueStartOffset(node, ctxForAstro)
+            calcAttributeValueStartOffset(node, ctxForAstro),
           );
           let valueEnd = normalized.remapIndex(
-            calcAttributeEndOffset(node, ctxForAstro)
+            calcAttributeEndOffset(node, ctxForAstro),
           );
           if (
             node.kind !== "quoted" ||
@@ -124,7 +124,7 @@ function remap(
     },
     (_node) => {
       /* noop */
-    }
+    },
   );
 
   for (const [node, remapData] of remapDataMap) {

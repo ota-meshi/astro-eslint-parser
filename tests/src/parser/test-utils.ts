@@ -16,7 +16,7 @@ import type { AstroNode } from "../../../src/ast";
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
-  filePath = "<input>"
+  filePath = "<input>",
 ): Linter.BaseConfig["parserOptions"] {
   let parser = "@typescript-eslint/parser";
 
@@ -68,19 +68,19 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
     if (filename.endsWith("input.astro") || filename.endsWith("input.md")) {
       const outputFileName = inputFileName.replace(
         /input\.[a-z]+$/u,
-        "output.json"
+        "output.json",
       );
       const scopeFileName = inputFileName.replace(
         /input\.[a-z]+$/u,
-        "scope-output.json"
+        "scope-output.json",
       );
       const typeFileName = inputFileName.replace(
         /input\.([a-z]+)$/u,
-        "type-output.$1"
+        "type-output.$1",
       );
       const requirementsFileName = inputFileName.replace(
         /input\.[a-z]+$/u,
-        "requirements.json"
+        "requirements.json",
       );
 
       const input = fs.readFileSync(inputFileName, "utf8");
@@ -97,7 +97,7 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
         getRuleOutputFileName: (ruleName) => {
           return inputFileName.replace(
             /input\.[a-z]+$/u,
-            `${ruleName}-result.json`
+            `${ruleName}-result.json`,
           );
         },
         meetRequirements(key) {
@@ -128,7 +128,7 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
 
 export function getMessageData(
   code: string,
-  message: Linter.LintMessage
+  message: Linter.LintMessage,
 ): {
   ruleId: string | null;
   code: string;
@@ -301,7 +301,7 @@ function normalizeObject(value: any) {
   let entries = Object.entries(value);
   if (isNode) {
     entries = entries.filter(
-      ([k]) => k !== "parent" && k !== "start" && k !== "end"
+      ([k]) => k !== "parent" && k !== "start" && k !== "end",
     );
   }
   const nodeType: string | null = isNode ? value.type : null;
@@ -315,6 +315,6 @@ function normalizeObject(value: any) {
         return c;
       }
       return a < b ? -1 : a > b ? 1 : 0;
-    })
+    }),
   );
 }

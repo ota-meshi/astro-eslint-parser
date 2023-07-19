@@ -9,5 +9,5 @@ export default new Proxy(
       }
       return target[key];
     },
-  }
+  },
 );

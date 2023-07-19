@@ -16,7 +16,7 @@ import type { TSESTree } from "@typescript-eslint/types";
 
 const ERROR_FIXTURE_ROOT = path.resolve(
   __dirname,
-  "../tests/fixtures/parser/error"
+  "../tests/fixtures/parser/error",
 );
 
 const RULES = [
@@ -89,7 +89,7 @@ for (const {
           es2021: true,
         },
       },
-      inputFileName
+      inputFileName,
     );
 
     if (messages.length === 0) {
@@ -100,7 +100,7 @@ for (const {
           return getMessageData(input, m);
         }),
         null,
-        2
+        2,
       );
       fs.writeFileSync(ruleOutputFileName, messagesJson, "utf8");
     }
@@ -108,7 +108,7 @@ for (const {
 }
 
 for (const { input, inputFileName, outputFileName } of listupFixtures(
-  ERROR_FIXTURE_ROOT
+  ERROR_FIXTURE_ROOT,
 )) {
   // eslint-disable-next-line no-console -- ignore
   console.log(inputFileName);
@@ -136,7 +136,7 @@ function buildTypes(
     ast: parser.AST.AstroProgram;
     services: Record<string, any>;
     visitorKeys: { [type: string]: string[] };
-  }
+  },
 ): string {
   const scriptLineRange: [number, number][] = [];
   for (const body of result.ast.body) {
@@ -164,8 +164,8 @@ function buildTypes(
           {
             type: node.type,
             loc: node.loc,
-          }
-        )}`
+          },
+        )}`,
       );
     }
     const type = checker.getTypeAtLocation(tsNode);

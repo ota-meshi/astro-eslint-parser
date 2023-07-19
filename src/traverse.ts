@@ -51,7 +51,7 @@ export function getKeys(node: any, visitorKeys?: VisitorKeys): string[] {
  */
 export function* getNodes(
   node: any,
-  key: string
+  key: string,
 ): IterableIterator<AstroNode | TSESTree.Node> {
   const child = node[key];
   if (Array.isArray(child)) {
@@ -83,7 +83,7 @@ function isNode(x: any): x is AstroNode {
 function traverse<N extends AstroNode | TSESTree.Node>(
   node: N,
   parent: N | null,
-  visitor: Visitor<N>
+  visitor: Visitor<N>,
 ): void {
   visitor.enterNode(node, parent);
 
@@ -109,11 +109,11 @@ export interface Visitor<N> {
 
 export function traverseNodes(
   node: AstroNode,
-  visitor: Visitor<AstroNode | TSESTree.Node>
+  visitor: Visitor<AstroNode | TSESTree.Node>,
 ): void;
 export function traverseNodes(
   node: TSESTree.Node,
-  visitor: Visitor<TSESTree.Node>
+  visitor: Visitor<TSESTree.Node>,
 ): void;
 /**
  * Traverse the given AST tree.
@@ -122,7 +122,7 @@ export function traverseNodes(
  */
 export function traverseNodes(
   node: TSESTree.Node | AstroNode,
-  visitor: Visitor<AstroNode> | Visitor<TSESTree.Node>
+  visitor: Visitor<AstroNode> | Visitor<TSESTree.Node>,
 ): void {
   traverse(node, null, visitor);
 }

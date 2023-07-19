@@ -38,7 +38,7 @@ export function removeAllScopeAndVariableAndReference(
   info: {
     visitorKeys?: VisitorKeys;
     scopeManager: ScopeManager;
-  }
+  },
 ): void {
   const targetScopes = new Set<Scope>();
   traverseNodes(target, {
@@ -89,7 +89,7 @@ export function addVirtualReference(
     write?: boolean;
     typeRef?: boolean;
     forceUsed?: boolean;
-  }
+  },
 ): Reference {
   const reference = new ReferenceClass(
     node,
@@ -102,7 +102,7 @@ export function addVirtualReference(
     undefined, // writeExpr
     undefined, // maybeImplicitGlobal
     undefined, // init
-    status.typeRef ? REFERENCE_TYPE_TYPE_FLAG : REFERENCE_TYPE_VALUE_FLAG
+    status.typeRef ? REFERENCE_TYPE_TYPE_FLAG : REFERENCE_TYPE_VALUE_FLAG,
   );
   (reference as any).astroVirtualReference = true;
 
@@ -121,7 +121,7 @@ export function addVirtualReference(
  */
 export function addGlobalVariable(
   reference: Reference,
-  scopeManager: ScopeManager
+  scopeManager: ScopeManager,
 ): Variable {
   const globalScope = scopeManager.globalScope!;
   const name = reference.identifier.name;
@@ -141,7 +141,7 @@ export function addGlobalVariable(
 /** Remove reference from through */
 export function removeReferenceFromThrough(
   reference: Reference,
-  baseScope: Scope
+  baseScope: Scope,
 ): void {
   const variable = reference.resolved!;
   const name = reference.identifier.name;
@@ -222,7 +222,7 @@ function removeReference(reference: Reference, baseScope: Scope): void {
 /** Remove variable */
 function removeIdentifierVariable(
   node: TSESTree.Identifier,
-  scope: Scope
+  scope: Scope,
 ): void {
   for (let varIndex = 0; varIndex < scope.variables.length; varIndex++) {
     const variable = scope.variables[varIndex];
@@ -256,7 +256,7 @@ function removeIdentifierVariable(
 /** Remove reference */
 function removeIdentifierReference(
   node: TSESTree.Identifier,
-  scope: Scope
+  scope: Scope,
 ): boolean {
   const reference = scope.references.find((ref) => ref.identifier === node);
   if (reference) {
@@ -291,11 +291,11 @@ function removeIdentifierReference(
  */
 function getInnermostScopeFromNode(
   scopeManager: ScopeManager,
-  currentNode: TSESTree.Node
+  currentNode: TSESTree.Node,
 ): Scope {
   return getInnermostScope(
     getScopeFromNode(scopeManager, currentNode),
-    currentNode
+    currentNode,
   );
 }
 
@@ -304,7 +304,7 @@ function getInnermostScopeFromNode(
  */
 function getScopeFromNode(
   scopeManager: ScopeManager,
-  currentNode: TSESTree.Node
+  currentNode: TSESTree.Node,
 ): Scope {
   let node: TSESTree.Node | null = currentNode;
   for (; node; node = node.parent || null) {
@@ -361,7 +361,7 @@ function addAllReferences(list: Reference[], elements: Reference[]): void {
   addElementsToSortedArray(
     list,
     elements,
-    (a, b) => a.identifier.range[0] - b.identifier.range[0]
+    (a, b) => a.identifier.range[0] - b.identifier.range[0],
   );
 }
 
@@ -372,6 +372,6 @@ function addReference(list: Reference[], reference: Reference): void {
   addElementToSortedArray(
     list,
     reference,
-    (a, b) => a.identifier.range[0] - b.identifier.range[0]
+    (a, b) => a.identifier.range[0] - b.identifier.range[0],
   );
 }
