@@ -68,7 +68,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install eslint v7
       run: |+
-        npm i -D eslint@7 --legacy-peer-deps
+        npm i -D eslint@7 @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 --legacy-peer-deps
         npx rimraf node_modules
     - name: Install Packages
       run: npm install --legacy-peer-deps
