@@ -224,7 +224,16 @@ export function nodeReplacer(key: string, value: any): any {
   if (key === "parent") {
     return undefined;
   }
-  if (key === "assertions" && Array.isArray(value) && value.length === 0) {
+  if (
+    (key === "assertions" || key === "decorators" || key === "extends") &&
+    Array.isArray(value) &&
+    value.length === 0
+  ) {
+    // Node types changed in typescript-eslint v6.
+    return undefined;
+  }
+  if ((key === "definite" || key === "declare") && value === false) {
+    // Node types changed in typescript-eslint v6.
     return undefined;
   }
   if (value instanceof RegExp) {
@@ -234,7 +243,40 @@ export function nodeReplacer(key: string, value: any): any {
     return null; // Make it null so it can be checked on node8.
     // return `${String(value)}n`
   }
-  return normalizeObject(value);
+  let obj = value;
+  if (obj) {
+    if (
+      (obj.type === "Identifier" ||
+        obj.type === "Property" ||
+        obj.type === "ObjectPattern" ||
+        obj.type === "AssignmentPattern") &&
+      obj.optional === false
+    ) {
+      // Node types changed in typescript-eslint v6.
+      obj = { ...obj };
+      delete obj.optional;
+    }
+    if (
+      (obj.type === "TSTypeReference" || obj.type === "CallExpression") &&
+      obj.typeParameters
+    ) {
+      // Node types changed in typescript-eslint v6.
+      const copy = { ...obj };
+      copy.typeArguments = obj.typeParameters;
+      delete copy.typeParameters;
+      obj = copy;
+    }
+    if (obj.type === "TSPropertySignature") {
+      // Node types changed in typescript-eslint v6.
+      obj = { ...obj };
+      for (const k of ["optional", "readonly", "static"]) {
+        if (obj[k] === false) {
+          delete obj[k];
+        }
+      }
+    }
+  }
+  return normalizeObject(obj);
 }
 
 type TargetNode = AstroNode | TSESTree.JSXNamespacedName;
