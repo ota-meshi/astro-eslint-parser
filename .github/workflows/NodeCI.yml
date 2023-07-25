@@ -49,7 +49,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install old versions
       run: |+
-        npm i -D @typescript-eslint/parser@5 --legacy-peer-deps
+        npm i -D @typescript-eslint/parser@5 @typescript-eslint/eslint-plugin@5 --legacy-peer-deps
         npx rimraf node_modules
     - name: Install Packages
       run: npm install --legacy-peer-deps
