@@ -4,8 +4,9 @@ import type {
   TagLikeNode,
   ElementNode,
   RootNode,
-} from "@astrojs/compiler/types";
-import type { ParseResult } from "@astrojs/compiler";
+  ParseResult,
+} from "./types";
+// @ts-expect-error -- Type bug?
 import * as service from "astrojs-compiler-sync";
 import {
   calcAttributeEndOffset,

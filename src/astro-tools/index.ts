@@ -1,4 +1,9 @@
-import type { ParseResult } from "@astrojs/compiler";
+import type {
+  ParseResult,
+  AttributeNode,
+  Node,
+  ParentNode,
+} from "../parser/astro-parser/types";
 import { parseTemplate as parse } from "../parser/template";
 import {
   getEndOffset,
@@ -6,7 +11,6 @@ import {
   calcAttributeValueStartOffset,
   calcAttributeEndOffset,
 } from "../astro";
-import type { AttributeNode, Node, ParentNode } from "@astrojs/compiler/types";
 
 export interface ParseTemplateResult {
   result: ParseResult;
