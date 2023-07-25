@@ -5,7 +5,7 @@ import { AST_TOKEN_TYPES } from "@typescript-eslint/types";
 import type { ScopeManager } from "@typescript-eslint/scope-manager";
 import { parseScript } from "./script";
 import { sort } from "./sort";
-import type { ParseResult } from "@astrojs/compiler";
+import type { ParseResult } from "./astro-parser/types";
 import { processTemplate } from "./process-template";
 import { parseTemplate } from "./template";
 import { ParserOptionsContext } from "../context/parser-options";
