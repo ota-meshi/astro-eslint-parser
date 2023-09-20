@@ -1,6 +1,6 @@
 ---
 import SnsBar from "./SnsBar.svelte";
-const baseUrl = import.meta.env.BASE_URL;
+const baseUrl = `${import.meta.env.BASE_URL.replace(/\/$/u, "")}/`;
 const currentPage = new URL(Astro.request.url).pathname;
 
 function isActive(path) {
