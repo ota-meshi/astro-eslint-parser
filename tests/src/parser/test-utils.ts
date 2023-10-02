@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import semver from "semver";
 import type { Linter } from "eslint";
+import * as globals from "globals";
 import type { TSESTree } from "@typescript-eslint/types";
 import { LinesAndColumns } from "../../../src/context";
 import type {
@@ -13,6 +14,7 @@ import type {
   Definition,
 } from "@typescript-eslint/scope-manager";
 import type { AstroNode } from "../../../src/ast";
+import { TS_GLOBALS } from "./ts-vars";
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
@@ -173,9 +175,19 @@ export function scopeToJSON(scopeManager: ScopeManager): string {
 }
 
 function normalizeScope(scope: Scope): any {
+  let variables = scope.variables;
+  if (scope.type === "global") {
+    // Exclude well-known variables as they do not need to be tested.
+    variables = variables.filter(
+      (v) =>
+        !TS_GLOBALS.includes(v.name) &&
+        !(v.name in globals.builtin) &&
+        !(v.name in globals.browser),
+    );
+  }
   return {
     type: scope.type,
-    variables: scope.variables.map(normalizeVar),
+    variables: variables.map(normalizeVar),
     references: scope.references.map(normalizeReference),
     childScopes: scope.childScopes.map(normalizeScope),
     through: scope.through.map(normalizeReference),
@@ -220,6 +232,7 @@ export function normalizeError(error: any): any {
 /**
  * Remove `parent` properties from the given AST.
  */
+// eslint-disable-next-line complexity -- ignore
 export function nodeReplacer(key: string, value: any): any {
   if (key === "parent") {
     return undefined;
