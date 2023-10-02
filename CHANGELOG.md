@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.16.0
+
+### Minor Changes
+
+- [#248](https://github.com/ota-meshi/astro-eslint-parser/pull/248) [`c7a12dc`](https://github.com/ota-meshi/astro-eslint-parser/commit/c7a12dc54bfaf7e0249fd4e2e1750ba935120838) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: parsing error for `is:raw`
+
 ## 0.15.0
 
 ### Minor Changes
