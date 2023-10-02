@@ -170,82 +170,11 @@
               }
             }
           }
-        },
-        {
-          "identifier": {
-            "type": "Identifier",
-            "name": "syntax",
-            "range": [
-              87,
-              93
-            ],
-            "loc": {
-              "start": {
-                "line": 4,
-                "column": 32
-              },
-              "end": {
-                "line": 4,
-                "column": 38
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
         }
       ],
       "childScopes": [],
-      "through": [
-        {
-          "identifier": {
-            "type": "Identifier",
-            "name": "syntax",
-            "range": [
-              87,
-              93
-            ],
-            "loc": {
-              "start": {
-                "line": 4,
-                "column": 32
-              },
-              "end": {
-                "line": 4,
-                "column": 38
-              }
-            }
-          },
-          "from": "module",
-          "init": null,
-          "resolved": null
-        }
-      ]
+      "through": []
     }
   ],
-  "through": [
-    {
-      "identifier": {
-        "type": "Identifier",
-        "name": "syntax",
-        "range": [
-          87,
-          93
-        ],
-        "loc": {
-          "start": {
-            "line": 4,
-            "column": 32
-          },
-          "end": {
-            "line": 4,
-            "column": 38
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    }
-  ]
+  "through": []
 }

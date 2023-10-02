@@ -235,7 +235,11 @@ export function processTemplate(
         }
 
         // Process for raw text
-        if (node.name === "script" || node.name === "style") {
+        if (
+          node.name === "script" ||
+          node.name === "style" ||
+          node.attributes.some((attr) => attr.name === "is:raw")
+        ) {
           const text = node.children[0];
           if (text && text.type === "text") {
             const styleNodeStart = node.position!.start.offset;
