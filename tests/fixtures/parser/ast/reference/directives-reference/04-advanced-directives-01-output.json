@@ -82,71 +82,17 @@
           "type": "JSXElement",
           "children": [
             {
-              "type": "JSXText",
-              "raw": "Some conflicting ",
-              "value": "Some conflicting ",
+              "type": "AstroRawText",
+              "value": "Some conflicting {syntax} here",
+              "raw": "Some conflicting {syntax} here",
               "range": [
                 69,
-                86
-              ],
-              "loc": {
-                "start": {
-                  "line": 4,
-                  "column": 14
-                },
-                "end": {
-                  "line": 4,
-                  "column": 31
-                }
-              }
-            },
-            {
-              "type": "JSXExpressionContainer",
-              "expression": {
-                "type": "Identifier",
-                "name": "syntax",
-                "range": [
-                  87,
-                  93
-                ],
-                "loc": {
-                  "start": {
-                    "line": 4,
-                    "column": 32
-                  },
-                  "end": {
-                    "line": 4,
-                    "column": 38
-                  }
-                }
-              },
-              "range": [
-                86,
-                94
-              ],
-              "loc": {
-                "start": {
-                  "line": 4,
-                  "column": 31
-                },
-                "end": {
-                  "line": 4,
-                  "column": 39
-                }
-              }
-            },
-            {
-              "type": "JSXText",
-              "raw": " here",
-              "value": " here",
-              "range": [
-                94,
                 99
               ],
               "loc": {
                 "start": {
                   "line": 4,
-                  "column": 39
+                  "column": 14
                 },
                 "end": {
                   "line": 4,
@@ -589,87 +535,15 @@
     },
     {
       "type": "JSXText",
-      "value": "Some conflicting ",
+      "value": "Some conflicting {syntax} here",
       "range": [
         69,
-        86
-      ],
-      "loc": {
-        "start": {
-          "line": 4,
-          "column": 14
-        },
-        "end": {
-          "line": 4,
-          "column": 31
-        }
-      }
-    },
-    {
-      "type": "Punctuator",
-      "value": "{",
-      "range": [
-        86,
-        87
-      ],
-      "loc": {
-        "start": {
-          "line": 4,
-          "column": 31
-        },
-        "end": {
-          "line": 4,
-          "column": 32
-        }
-      }
-    },
-    {
-      "type": "Identifier",
-      "value": "syntax",
-      "range": [
-        87,
-        93
-      ],
-      "loc": {
-        "start": {
-          "line": 4,
-          "column": 32
-        },
-        "end": {
-          "line": 4,
-          "column": 38
-        }
-      }
-    },
-    {
-      "type": "Punctuator",
-      "value": "}",
-      "range": [
-        93,
-        94
-      ],
-      "loc": {
-        "start": {
-          "line": 4,
-          "column": 38
-        },
-        "end": {
-          "line": 4,
-          "column": 39
-        }
-      }
-    },
-    {
-      "type": "JSXText",
-      "value": " here",
-      "range": [
-        94,
         99
       ],
       "loc": {
         "start": {
           "line": 4,
-          "column": 39
+          "column": 14
         },
         "end": {
           "line": 4,
