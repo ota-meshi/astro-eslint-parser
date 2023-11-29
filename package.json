@@ -107,7 +107,7 @@
     "string-replace-loader": "^3.0.3",
     "svelte": "^4.0.0",
     "tsup": "^8.0.0",
-    "typescript": "~5.2.0",
+    "typescript": "~5.3.0",
     "typescript-eslint-parser-for-extra-files": "^0.5.0"
   },
   "publishConfig": {
