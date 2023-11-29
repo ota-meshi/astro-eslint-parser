@@ -259,6 +259,16 @@ export function nodeReplacer(key: string, value: any): any {
   let obj = value;
   if (obj) {
     if (
+      (obj.type === "ImportDeclaration" ||
+        obj.type === "ExportNamedDeclaration") &&
+      Array.isArray(obj.attributes) &&
+      obj.attributes.length === 0
+    ) {
+      // Node types changed in typescript-eslint v6.
+      obj = { ...obj };
+      delete obj.attributes;
+    }
+    if (
       (obj.type === "Identifier" ||
         obj.type === "Property" ||
         obj.type === "ObjectPattern" ||

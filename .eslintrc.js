@@ -57,6 +57,10 @@ module.exports = {
             selector: "method",
             format: null,
           },
+          {
+            selector: "import",
+            format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          },
         ],
         "no-implicit-globals": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
