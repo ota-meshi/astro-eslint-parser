@@ -115,8 +115,8 @@ function checkTokens(ast: AstroProgram, input: string) {
     return token.type === "Block"
       ? `/*${token.value}*/`
       : token.type === "Line"
-      ? `//${token.value}`
-      : token.value;
+        ? `//${token.value}`
+        : token.value;
   }
 }
 

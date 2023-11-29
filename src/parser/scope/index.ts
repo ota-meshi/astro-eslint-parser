@@ -97,8 +97,8 @@ export function addVirtualReference(
     status.write && status.read
       ? READ_WRITE_FLAG
       : status.write
-      ? WRITE_FLAG
-      : READ_FLAG,
+        ? WRITE_FLAG
+        : READ_FLAG,
     undefined, // writeExpr
     undefined, // maybeImplicitGlobal
     undefined, // init
