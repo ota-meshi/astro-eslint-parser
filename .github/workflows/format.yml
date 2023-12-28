@@ -15,7 +15,7 @@ jobs:
       - name: Install deps
         run: npm install
       - name: Format
-        run: npm run lint-fix
+        run: npm run eslint-fix
       - name: Commit
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
