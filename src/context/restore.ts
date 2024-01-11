@@ -40,6 +40,11 @@ class RestoreNodeProcessContext {
   public getParent(node: TSESTree.Node): TSESTree.Node | null {
     return this.nodeMap.get(node) || null;
   }
+
+  public findToken(startIndex: number): TSESTree.Token | null {
+    const tokens = this.result.ast.tokens || [];
+    return tokens.find((t) => t.range[0] === startIndex) || null;
+  }
 }
 
 export class RestoreContext {
