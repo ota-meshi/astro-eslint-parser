@@ -1,5 +1,13 @@
 # astro-eslint-parser
 
+## 0.16.1
+
+### Patch Changes
+
+- [#278](https://github.com/ota-meshi/astro-eslint-parser/pull/278) [`bf924a2`](https://github.com/ota-meshi/astro-eslint-parser/commit/bf924a2abe0afc74b6ad21b8ec66a8066ffa692c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with HTML entities
+
+- [#280](https://github.com/ota-meshi/astro-eslint-parser/pull/280) [`004997d`](https://github.com/ota-meshi/astro-eslint-parser/commit/004997d6739dc83baddd98eeb3ed685944908d0c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash with unquoted attribute value
+
 ## 0.16.0
 
 ### Minor Changes
