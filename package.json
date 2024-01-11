@@ -53,6 +53,7 @@
     "@typescript-eslint/types": "^5.0.0",
     "astrojs-compiler-sync": "^0.3.0",
     "debug": "^4.3.4",
+    "entities": "^4.5.0",
     "eslint-visitor-keys": "^3.0.0",
     "espree": "^9.0.0",
     "semver": "^7.3.8"

@@ -7,6 +7,11 @@ import type {
   ParentNode,
   TagLikeNode,
 } from "@astrojs/compiler/types";
+import {
+  EntityDecoder,
+  DecodingMode,
+  htmlDecodeTree,
+} from "entities/lib/decode.js";
 import type { Context } from "../context";
 import { ParseError } from "../errors";
 
@@ -105,7 +110,22 @@ export function calcAttributeEndOffset(
   } else if (node.kind === "quoted") {
     info = getTokenInfo(
       ctx,
-      [[`"${node.value}"`, `'${node.value}'`, node.value]],
+      [
+        [
+          {
+            token: `"${node.value}"`,
+            htmlEntityDecode: true,
+          },
+          {
+            token: `'${node.value}'`,
+            htmlEntityDecode: true,
+          },
+          {
+            token: node.value,
+            htmlEntityDecode: true,
+          },
+        ],
+      ],
       calcAttributeValueStartOffset(node, ctx),
     );
   } else if (node.kind === "expression") {
@@ -153,7 +173,11 @@ export function calcAttributeValueStartOffset(
   if (node.kind === "quoted") {
     info = getTokenInfo(
       ctx,
-      [node.name, "=", [`"`, `'`, node.value]],
+      [
+        node.name,
+        "=",
+        [`"`, `'`, { token: node.value, htmlEntityDecode: true }],
+      ],
       node.position!.start.offset,
     );
   } else if (node.kind === "expression") {
@@ -340,12 +364,14 @@ function calcExpressionEndOffset(node: ExpressionNode, ctx: Context): number {
   return info.index + info.match.length;
 }
 
+type TokenParam = { token: string; htmlEntityDecode: boolean };
+
 /**
  * Get token info
  */
 function getTokenInfo(
   ctx: Context,
-  tokens: (string | string[])[],
+  tokens: (TokenParam | string | (TokenParam | string)[])[],
   position: number,
 ): {
   match: string;
@@ -361,8 +387,7 @@ function getTokenInfo(
     const index = lastMatch
       ? lastMatch.index + lastMatch.match.length
       : position;
-    const m =
-      typeof t === "string" ? matchOfStr(t, index) : matchOfForMulti(t, index);
+    const m = Array.isArray(t) ? matchOfForMulti(t, index) : match(t, index);
     if (m == null) {
       throw new ParseError(
         `Unknown token at ${index}, expected: ${JSON.stringify(
@@ -377,9 +402,10 @@ function getTokenInfo(
   return lastMatch!;
 
   /**
-   * For string
+   * For Single Token
    */
-  function matchOfStr(search: string, position: number) {
+  function match(token: TokenParam | string, position: number) {
+    const search = typeof token === "string" ? token : token.token;
     const index =
       search.trim() === search ? skipSpaces(ctx.code, position) : position;
     if (ctx.code.startsWith(search, index)) {
@@ -388,20 +414,78 @@ function getTokenInfo(
         index,
       };
     }
+    if (typeof token !== "string") {
+      return matchWithHTMLEntity(token, index);
+    }
     return null;
   }
 
   /**
-   * For multi
+   * For Multiple Token
    */
-  function matchOfForMulti(search: string[], position: number) {
+  function matchOfForMulti(search: (TokenParam | string)[], position: number) {
     for (const s of search) {
-      const m = matchOfStr(s, position);
+      const m = match(s, position);
       if (m) {
         return m;
       }
     }
     return null;
+  }
+
+  /**
+   * With HTML entity
+   */
+  function matchWithHTMLEntity(token: TokenParam, position: number) {
+    const search = token.token;
+    let codeOffset = position;
+    let searchOffset = 0;
+    while (searchOffset < search.length) {
+      const searchChar = search[searchOffset];
+      if (ctx.code[codeOffset] === searchChar) {
+        codeOffset++;
+        searchOffset++;
+        continue;
+      }
+      const entity = getHTMLEntity(codeOffset);
+      if (entity?.entity === searchChar) {
+        codeOffset += entity.length;
+        searchOffset++;
+        continue;
+      }
+      return null;
+    }
+    return {
+      match: ctx.code.slice(position, codeOffset),
+      index: position,
+    };
+
+    /**
+     * Get HTML entity from the given position
+     */
+    function getHTMLEntity(position: number) {
+      let codeOffset = position;
+      if (ctx.code[codeOffset++] !== "&") return null;
+
+      let entity = "";
+      const entityDecoder = new EntityDecoder(
+        htmlDecodeTree,
+        (cp) => (entity += String.fromCodePoint(cp)),
+      );
+      entityDecoder.startEntity(DecodingMode.Attribute);
+      const length = entityDecoder.write(ctx.code, codeOffset);
+
+      if (length < 0) {
+        return null;
+      }
+      if (length === 0) {
+        return null;
+      }
+      return {
+        entity,
+        length,
+      };
+    }
   }
 }
 
