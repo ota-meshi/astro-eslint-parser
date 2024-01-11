@@ -174,7 +174,38 @@ export function processTemplate(
               processAttributePunctuators(attr);
             }
           }
-          if (attr.kind === "shorthand") {
+          if (attr.kind === "quoted") {
+            if (
+              attr.raw &&
+              !attr.raw.startsWith('"') &&
+              !attr.raw.startsWith("'")
+            ) {
+              const attrStart = attr.position!.start.offset;
+              const start = calcAttributeValueStartOffset(attr, ctx);
+              const end = calcAttributeEndOffset(attr, ctx);
+              script.appendOriginal(start);
+              script.appendVirtualScript('"');
+              script.appendOriginal(end);
+              script.appendVirtualScript('"');
+
+              script.restoreContext.addRestoreNodeProcess((scriptNode) => {
+                if (
+                  scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                  scriptNode.range[0] === attrStart
+                ) {
+                  const attrNode = scriptNode;
+                  if (
+                    attrNode.value?.type === "Literal" &&
+                    typeof attrNode.value.value === "string"
+                  ) {
+                    attrNode.value.raw = ctx.code.slice(start, end);
+                    return true;
+                  }
+                }
+                return false;
+              });
+            }
+          } else if (attr.kind === "shorthand") {
             const start = attr.position!.start.offset;
             script.appendOriginal(start);
             const jsxName = /[\s"'[\]{}]/u.test(attr.name)
