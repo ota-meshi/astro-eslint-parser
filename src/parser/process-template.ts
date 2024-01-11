@@ -188,22 +188,26 @@ export function processTemplate(
               script.appendOriginal(end);
               script.appendVirtualScript('"');
 
-              script.restoreContext.addRestoreNodeProcess((scriptNode) => {
-                if (
-                  scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                  scriptNode.range[0] === attrStart
-                ) {
-                  const attrNode = scriptNode;
+              script.restoreContext.addRestoreNodeProcess(
+                (scriptNode, context) => {
                   if (
-                    attrNode.value?.type === "Literal" &&
-                    typeof attrNode.value.value === "string"
+                    scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                    scriptNode.range[0] === attrStart
                   ) {
-                    attrNode.value.raw = ctx.code.slice(start, end);
-                    return true;
+                    const attrNode = scriptNode;
+                    if (
+                      attrNode.value?.type === "Literal" &&
+                      typeof attrNode.value.value === "string"
+                    ) {
+                      const raw = ctx.code.slice(start, end);
+                      attrNode.value.raw = raw;
+                      context.findToken(start)!.value = raw;
+                      return true;
+                    }
                   }
-                }
-                return false;
-              });
+                  return false;
+                },
+              );
             }
           } else if (attr.kind === "shorthand") {
             const start = attr.position!.start.offset;

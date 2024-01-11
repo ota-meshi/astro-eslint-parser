@@ -502,7 +502,7 @@
     },
     {
       "type": "JSXText",
-      "value": "\"&#x2603;\"",
+      "value": "&#x2603;",
       "range": [
         21,
         29
@@ -718,7 +718,7 @@
     },
     {
       "type": "JSXText",
-      "value": "\"&copy;\"",
+      "value": "&copy;",
       "range": [
         56,
         62
