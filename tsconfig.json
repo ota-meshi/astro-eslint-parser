@@ -17,14 +17,14 @@
 
     "paths": {
       // Since multiple type definitions are provided, specify the definition here to avoid an error.
-      "responselike": ["./node_modules/@types/responselike"]
-    }
+      "responselike": ["./node_modules/@types/responselike"],
+    },
   },
   "include": [
     "src/**/*.ts",
     "tests/**/*.ts",
     "tools/**/*.ts",
     "benchmark/**/*.ts",
-    "tsup.config.ts"
-  ]
+    "tsup.config.ts",
+  ],
 }
