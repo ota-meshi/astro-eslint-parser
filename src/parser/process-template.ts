@@ -503,54 +503,42 @@ export function processTemplate(
       ) {
         const baseNameNode = scriptNode.name;
         if (colonOffset != null) {
-          const nameNode: TSESTree.JSXNamespacedName = {
-            ...baseNameNode,
-            type: AST_NODE_TYPES.JSXNamespacedName,
-            namespace: {
-              type: AST_NODE_TYPES.JSXIdentifier,
-              name: attr.name.slice(0, colonOffset),
-              ...ctx.getLocations(
-                baseNameNode.range[0],
-                baseNameNode.range[0] + colonOffset,
-              ),
-            },
-            name: {
-              type: AST_NODE_TYPES.JSXIdentifier,
-              name: attr.name.slice(colonOffset + 1),
-              ...ctx.getLocations(
-                baseNameNode.range[0] + colonOffset + 1,
-                baseNameNode.range[1],
-              ),
-            },
+          const nameNode = baseNameNode as TSESTree.JSXNamespacedName;
+          nameNode.type = AST_NODE_TYPES.JSXNamespacedName;
+          nameNode.namespace = {
+            type: AST_NODE_TYPES.JSXIdentifier,
+            name: attr.name.slice(0, colonOffset),
+            ...ctx.getLocations(
+              baseNameNode.range[0],
+              baseNameNode.range[0] + colonOffset,
+            ),
+          };
+          nameNode.name = {
+            type: AST_NODE_TYPES.JSXIdentifier,
+            name: attr.name.slice(colonOffset + 1),
+            ...ctx.getLocations(
+              baseNameNode.range[0] + colonOffset + 1,
+              baseNameNode.range[1],
+            ),
           };
           scriptNode.name = nameNode;
           nameNode.namespace.parent = nameNode;
           nameNode.name.parent = nameNode;
         } else {
           if (baseNameNode.type === AST_NODE_TYPES.JSXIdentifier) {
-            const nameNode: TSESTree.JSXIdentifier = {
-              ...baseNameNode,
-              name: attr.name,
-            };
+            const nameNode = baseNameNode;
+            nameNode.name = attr.name;
             scriptNode.name = nameNode;
           } else {
-            const nameNode: TSESTree.JSXNamespacedName = {
-              ...baseNameNode,
-              namespace: {
-                ...baseNameNode.namespace,
-                name: attr.name.slice(
-                  baseNameNode.namespace.range[0] - start,
-                  baseNameNode.namespace.range[1] - start,
-                ),
-              },
-              name: {
-                ...baseNameNode.name,
-                name: attr.name.slice(
-                  baseNameNode.name.range[0] - start,
-                  baseNameNode.name.range[1] - start,
-                ),
-              },
-            };
+            const nameNode = baseNameNode;
+            nameNode.namespace.name = attr.name.slice(
+              baseNameNode.namespace.range[0] - start,
+              baseNameNode.namespace.range[1] - start,
+            );
+            nameNode.name.name = attr.name.slice(
+              baseNameNode.name.range[0] - start,
+              baseNameNode.name.range[1] - start,
+            );
             scriptNode.name = nameNode;
             nameNode.namespace.parent = nameNode;
             nameNode.name.parent = nameNode;
