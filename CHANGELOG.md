@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.16.2
+
+### Patch Changes
+
+- [#283](https://github.com/ota-meshi/astro-eslint-parser/pull/283) [`33b0a3f`](https://github.com/ota-meshi/astro-eslint-parser/commit/33b0a3f4a6c59e934e6716afb638f08c748c52f4) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash for `set:html` with tseslint
+
 ## 0.16.1
 
 ### Patch Changes
