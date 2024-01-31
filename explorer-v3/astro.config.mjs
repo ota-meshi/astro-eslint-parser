@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 import { resolve } from "path";
+import { version as monacoVersion } from "monaco-editor/package.json";
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,6 +12,9 @@ export default defineConfig({
     server: {
       fs: { strict: false },
     },
+    define: {
+      MONACO_EDITOR_VERSION: JSON.stringify(monacoVersion),
+    },
     resolve: {
       alias: {
         assert: resolve("./build-system/shim/assert.js"),
@@ -18,16 +22,16 @@ export default defineConfig({
         fs: resolve("./build-system/shim/fs.js"),
         module: resolve("./build-system/shim/module.js"),
         "eslint/package.json": resolve(
-          "./build-system/shim/eslint/package.json"
+          "./build-system/shim/eslint/package.json",
         ),
         eslint: resolve("./build-system/shim/eslint/index.js"),
         "astro-eslint-parser": resolve(
-          "./build-system/shim/astro-eslint-parser/index.js"
+          "./build-system/shim/astro-eslint-parser/index.js",
         ),
         globby: resolve("./build-system/shim/globby.js"),
         tslib: resolve("../node_modules/tslib/tslib.es6.js"),
         "escape-string-regexp": resolve(
-          "./build-system/shim/escape-string-regexp/index.js"
+          "./build-system/shim/escape-string-regexp/index.js",
         ),
         resolve: resolve("./build-system/shim/resolve.js"),
       },
