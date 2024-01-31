@@ -118,10 +118,13 @@ export function processTemplate(
       } else if (isTag(node)) {
         // Process for multiple tag
         if (parent.type === "expression") {
-          const index = parent.children.indexOf(node);
-          const before = parent.children[index - 1];
+          const siblings = parent.children.filter(
+            (n) => n.type !== "text" || n.value.trim(),
+          );
+          const index = siblings.indexOf(node);
+          const before = siblings[index - 1];
           if (!before || !isTag(before)) {
-            const after = parent.children[index + 1];
+            const after = siblings[index + 1];
             if (after && (isTag(after) || after.type === "comment")) {
               const start = node.position!.start.offset;
               script.appendOriginal(start);
@@ -427,10 +430,13 @@ export function processTemplate(
         (isTag(node) || node.type === "comment") &&
         parent.type === "expression"
       ) {
-        const index = parent.children.indexOf(node);
-        const after = parent.children[index + 1];
+        const siblings = parent.children.filter(
+          (n) => n.type !== "text" || n.value.trim(),
+        );
+        const index = siblings.indexOf(node);
+        const after = siblings[index + 1];
         if (!after || (!isTag(after) && after.type !== "comment")) {
-          const before = parent.children[index - 1];
+          const before = siblings[index - 1];
           if (before && (isTag(before) || before.type === "comment")) {
             const end = getEndOffset(node, ctx);
             script.appendOriginal(end);
