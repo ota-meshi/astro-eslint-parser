@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.16.3
+
+### Patch Changes
+
+- [#289](https://github.com/ota-meshi/astro-eslint-parser/pull/289) [`b62ac68`](https://github.com/ota-meshi/astro-eslint-parser/commit/b62ac68e66fb7e9501cfdb474d5c0c8c197faa4b) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: parsing error in multiple tags with spaces
+
 ## 0.16.2
 
 ### Patch Changes
