@@ -1,20 +1,11 @@
 <script>
   // eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
   /* eslint-disable no-useless-escape -- ignore */
+  import "./scripts/shim.js";
   import MonacoEditor from "./MonacoEditor.svelte";
   import AstOptions from "./AstOptions.svelte";
   import * as astroEslintParser from "astro-eslint-parser";
   import { processJsonValue } from "./scripts/json";
-
-  if (typeof globalThis.process === "undefined") {
-    globalThis.process = {};
-  }
-  if (!process.env) {
-    process.env = {};
-  }
-  if (!process.cwd) {
-    process.cwd = () => "/";
-  }
 
   let options = {
     showLocations: false,

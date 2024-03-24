@@ -1,4 +1,5 @@
 <script>
+  import "./scripts/shim.js";
   import { onDestroy, onMount } from "svelte";
   import { Linter } from "eslint";
   import pluginReact from "eslint-plugin-react";
@@ -7,16 +8,6 @@
   import RulesSettings from "./RulesSettings.svelte";
   import { deserializeState, serializeState } from "./scripts/state";
   import { DEFAULT_RULES_CONFIG, getURL } from "./scripts/rules.js";
-
-  if (typeof globalThis.process === "undefined") {
-    globalThis.process = {};
-  }
-  if (!process.env) {
-    process.env = {};
-  }
-  if (!process.cwd) {
-    process.cwd = () => "/";
-  }
 
   let linter = null;
   let tsParser;
