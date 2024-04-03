@@ -1,5 +1,6 @@
 import type { ParserOptions } from "@typescript-eslint/parser";
 import fs from "fs";
+import { sync as globSync } from "globby";
 import path from "path";
 
 /** Parse and get project configs */
@@ -9,9 +10,13 @@ export function getProjectConfigFiles(options: ParserOptions): string[] {
       ? options.tsconfigRootDir
       : process.cwd();
   if (options.project !== true) {
-    return Array.isArray(options.project)
-      ? options.project
-      : [options.project!];
+    if (options.project == null || options.project === false) {
+      return [];
+    }
+    return globSync(
+      Array.isArray(options.project) ? options.project : [options.project],
+      { cwd: tsconfigRootDir },
+    );
   }
 
   let directory = path.dirname(options.filePath!);
