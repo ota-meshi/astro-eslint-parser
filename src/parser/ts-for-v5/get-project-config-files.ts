@@ -1,38 +1,41 @@
-import type { ParserOptions } from "@typescript-eslint/parser";
-import fs from "fs";
-import { sync as globSync } from "globby";
-import path from "path";
+/**
+ * Code from: https://github.com/typescript-eslint/typescript-eslint/blob/v5.62.0/packages/typescript-estree/src/parseSettings/getProjectConfigFiles.ts
+ * Code updated to exclude caching.
+ */
+
+import * as fs from "fs";
+import * as path from "path";
 
 /** Parse and get project configs */
-export function getProjectConfigFiles(options: ParserOptions): string[] {
-  const tsconfigRootDir =
-    typeof options.tsconfigRootDir === "string"
-      ? options.tsconfigRootDir
-      : process.cwd();
-  if (options.project !== true) {
-    if (options.project == null || options.project === false) {
-      return [];
-    }
-    return globSync(
-      Array.isArray(options.project) ? options.project : [options.project],
-      { cwd: tsconfigRootDir },
-    );
+export function getProjectConfigFiles(
+  parseSettings: Readonly<{ filePath: string; tsconfigRootDir: string }>,
+  project: string | string[] | true | undefined,
+): string[] | undefined {
+  if (project !== true) {
+    return project === undefined || Array.isArray(project)
+      ? project
+      : [project];
   }
 
-  let directory = path.dirname(options.filePath!);
+  let directory = path.dirname(parseSettings.filePath);
   const checkedDirectories = [directory];
 
   do {
     const tsconfigPath = path.join(directory, "tsconfig.json");
-    if (fs.existsSync(tsconfigPath)) {
-      return [tsconfigPath];
+    const cached = fs.existsSync(tsconfigPath) && tsconfigPath;
+
+    if (cached) {
+      return [cached];
     }
 
     directory = path.dirname(directory);
     checkedDirectories.push(directory);
-  } while (directory.length > 1 && directory.length >= tsconfigRootDir.length);
+  } while (
+    directory.length > 1 &&
+    directory.length >= parseSettings.tsconfigRootDir.length
+  );
 
   throw new Error(
-    `project was set to \`true\` but couldn't find any tsconfig.json relative to '${options.filePath}' within '${tsconfigRootDir}'.`,
+    `project was set to \`true\` but couldn't find any tsconfig.json relative to '${parseSettings.filePath}' within '${parseSettings.tsconfigRootDir}'.`,
   );
 }
