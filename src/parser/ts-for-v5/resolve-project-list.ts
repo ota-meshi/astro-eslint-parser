@@ -6,10 +6,15 @@
 import { sync as globSync } from "globby";
 import isGlob from "is-glob";
 import * as path from "path";
-import * as ts from "typescript";
+import { createRequire } from "module";
 
 import type { ParserOptions } from "@typescript-eslint/types";
 import type { TSESTreeOptions } from "@typescript-eslint/typescript-estree";
+import type { TS } from "../../types";
+
+const ts: TS = createRequire(path.join(process.cwd(), "__placeholder__.js"))(
+  "typescript",
+);
 
 /**
  * Normalizes, sanitizes, resolves and filters the provided project paths
