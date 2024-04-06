@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 0.17.0
+
+### Minor Changes
+
+- [#304](https://github.com/ota-meshi/astro-eslint-parser/pull/304) [`529a588`](https://github.com/ota-meshi/astro-eslint-parser/commit/529a588c3a236aaf480f8e757dd805b4293b7cfb) Thanks [@nix6839](https://github.com/nix6839)! - feat: support glob in `project` key
+
 ## 0.16.3
 
 ### Patch Changes
