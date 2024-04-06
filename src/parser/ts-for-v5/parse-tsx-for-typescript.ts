@@ -3,6 +3,7 @@ import type * as tsParserAll from "@typescript-eslint/parser";
 import type { ESLintExtendedProgram, TS } from "../../types";
 import { getProjectConfigFiles } from "./get-project-config-files";
 import { getTSProgram } from "./programs";
+import { resolveProjectList } from "./resolve-project-list";
 
 const DEFAULT_EXTRA_FILE_EXTENSIONS = [".vue", ".svelte", ".astro"];
 /**
@@ -44,7 +45,21 @@ function* iterateOptions(options: ParserOptions): Iterable<ProgramOptions> {
       "Specify `parserOptions.project`. Otherwise there is no point in using this parser.",
     );
   }
-  for (const project of getProjectConfigFiles(options)) {
+  // Code from: https://github.com/typescript-eslint/typescript-eslint/blob/v5.62.0/packages/typescript-estree/src/parseSettings/createParseSettings.ts
+  const tsconfigRootDir =
+    typeof options.tsconfigRootDir === "string"
+      ? options.tsconfigRootDir
+      : process.cwd();
+
+  const projects = resolveProjectList({
+    project: getProjectConfigFiles(
+      { tsconfigRootDir, filePath: options.filePath },
+      options.project,
+    ),
+    projectFolderIgnoreList: options.projectFolderIgnoreList,
+    tsconfigRootDir,
+  });
+  for (const project of projects) {
     yield {
       project,
       filePath: options.filePath,
