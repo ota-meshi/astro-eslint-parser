@@ -1,6 +1,6 @@
 {
   "name": "astro-eslint-parser",
-  "version": "0.16.3",
+  "version": "0.17.0",
   "description": "Astro component parser for ESLint",
   "main": "lib/index.js",
   "module": "lib/index.mjs",
