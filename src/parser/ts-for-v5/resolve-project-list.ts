@@ -12,10 +12,6 @@ import type { ParserOptions } from "@typescript-eslint/types";
 import type { TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import type { TS } from "../../types";
 
-const ts: TS = createRequire(path.join(process.cwd(), "__placeholder__.js"))(
-  "typescript",
-);
-
 /**
  * Normalizes, sanitizes, resolves and filters the provided project paths
  */
@@ -85,12 +81,26 @@ export function resolveProjectList(
  * Below code from: https://github.com/typescript-eslint/typescript-eslint/blob/v5.62.0/packages/typescript-estree/src/create-program/shared.ts#L53-L71
  */
 
-// typescript doesn't provide a ts.sys implementation for browser environments
-const useCaseSensitiveFileNames =
-  ts.sys !== undefined ? ts.sys.useCaseSensitiveFileNames : true;
-const correctPathCasing = useCaseSensitiveFileNames
-  ? (filePath: string): string => filePath
-  : (filePath: string): string => filePath.toLowerCase();
+/** Don't call this directly; use `correctPathCasing()` instead */
+let _correctPathCasing: ((filePath: string) => string) | undefined;
+
+/** */
+function correctPathCasing(filePath: string): string {
+  if (_correctPathCasing === undefined) {
+    const ts: TS = createRequire(
+      path.join(process.cwd(), "__placeholder__.js"),
+    )("typescript");
+
+    // typescript doesn't provide a ts.sys implementation for browser environments
+    const useCaseSensitiveFileNames =
+      ts.sys !== undefined ? ts.sys.useCaseSensitiveFileNames : true;
+    _correctPathCasing = useCaseSensitiveFileNames
+      ? (filePath: string): string => filePath
+      : (filePath: string): string => filePath.toLowerCase();
+  }
+
+  return _correctPathCasing(filePath);
+}
 
 /** */
 function getCanonicalFileName(filePath: string): string {
