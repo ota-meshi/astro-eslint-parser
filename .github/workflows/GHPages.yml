@@ -30,10 +30,10 @@ jobs:
         node-version: 18
     - name: Install And Build
       run: |+
-        npm install --legacy-peer-deps
+        npm install -f
         npm run build
         cd explorer-v3
-        npm install --legacy-peer-deps
+        npm install -f
         npm run pre-build
         npm run build
     - name: Setup Pages
