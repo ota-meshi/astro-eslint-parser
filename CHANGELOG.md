@@ -4,9 +4,7 @@
 
 ### Major Changes
 
-- [#314](https://github.com/ota-meshi/astro-eslint-parser/pull/314) [`b5741ca`](https://github.com/ota-meshi/astro-eslint-parser/commit/b5741ca91cf307efd6c62076a5c4646da71ffa89) Thanks [@JoshuaKGoldberg](https://github.com/JoshuaKGoldberg)! - feat!: bump Node to 18 and typescript-eslint to v7
-
-- [#316](https://github.com/ota-meshi/astro-eslint-parser/pull/316) [`29f99d7`](https://github.com/ota-meshi/astro-eslint-parser/commit/29f99d7ef6ed1b04cee03e9ee34c7cfe27f88986) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat!: make node version support more strict
+- [#314](https://github.com/ota-meshi/astro-eslint-parser/pull/314) [`b5741ca`](https://github.com/ota-meshi/astro-eslint-parser/commit/b5741ca91cf307efd6c62076a5c4646da71ffa89), [#316](https://github.com/ota-meshi/astro-eslint-parser/pull/316) [`29f99d7`](https://github.com/ota-meshi/astro-eslint-parser/commit/29f99d7ef6ed1b04cee03e9ee34c7cfe27f88986) Thanks [@JoshuaKGoldberg](https://github.com/JoshuaKGoldberg)! - feat!: bump Node to 18 and typescript-eslint to v7
 
 ## 0.17.0
 
