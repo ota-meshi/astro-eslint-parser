@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.0.1
+
+### Patch Changes
+
+- [#318](https://github.com/ota-meshi/astro-eslint-parser/pull/318) [`7126ccc`](https://github.com/ota-meshi/astro-eslint-parser/commit/7126ccc91e91f8caed2eda1460f47364ebe462cc) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: crash in scope analysis when using espree
+
 ## 1.0.0
 
 ### Major Changes
