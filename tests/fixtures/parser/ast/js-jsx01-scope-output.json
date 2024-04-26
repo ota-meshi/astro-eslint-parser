@@ -1,1 +1,180 @@
-null
+{
+  "type": "global",
+  "variables": [],
+  "references": [],
+  "childScopes": [
+    {
+      "type": "module",
+      "variables": [
+        {
+          "name": "MyComponent",
+          "identifiers": [
+            {
+              "type": "Identifier",
+              "name": "MyComponent",
+              "range": [
+                11,
+                22
+              ],
+              "loc": {
+                "start": {
+                  "line": 2,
+                  "column": 7
+                },
+                "end": {
+                  "line": 2,
+                  "column": 18
+                }
+              }
+            }
+          ],
+          "defs": [
+            {
+              "type": "ImportBinding",
+              "name": {
+                "type": "Identifier",
+                "name": "MyComponent",
+                "range": [
+                  11,
+                  22
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 18
+                  }
+                }
+              },
+              "node": {
+                "type": "ImportDefaultSpecifier",
+                "local": {
+                  "type": "Identifier",
+                  "name": "MyComponent",
+                  "range": [
+                    11,
+                    22
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 2,
+                      "column": 7
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 18
+                    }
+                  }
+                },
+                "range": [
+                  11,
+                  22
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 18
+                  }
+                }
+              }
+            }
+          ],
+          "references": [
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "MyComponent",
+                "range": [
+                  57,
+                  68
+                ],
+                "loc": {
+                  "start": {
+                    "line": 5,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 5,
+                    "column": 12
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "MyComponent",
+                "range": [
+                  11,
+                  22
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 18
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "references": [
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "MyComponent",
+            "range": [
+              57,
+              68
+            ],
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 1
+              },
+              "end": {
+                "line": 5,
+                "column": 12
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "MyComponent",
+            "range": [
+              11,
+              22
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 7
+              },
+              "end": {
+                "line": 2,
+                "column": 18
+              }
+            }
+          }
+        }
+      ],
+      "childScopes": [],
+      "through": []
+    }
+  ],
+  "through": []
+}

@@ -31,6 +31,7 @@ export function getBasicParserOptions(
     project: require.resolve("../../fixtures/tsconfig.test.json"),
     extraFileExtensions: [".astro", ".md"],
     sourceType: "module",
+    eslintScopeManager: true,
   };
 }
 
