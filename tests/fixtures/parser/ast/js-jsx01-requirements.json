@@ -1,0 +1,5 @@
+{
+    "scope": {
+        "@typescript-eslint/parser" : ">=7"
+    }
+}
