@@ -52,7 +52,7 @@
     "@typescript-eslint/scope-manager": "^7.0.0",
     "@typescript-eslint/types": "^7.0.0",
     "@typescript-eslint/typescript-estree": "^7.0.0",
-    "astrojs-compiler-sync": "^0.3.0",
+    "astrojs-compiler-sync": "^1.0.0",
     "debug": "^4.3.4",
     "entities": "^4.5.0",
     "eslint-visitor-keys": "^3.0.0",
