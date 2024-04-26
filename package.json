@@ -55,7 +55,7 @@
     "astrojs-compiler-sync": "^1.0.0",
     "debug": "^4.3.4",
     "entities": "^4.5.0",
-    "eslint-visitor-keys": "^3.0.0",
+    "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.0",
     "globby": "^11.1.0",
     "is-glob": "^4.0.3",
