@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.0.2
+
+### Patch Changes
+
+- [#321](https://github.com/ota-meshi/astro-eslint-parser/pull/321) [`c089a5c`](https://github.com/ota-meshi/astro-eslint-parser/commit/c089a5c625aba86607d5df0a914055c4d6259632) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: incorrect JSX scope analysis
+
 ## 1.0.1
 
 ### Patch Changes
