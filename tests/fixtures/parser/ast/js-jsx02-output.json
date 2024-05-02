@@ -192,7 +192,7 @@
       ],
       "range": [
         51,
-        71
+        72
       ],
       "loc": {
         "start": {
@@ -201,7 +201,7 @@
         },
         "end": {
           "line": 3,
-          "column": 20
+          "column": 21
         }
       }
     },
@@ -216,8 +216,8 @@
               "raw": "\n    ",
               "value": "\n    ",
               "range": [
-                89,
-                94
+                90,
+                95
               ],
               "loc": {
                 "start": {
@@ -247,8 +247,8 @@
                             "type": "Identifier",
                             "name": "num",
                             "range": [
-                              142,
-                              145
+                              143,
+                              146
                             ],
                             "loc": {
                               "start": {
@@ -262,8 +262,8 @@
                             }
                           },
                           "range": [
-                            141,
-                            146
+                            142,
+                            147
                           ],
                           "loc": {
                             "start": {
@@ -283,8 +283,8 @@
                           "type": "JSXIdentifier",
                           "name": "div",
                           "range": [
-                            148,
-                            151
+                            149,
+                            152
                           ],
                           "loc": {
                             "start": {
@@ -298,8 +298,8 @@
                           }
                         },
                         "range": [
-                          146,
-                          152
+                          147,
+                          153
                         ],
                         "loc": {
                           "start": {
@@ -318,8 +318,8 @@
                           "type": "JSXIdentifier",
                           "name": "div",
                           "range": [
-                            137,
-                            140
+                            138,
+                            141
                           ],
                           "loc": {
                             "start": {
@@ -335,8 +335,8 @@
                         "attributes": [],
                         "selfClosing": false,
                         "range": [
-                          136,
-                          141
+                          137,
+                          142
                         ],
                         "loc": {
                           "start": {
@@ -350,8 +350,8 @@
                         }
                       },
                       "range": [
-                        136,
-                        152
+                        137,
+                        153
                       ],
                       "loc": {
                         "start": {
@@ -372,8 +372,8 @@
                         "type": "Identifier",
                         "name": "num",
                         "range": [
-                          114,
-                          117
+                          115,
+                          118
                         ],
                         "loc": {
                           "start": {
@@ -388,8 +388,8 @@
                       }
                     ],
                     "range": [
-                      113,
-                      162
+                      114,
+                      163
                     ],
                     "loc": {
                       "start": {
@@ -410,8 +410,8 @@
                     "type": "Identifier",
                     "name": "list",
                     "range": [
-                      104,
-                      108
+                      105,
+                      109
                     ],
                     "loc": {
                       "start": {
@@ -429,8 +429,8 @@
                     "type": "Identifier",
                     "name": "map",
                     "range": [
-                      109,
-                      112
+                      110,
+                      113
                     ],
                     "loc": {
                       "start": {
@@ -444,8 +444,8 @@
                     }
                   },
                   "range": [
-                    104,
-                    112
+                    105,
+                    113
                   ],
                   "loc": {
                     "start": {
@@ -460,8 +460,8 @@
                 },
                 "optional": false,
                 "range": [
-                  104,
-                  163
+                  105,
+                  164
                 ],
                 "loc": {
                   "start": {
@@ -475,8 +475,8 @@
                 }
               },
               "range": [
-                94,
-                169
+                95,
+                170
               ],
               "loc": {
                 "start": {
@@ -494,8 +494,8 @@
               "raw": "\n",
               "value": "\n",
               "range": [
-                169,
-                170
+                170,
+                171
               ],
               "loc": {
                 "start": {
@@ -515,8 +515,8 @@
               "type": "JSXIdentifier",
               "name": "MyComponent",
               "range": [
-                172,
-                183
+                173,
+                184
               ],
               "loc": {
                 "start": {
@@ -530,8 +530,8 @@
               }
             },
             "range": [
-              170,
-              184
+              171,
+              185
             ],
             "loc": {
               "start": {
@@ -550,8 +550,8 @@
               "type": "JSXIdentifier",
               "name": "MyComponent",
               "range": [
-                77,
-                88
+                78,
+                89
               ],
               "loc": {
                 "start": {
@@ -567,8 +567,8 @@
             "attributes": [],
             "selfClosing": false,
             "range": [
-              76,
-              89
+              77,
+              90
             ],
             "loc": {
               "start": {
@@ -582,8 +582,8 @@
             }
           },
           "range": [
-            76,
-            184
+            77,
+            185
           ],
           "loc": {
             "start": {
@@ -601,8 +601,8 @@
           "raw": "\n",
           "value": "\n",
           "range": [
-            184,
-            185
+            185,
+            186
           ],
           "loc": {
             "start": {
@@ -617,8 +617,8 @@
         }
       ],
       "range": [
-        76,
-        185
+        77,
+        186
       ],
       "loc": {
         "start": {
@@ -925,10 +925,28 @@
     },
     {
       "type": "Punctuator",
+      "value": ";",
+      "range": [
+        71,
+        72
+      ],
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 20
+        },
+        "end": {
+          "line": 3,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
       "value": "---",
       "range": [
-        72,
-        75
+        73,
+        76
       ],
       "loc": {
         "start": {
@@ -945,8 +963,8 @@
       "type": "Punctuator",
       "value": "<",
       "range": [
-        76,
-        77
+        77,
+        78
       ],
       "loc": {
         "start": {
@@ -963,8 +981,8 @@
       "type": "JSXIdentifier",
       "value": "MyComponent",
       "range": [
-        77,
-        88
+        78,
+        89
       ],
       "loc": {
         "start": {
@@ -981,8 +999,8 @@
       "type": "Punctuator",
       "value": ">",
       "range": [
-        88,
-        89
+        89,
+        90
       ],
       "loc": {
         "start": {
@@ -999,8 +1017,8 @@
       "type": "JSXText",
       "value": "\n    ",
       "range": [
-        89,
-        94
+        90,
+        95
       ],
       "loc": {
         "start": {
@@ -1017,8 +1035,8 @@
       "type": "Punctuator",
       "value": "{",
       "range": [
-        94,
-        95
+        95,
+        96
       ],
       "loc": {
         "start": {
@@ -1035,8 +1053,8 @@
       "type": "Identifier",
       "value": "list",
       "range": [
-        104,
-        108
+        105,
+        109
       ],
       "loc": {
         "start": {
@@ -1053,8 +1071,8 @@
       "type": "Punctuator",
       "value": ".",
       "range": [
-        108,
-        109
+        109,
+        110
       ],
       "loc": {
         "start": {
@@ -1071,8 +1089,8 @@
       "type": "Identifier",
       "value": "map",
       "range": [
-        109,
-        112
+        110,
+        113
       ],
       "loc": {
         "start": {
@@ -1089,8 +1107,8 @@
       "type": "Punctuator",
       "value": "(",
       "range": [
-        112,
-        113
+        113,
+        114
       ],
       "loc": {
         "start": {
@@ -1107,8 +1125,8 @@
       "type": "Punctuator",
       "value": "(",
       "range": [
-        113,
-        114
+        114,
+        115
       ],
       "loc": {
         "start": {
@@ -1125,8 +1143,8 @@
       "type": "Identifier",
       "value": "num",
       "range": [
-        114,
-        117
+        115,
+        118
       ],
       "loc": {
         "start": {
@@ -1143,8 +1161,8 @@
       "type": "Punctuator",
       "value": ")",
       "range": [
-        117,
-        118
+        118,
+        119
       ],
       "loc": {
         "start": {
@@ -1161,8 +1179,8 @@
       "type": "Punctuator",
       "value": "=>",
       "range": [
-        119,
-        121
+        120,
+        122
       ],
       "loc": {
         "start": {
@@ -1179,8 +1197,8 @@
       "type": "Punctuator",
       "value": "(",
       "range": [
-        122,
-        123
+        123,
+        124
       ],
       "loc": {
         "start": {
@@ -1197,8 +1215,8 @@
       "type": "Punctuator",
       "value": "<",
       "range": [
-        136,
-        137
+        137,
+        138
       ],
       "loc": {
         "start": {
@@ -1215,8 +1233,8 @@
       "type": "JSXIdentifier",
       "value": "div",
       "range": [
-        137,
-        140
+        138,
+        141
       ],
       "loc": {
         "start": {
@@ -1233,8 +1251,8 @@
       "type": "Punctuator",
       "value": ">",
       "range": [
-        140,
-        141
+        141,
+        142
       ],
       "loc": {
         "start": {
@@ -1251,8 +1269,8 @@
       "type": "Punctuator",
       "value": "{",
       "range": [
-        141,
-        142
+        142,
+        143
       ],
       "loc": {
         "start": {
@@ -1269,8 +1287,8 @@
       "type": "Identifier",
       "value": "num",
       "range": [
-        142,
-        145
+        143,
+        146
       ],
       "loc": {
         "start": {
@@ -1287,8 +1305,8 @@
       "type": "Punctuator",
       "value": "}",
       "range": [
-        145,
-        146
+        146,
+        147
       ],
       "loc": {
         "start": {
@@ -1305,8 +1323,8 @@
       "type": "Punctuator",
       "value": "<",
       "range": [
-        146,
-        147
+        147,
+        148
       ],
       "loc": {
         "start": {
@@ -1323,8 +1341,8 @@
       "type": "Punctuator",
       "value": "/",
       "range": [
-        147,
-        148
+        148,
+        149
       ],
       "loc": {
         "start": {
@@ -1341,8 +1359,8 @@
       "type": "JSXIdentifier",
       "value": "div",
       "range": [
-        148,
-        151
+        149,
+        152
       ],
       "loc": {
         "start": {
@@ -1359,8 +1377,8 @@
       "type": "Punctuator",
       "value": ">",
       "range": [
-        151,
-        152
+        152,
+        153
       ],
       "loc": {
         "start": {
@@ -1377,8 +1395,8 @@
       "type": "Punctuator",
       "value": ")",
       "range": [
-        161,
-        162
+        162,
+        163
       ],
       "loc": {
         "start": {
@@ -1395,8 +1413,8 @@
       "type": "Punctuator",
       "value": ")",
       "range": [
-        162,
-        163
+        163,
+        164
       ],
       "loc": {
         "start": {
@@ -1413,8 +1431,8 @@
       "type": "Punctuator",
       "value": "}",
       "range": [
-        168,
-        169
+        169,
+        170
       ],
       "loc": {
         "start": {
@@ -1431,8 +1449,8 @@
       "type": "JSXText",
       "value": "\n",
       "range": [
-        169,
-        170
+        170,
+        171
       ],
       "loc": {
         "start": {
@@ -1449,8 +1467,8 @@
       "type": "Punctuator",
       "value": "<",
       "range": [
-        170,
-        171
+        171,
+        172
       ],
       "loc": {
         "start": {
@@ -1467,8 +1485,8 @@
       "type": "Punctuator",
       "value": "/",
       "range": [
-        171,
-        172
+        172,
+        173
       ],
       "loc": {
         "start": {
@@ -1485,8 +1503,8 @@
       "type": "JSXIdentifier",
       "value": "MyComponent",
       "range": [
-        172,
-        183
+        173,
+        184
       ],
       "loc": {
         "start": {
@@ -1503,8 +1521,8 @@
       "type": "Punctuator",
       "value": ">",
       "range": [
-        183,
-        184
+        184,
+        185
       ],
       "loc": {
         "start": {
@@ -1521,8 +1539,8 @@
       "type": "JSXText",
       "value": "\n",
       "range": [
-        184,
-        185
+        185,
+        186
       ],
       "loc": {
         "start": {
@@ -1538,7 +1556,7 @@
   ],
   "range": [
     0,
-    185
+    186
   ],
   "loc": {
     "start": {
