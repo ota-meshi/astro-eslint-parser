@@ -17,10 +17,10 @@ import type {
   ReferenceTypeFlag,
 } from "@typescript-eslint/scope-manager/dist/referencer/Reference";
 
-const READ_FLAG = 1 as ReferenceFlag;
+export const READ_FLAG = 1 as ReferenceFlag;
 const WRITE_FLAG = 2 as ReferenceFlag;
 const READ_WRITE_FLAG = 3 as ReferenceFlag;
-const REFERENCE_TYPE_VALUE_FLAG = 1 as ReferenceTypeFlag;
+export const REFERENCE_TYPE_VALUE_FLAG = 1 as ReferenceTypeFlag;
 const REFERENCE_TYPE_TYPE_FLAG = 2 as ReferenceTypeFlag;
 
 /**

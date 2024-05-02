@@ -1,0 +1,11 @@
+---
+import MyComponent from "./MyComponent.astro";
+const list = [1,2,3]
+---
+<MyComponent>
+    {
+        list.map((num) => (
+            <div>{num}</div>
+        ))
+    }
+</MyComponent>
