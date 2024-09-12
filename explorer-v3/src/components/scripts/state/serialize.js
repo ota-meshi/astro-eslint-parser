@@ -26,10 +26,10 @@ export function serializeState(state) {
     filePath: state.filePath,
   };
   const jsonString = JSON.stringify(saveData);
-  // eslint-disable-next-line n/no-unsupported-features/node-builtins -- ignore
   const uint8Arr = new TextEncoder().encode(jsonString);
   const compressedString = String.fromCharCode(...pako.deflate(uint8Arr));
   const base64 =
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins -- ignore
     (typeof window !== "undefined" && window.btoa(compressedString)) ||
     compressedString;
 
