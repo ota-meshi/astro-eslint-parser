@@ -54,7 +54,7 @@
     "@typescript-eslint/typescript-estree": "^7.0.0 || ^8.0.0",
     "astrojs-compiler-sync": "^1.0.0",
     "debug": "^4.3.4",
-    "entities": "^4.5.0",
+    "entities": "^5.0.0",
     "eslint-scope": "^8.0.1",
     "eslint-visitor-keys": "^4.0.0",
     "espree": "^10.0.0",
