@@ -16,11 +16,11 @@ export function deserializeState(serializedString) {
   }
 
   try {
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins -- ignore
     const compressedString = window.atob(serializedString);
     const uint8Arr = pako.inflate(
       Uint8Array.from(compressedString, (c) => c.charCodeAt(0)),
     );
-    // eslint-disable-next-line n/no-unsupported-features/node-builtins -- ignore
     const jsonText = new TextDecoder().decode(uint8Arr);
     const json = JSON.parse(jsonText);
 
