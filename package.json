@@ -106,7 +106,7 @@
     "magic-string": "^0.30.0",
     "mocha": "^10.0.0",
     "mocha-chai-jest-snapshot": "^1.1.3",
-    "nyc": "^15.1.0",
+    "nyc": "^17.0.0",
     "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.14.0",
     "prettier-plugin-svelte": "^3.0.0",
