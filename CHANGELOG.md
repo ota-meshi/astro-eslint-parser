@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.0.3
+
+### Patch Changes
+
+- [#333](https://github.com/ota-meshi/astro-eslint-parser/pull/333) [`9f4526e`](https://github.com/ota-meshi/astro-eslint-parser/commit/9f4526ec4ce5b2d24c342d2cf3833b25ea78730d) Thanks [@JoshuaKGoldberg](https://github.com/JoshuaKGoldberg)! - fix: support typescript-eslint@8
+
 ## 1.0.2
 
 ### Patch Changes
