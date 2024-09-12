@@ -49,9 +49,9 @@
   "homepage": "https://github.com/ota-meshi/astro-eslint-parser#readme",
   "dependencies": {
     "@astrojs/compiler": "^2.0.0",
-    "@typescript-eslint/scope-manager": "^7.0.0",
-    "@typescript-eslint/types": "^7.0.0",
-    "@typescript-eslint/typescript-estree": "^7.0.0",
+    "@typescript-eslint/scope-manager": "^7.0.0 || ^8.0.0",
+    "@typescript-eslint/types": "^7.0.0 || ^8.0.0",
+    "@typescript-eslint/typescript-estree": "^7.0.0 || ^8.0.0",
     "astrojs-compiler-sync": "^1.0.0",
     "debug": "^4.3.4",
     "entities": "^4.5.0",
