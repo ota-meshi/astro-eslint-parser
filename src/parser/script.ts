@@ -98,7 +98,20 @@ function parseScriptInternal(
       parserOptions.project
     ) {
       patchResult = tsPatch(parserOptions, parserOptionsCtx.getTSParserName()!);
+    } else if (
+      parserOptionsCtx.isTypeScript() &&
+      parserOptions.filePath &&
+      parserOptions.projectService
+    ) {
+      console.warn(
+        "`astro-eslint-parser` does not support the `projectService` option, it will parse it as `project: true` instead.",
+      );
+      patchResult = tsPatch(
+        { ...parserOptions, project: true },
+        parserOptionsCtx.getTSParserName()!,
+      );
     }
+
     const result = isEnhancedParserObject(parser)
       ? patchResult?.parse
         ? patchResult.parse(code, parser)
