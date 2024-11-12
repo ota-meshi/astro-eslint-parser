@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.1.0
+
+### Minor Changes
+
+- [#348](https://github.com/ota-meshi/astro-eslint-parser/pull/348) [`3ba8379`](https://github.com/ota-meshi/astro-eslint-parser/commit/3ba837993940559d64f93c8744ef28f1bc99df9a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: to parse using `project: true` instead if `projectService` is specified
+
 ## 1.0.3
 
 ### Patch Changes
