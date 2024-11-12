@@ -19,6 +19,7 @@ export default defineConfig({
       alias: {
         assert: resolve("./build-system/shim/assert.js"),
         path: resolve("./build-system/shim/path.js"),
+        "node:path": resolve("./build-system/shim/path.js"),
         fs: resolve("./build-system/shim/fs.js"),
         module: resolve("./build-system/shim/module.js"),
         "eslint/package.json": resolve(
@@ -29,6 +30,7 @@ export default defineConfig({
           "./build-system/shim/astro-eslint-parser/index.js",
         ),
         globby: resolve("./build-system/shim/globby.js"),
+        "fast-glob": resolve("./build-system/shim/fast-glob.js"),
         tslib: resolve("../node_modules/tslib/tslib.es6.js"),
         "escape-string-regexp": resolve(
           "./build-system/shim/escape-string-regexp/index.js",
