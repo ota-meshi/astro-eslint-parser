@@ -22,7 +22,7 @@
     "pako": "^2.0.4",
     "svelte": "^4.0.0",
     "webpack": "^5.72.1",
-    "webpack-cli": "^5.0.0",
+    "webpack-cli": "^6.0.0",
     "wrapper-webpack-plugin": "^2.1.0",
     "yaml": "^2.1.1"
   },
