@@ -1,5 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair -- ignore
-/* eslint-disable require-jsdoc, no-console -- ignore */
 import * as Benchmark from "benchmark";
 import fs from "fs";
 import { parseForESLint } from "../src/index";

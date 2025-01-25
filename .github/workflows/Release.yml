@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

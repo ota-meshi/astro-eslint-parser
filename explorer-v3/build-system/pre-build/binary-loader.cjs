@@ -1,8 +1,9 @@
+"use strict";
+
 const pako = require("pako");
 module.exports = function (source) {
   let content = source;
   if (typeof source === "string") {
-    // eslint-disable-next-line no-param-reassign -- ignore
     content = Buffer.from(source);
   }
 

@@ -49,39 +49,6 @@ function getBase(name) {
 /** @type {import('webpack').Configuration[]} */
 export default [
   {
-    ...getBase("eslint"),
-    entry: {
-      eslint: resolve("./eslint.js"),
-    },
-    externals: {
-      espree: "$$inject_espree$$",
-      esquery: "$$inject_esquery$$",
-      "escape-string-regexp": "$$inject_escape_string_regexp$$",
-    },
-    plugins: [
-      new WrapperPlugin({
-        test: /^index\.js/,
-        header: `
-				if (typeof window !== "undefined") {
-					if (typeof window.global === "undefined") {
-						window.global = {}
-					}
-					if (typeof window.process === "undefined") {
-						window.process = {
-							env: {},
-							cwd: () => undefined,
-						}
-					}
-				}
-				import * as $$inject_espree$$ from 'espree';
-				import $$inject_esquery$$ from 'esquery';
-				import * as $$inject_escape_string_regexp$$_all from 'escape-string-regexp';
-        const $$inject_escape_string_regexp$$ = $$inject_escape_string_regexp$$_all.default;
-				`,
-      }),
-    ],
-  },
-  {
     ...getBase("escape-string-regexp"),
     entry: {
       "escape-string-regexp": resolve("./escape-string-regexp.js"),

@@ -22,10 +22,6 @@ export default defineConfig({
         "node:path": resolve("./build-system/shim/path.js"),
         fs: resolve("./build-system/shim/fs.js"),
         module: resolve("./build-system/shim/module.js"),
-        "eslint/package.json": resolve(
-          "./build-system/shim/eslint/package.json",
-        ),
-        eslint: resolve("./build-system/shim/eslint/index.js"),
         "astro-eslint-parser": resolve(
           "./build-system/shim/astro-eslint-parser/index.js",
         ),

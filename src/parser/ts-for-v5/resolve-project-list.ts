@@ -95,8 +95,8 @@ function correctPathCasing(filePath: string): string {
     const useCaseSensitiveFileNames =
       ts.sys !== undefined ? ts.sys.useCaseSensitiveFileNames : true;
     _correctPathCasing = useCaseSensitiveFileNames
-      ? (filePath: string): string => filePath
-      : (filePath: string): string => filePath.toLowerCase();
+      ? (f: string): string => f
+      : (f: string): string => f.toLowerCase();
   }
 
   return _correctPathCasing(filePath);

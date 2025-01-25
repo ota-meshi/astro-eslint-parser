@@ -9,14 +9,12 @@ import {
   listupFixtures,
 } from "./parser/test-utils";
 import path from "path";
+import globals from "globals";
 
 const FIXTURE_ROOT = path.resolve(__dirname, "../fixtures/integrations");
 
 function createLinter() {
-  const linter = new Linter();
-
-  linter.defineParser("astro-eslint-parser", parser as any);
-
+  const linter = new Linter({ configType: "flat" });
   return linter;
 }
 
@@ -35,16 +33,19 @@ describe("Integration tests.", () => {
           require(setupFileName)
         : null;
       const linter = createLinter();
-      setup?.setupLinter?.(linter);
       const messages = linter.verify(
         input,
-        setup?.getConfig?.() ?? {
-          parser: "astro-eslint-parser",
-          parserOptions: getBasicParserOptions(),
-          env: {
-            browser: true,
-            es2021: true,
-          },
+        {
+          files: ["**"],
+          ...(setup?.getConfig?.() ?? {
+            languageOptions: {
+              ecmaVersion: "latest",
+              sourceType: "module",
+              parser,
+              parserOptions: getBasicParserOptions(),
+              globals: { ...globals.browser },
+            },
+          }),
         },
         inputFileName,
       );
@@ -67,13 +68,17 @@ describe("Integration tests.", () => {
       }
       const { output } = linter.verifyAndFix(
         input,
-        setup?.getConfig?.() ?? {
-          parser: "astro-eslint-parser",
-          parserOptions: getBasicParserOptions(),
-          env: {
-            browser: true,
-            es2021: true,
-          },
+        {
+          files: ["**"],
+          ...(setup?.getConfig?.() ?? {
+            languageOptions: {
+              ecmaVersion: "latest",
+              sourceType: "module",
+              parser,
+              parserOptions: getBasicParserOptions(),
+              globals: { ...globals.browser },
+            },
+          }),
         },
         inputFileName,
       );

@@ -30,7 +30,7 @@
     codeActionProviderDisposable;
   const loadingMonaco = loadMonacoEditor();
   const starting = appStarting;
-  // eslint-disable-next-line no-use-before-define -- TODO
+
   $: loading = Promise.all([waiting, loadingMonaco, starting]);
   $: {
     if (setLeftValue) {
@@ -265,10 +265,10 @@
     <div
       class="eslint-editor-monaco-root eslint-editor-monaco-root--wait"
       in:loadingTypewriter
-    />
+    ></div>
   {/if}
 {:then}
-  <div bind:this={rootElement} class="eslint-editor-monaco-root" />
+  <div bind:this={rootElement} class="eslint-editor-monaco-root"></div>
 {/await}
 
 <style>
