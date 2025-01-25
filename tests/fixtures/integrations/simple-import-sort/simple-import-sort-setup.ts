@@ -11,6 +11,8 @@ export function getConfig(): Linter.Config {
       "simple-import-sort": { rules },
     },
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       parser,
       parserOptions: getBasicParserOptions(),
       globals: { ...globals.browser },

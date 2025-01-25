@@ -7,6 +7,8 @@ import type { Linter } from "eslint";
 export function getConfig(): Linter.Config {
   return {
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       parser,
       parserOptions: { ...getBasicParserOptions(), parser: "espree" },
       globals: { ...globals.browser },

@@ -12,6 +12,7 @@ import {
   normalizeError,
   scopeToJSON,
 } from "../tests/src/parser/test-utils";
+import globals from "globals";
 
 const ERROR_FIXTURE_ROOT = path.resolve(
   __dirname,
@@ -79,14 +80,15 @@ for (const {
     const messages = linter.verify(
       input,
       {
-        parser: "astro-eslint-parser",
-        parserOptions: getBasicParserOptions(inputFileName),
+        languageOptions: {
+          ecmaVersion: "latest",
+          sourceType: "module",
+          parser,
+          parserOptions: getBasicParserOptions(inputFileName),
+          globals: { ...globals.browser },
+        },
         rules: {
           [rule]: "error",
-        },
-        env: {
-          browser: true,
-          es2021: true,
         },
       },
       inputFileName,
@@ -122,9 +124,6 @@ for (const { input, inputFileName, outputFileName } of listupFixtures(
 
 // eslint-disable-next-line jsdoc/require-jsdoc -- X
 function createLinter() {
-  const linter = new Linter();
-
-  linter.defineParser("astro-eslint-parser", parser as any);
-
+  const linter = new Linter({ configType: "flat" });
   return linter;
 }

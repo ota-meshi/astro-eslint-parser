@@ -39,6 +39,8 @@ describe("Integration tests.", () => {
           files: ["**"],
           ...(setup?.getConfig?.() ?? {
             languageOptions: {
+              ecmaVersion: "latest",
+              sourceType: "module",
               parser,
               parserOptions: getBasicParserOptions(),
               globals: { ...globals.browser },
@@ -66,13 +68,17 @@ describe("Integration tests.", () => {
       }
       const { output } = linter.verifyAndFix(
         input,
-        setup?.getConfig?.() ?? {
-          parser: "astro-eslint-parser",
-          parserOptions: getBasicParserOptions(),
-          env: {
-            browser: true,
-            es2021: true,
-          },
+        {
+          files: ["**"],
+          ...(setup?.getConfig?.() ?? {
+            languageOptions: {
+              ecmaVersion: "latest",
+              sourceType: "module",
+              parser,
+              parserOptions: getBasicParserOptions(),
+              globals: { ...globals.browser },
+            },
+          }),
         },
         inputFileName,
       );

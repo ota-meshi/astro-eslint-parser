@@ -50,6 +50,8 @@ describe("astro-eslint-parser with ESLint rules", () => {
             {
               files: ["**"],
               languageOptions: {
+                ecmaVersion: "latest",
+                sourceType: "module",
                 parser,
                 parserOptions: getBasicParserOptions(inputFileName),
                 globals: { ...globals.browser },

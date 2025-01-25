@@ -11,6 +11,8 @@ export function getConfig(): Linter.Config {
       "@typescript-eslint": { rules } as any,
     },
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       parser,
       parserOptions: getBasicParserOptions(),
       globals: { ...globals.browser },
