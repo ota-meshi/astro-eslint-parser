@@ -2,6 +2,7 @@
 import { getBasicParserOptions } from "../../../src/parser/test-utils";
 import * as parser from "../../../../src";
 import globals from "globals";
+import type { Linter } from "eslint";
 
 export function getConfig(): Linter.Config {
   return {
