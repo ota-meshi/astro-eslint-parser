@@ -1,5 +1,19 @@
 # astro-eslint-parser
 
+## 1.2.0
+
+### Minor Changes
+
+- [#360](https://github.com/ota-meshi/astro-eslint-parser/pull/360) [`c896c73`](https://github.com/ota-meshi/astro-eslint-parser/commit/c896c73b6529d36d62d1ab723a63c978ad84db34) Thanks [@ota-meshi](https://github.com/ota-meshi)! - some refactor
+
+### Patch Changes
+
+- [#306](https://github.com/ota-meshi/astro-eslint-parser/pull/306) [`4541d8c`](https://github.com/ota-meshi/astro-eslint-parser/commit/4541d8ce8a0a722b0413653adf616e54d2c52a79) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency globby to v14
+
+- [#356](https://github.com/ota-meshi/astro-eslint-parser/pull/356) [`a8b5d85`](https://github.com/ota-meshi/astro-eslint-parser/commit/a8b5d8575d976f4f5c36526ec3399813db5a54d1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency entities to v6
+
+- [#358](https://github.com/ota-meshi/astro-eslint-parser/pull/358) [`4b83588`](https://github.com/ota-meshi/astro-eslint-parser/commit/4b83588e0964d90f04adbc1352bdeaa9a10b8085) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fixed the parser issue where `no-undef` rule would crash if closing tag was omitted
+
 ## 1.1.0
 
 ### Minor Changes
