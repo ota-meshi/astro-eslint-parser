@@ -12,6 +12,7 @@ export default async function ({ github, context, output }) {
     context.event_name === "pull_request"
       ? context.payload.pull_request.head.sha
       : context.payload.after;
+
   const pullRequestNumber = await getPullRequestNumber();
 
   const packages = output.packages.map((p) => {
@@ -124,7 +125,7 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
     console.log("Publish Information");
     console.log("=".repeat(50));
     console.log("\nPublished Packages:");
-    console.log(packages.map((p) => `- ${p.name}: ${p.url}`).join("\n"));
+    console.log(output.packages.map((p) => `- ${p.name}: ${p.url}`).join("\n"));
     console.log(`\nCommit URL: ${commitUrl}`);
     console.log(`\n${"=".repeat(50)}`);
   }
