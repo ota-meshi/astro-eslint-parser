@@ -8,13 +8,31 @@
   {
     "ruleId": "no-undef",
     "code": "Button",
+    "line": 1,
+    "column": 47
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Button",
     "line": 3,
     "column": 2
   },
   {
     "ruleId": "no-undef",
     "code": "Button",
+    "line": 3,
+    "column": 51
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Button",
     "line": 5,
     "column": 2
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Button",
+    "line": 5,
+    "column": 42
   }
 ]

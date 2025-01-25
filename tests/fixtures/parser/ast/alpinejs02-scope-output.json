@@ -35,6 +35,29 @@
             "type": "JSXIdentifier",
             "name": "Button",
             "range": [
+              46,
+              52
+            ],
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 46
+              },
+              "end": {
+                "line": 1,
+                "column": 52
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
               56,
               62
             ],
@@ -58,6 +81,29 @@
             "type": "JSXIdentifier",
             "name": "Button",
             "range": [
+              105,
+              111
+            ],
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 50
+              },
+              "end": {
+                "line": 3,
+                "column": 56
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
               115,
               121
             ],
@@ -69,6 +115,29 @@
               "end": {
                 "line": 5,
                 "column": 7
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
+              155,
+              161
+            ],
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 41
+              },
+              "end": {
+                "line": 5,
+                "column": 47
               }
             }
           },
@@ -107,6 +176,29 @@
             "type": "JSXIdentifier",
             "name": "Button",
             "range": [
+              46,
+              52
+            ],
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 46
+              },
+              "end": {
+                "line": 1,
+                "column": 52
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
               56,
               62
             ],
@@ -130,6 +222,29 @@
             "type": "JSXIdentifier",
             "name": "Button",
             "range": [
+              105,
+              111
+            ],
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 50
+              },
+              "end": {
+                "line": 3,
+                "column": 56
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
               115,
               121
             ],
@@ -141,6 +256,29 @@
               "end": {
                 "line": 5,
                 "column": 7
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Button",
+            "range": [
+              155,
+              161
+            ],
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 41
+              },
+              "end": {
+                "line": 5,
+                "column": 47
               }
             }
           },
@@ -180,6 +318,29 @@
         "type": "JSXIdentifier",
         "name": "Button",
         "range": [
+          46,
+          52
+        ],
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 46
+          },
+          "end": {
+            "line": 1,
+            "column": 52
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    },
+    {
+      "identifier": {
+        "type": "JSXIdentifier",
+        "name": "Button",
+        "range": [
           56,
           62
         ],
@@ -203,6 +364,29 @@
         "type": "JSXIdentifier",
         "name": "Button",
         "range": [
+          105,
+          111
+        ],
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 50
+          },
+          "end": {
+            "line": 3,
+            "column": 56
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    },
+    {
+      "identifier": {
+        "type": "JSXIdentifier",
+        "name": "Button",
+        "range": [
           115,
           121
         ],
@@ -214,6 +398,29 @@
           "end": {
             "line": 5,
             "column": 7
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    },
+    {
+      "identifier": {
+        "type": "JSXIdentifier",
+        "name": "Button",
+        "range": [
+          155,
+          161
+        ],
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 41
+          },
+          "end": {
+            "line": 5,
+            "column": 47
           }
         }
       },

@@ -126,6 +126,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "MyComponent",
+                "range": [
+                  82,
+                  93
+                ],
+                "loc": {
+                  "start": {
+                    "line": 5,
+                    "column": 26
+                  },
+                  "end": {
+                    "line": 5,
+                    "column": 37
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "MyComponent",
+                "range": [
+                  11,
+                  22
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 18
+                  }
+                }
+              }
             }
           ]
         }
@@ -147,6 +187,46 @@
               "end": {
                 "line": 5,
                 "column": 12
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "MyComponent",
+            "range": [
+              11,
+              22
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 7
+              },
+              "end": {
+                "line": 2,
+                "column": 18
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "MyComponent",
+            "range": [
+              82,
+              93
+            ],
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 26
+              },
+              "end": {
+                "line": 5,
+                "column": 37
               }
             }
           },

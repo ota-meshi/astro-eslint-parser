@@ -6,6 +6,7 @@ import semver from "semver";
 import { traverseNodes } from "../../../src/traverse";
 import { parseForESLint } from "../../../src";
 import {
+  buildTypes,
   getBasicParserOptions,
   listupFixtures,
   nodeReplacer,
@@ -14,11 +15,16 @@ import {
 import type { AstroProgram } from "../../../src/ast";
 import type { TSESTree } from "@typescript-eslint/types";
 
-function parse(code: string, filePath: string) {
-  return parseForESLint(code, {
+function parse(
+  code: string,
+  filePath: string,
+  transformOption?: (options: any) => any,
+) {
+  const option = {
     ...getBasicParserOptions(filePath),
     filePath,
-  });
+  };
+  return parseForESLint(code, transformOption?.(option) ?? option);
 }
 
 describe("Check for AST.", () => {
@@ -78,6 +84,43 @@ describe("Check for AST.", () => {
         const astForWin = parse(inputForWin, inputFileName).ast;
         // check tokens
         checkTokens(astForWin, inputForWin);
+      });
+    });
+  }
+});
+
+describe("Check for Types.", () => {
+  for (const {
+    input,
+    inputFileName,
+    typeFileName,
+    meetRequirements,
+  } of listupFixtures()) {
+    if (!typeFileName) continue;
+    if (!inputFileName.endsWith(".astro")) {
+      continue;
+    }
+    if (!meetRequirements("test")) continue;
+    describe(inputFileName, () => {
+      it("types must be correct.", () => {
+        const result = parse(input, inputFileName);
+        const expected = fs.readFileSync(typeFileName, "utf8");
+        const actual = buildTypes(input, result);
+
+        assert.strictEqual(actual, expected);
+      });
+      it("types must be correct when use projectService.", () => {
+        const result = parse(input, inputFileName, (option) => {
+          return {
+            ...option,
+            project: undefined,
+            projectService: true,
+          };
+        });
+        const expected = fs.readFileSync(typeFileName, "utf8");
+        const actual = buildTypes(input, result);
+
+        assert.strictEqual(actual, expected);
       });
     });
   }
