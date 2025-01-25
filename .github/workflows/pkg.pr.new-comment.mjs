@@ -12,6 +12,7 @@ export default async function ({ github, context, output }) {
     context.event_name === "pull_request"
       ? context.payload.pull_request.head.sha
       : context.payload.after;
+  const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
   const pullRequestNumber = await getPullRequestNumber();
 
@@ -25,8 +26,6 @@ export default async function ({ github, context, output }) {
       url: normalizedUrl,
     };
   });
-
-  const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
   const botCommentIdentifier = "<!-- posted by pkg.pr.new-comment.mjs -->";
 
