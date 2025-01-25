@@ -107,7 +107,7 @@ function parseScriptInternal(
         "`astro-eslint-parser` does not support the `projectService` option, it will parse it as `project: true` instead.",
       );
       patchResult = tsPatch(
-        { ...parserOptions, project: true },
+        { ...parserOptions, project: true, projectService: undefined },
         parserOptionsCtx.getTSParserName()!,
       );
     }
