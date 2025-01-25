@@ -1,2 +1,4 @@
-export default {};
-export {};
+export default { sync };
+export function sync() {
+  // noop
+}
