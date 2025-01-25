@@ -7,11 +7,7 @@ import type {
   ParentNode,
   TagLikeNode,
 } from "@astrojs/compiler/types";
-import {
-  EntityDecoder,
-  DecodingMode,
-  htmlDecodeTree,
-} from "entities/lib/decode.js";
+import { EntityDecoder, DecodingMode, htmlDecodeTree } from "entities/decode";
 import type { Context } from "../context";
 import { ParseError } from "../errors";
 
