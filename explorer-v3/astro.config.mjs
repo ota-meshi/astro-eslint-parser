@@ -25,7 +25,6 @@ export default defineConfig({
         "astro-eslint-parser": resolve(
           "./build-system/shim/astro-eslint-parser/index.js",
         ),
-        globby: resolve("./build-system/shim/globby.js"),
         "fast-glob": resolve("./build-system/shim/fast-glob.js"),
         tslib: resolve("../node_modules/tslib/tslib.es6.js"),
         "escape-string-regexp": resolve(
