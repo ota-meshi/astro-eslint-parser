@@ -3,7 +3,7 @@
  * Code updated to exclude caching.
  */
 
-import { sync as globSync } from "globby";
+import { sync as globSync } from "fast-glob";
 import isGlob from "is-glob";
 import * as path from "path";
 import { createRequire } from "module";
