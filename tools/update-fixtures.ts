@@ -39,7 +39,7 @@ const RULES = [
  */
 function parse(code: string, filePath: string) {
   return parseForESLint(code, {
-    ...getBasicParserOptions(filePath)!,
+    ...getBasicParserOptions(filePath),
     filePath,
   });
 }

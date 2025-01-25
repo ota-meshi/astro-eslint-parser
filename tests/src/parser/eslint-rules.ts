@@ -7,12 +7,10 @@ import {
   getMessageData,
   listupFixtures,
 } from "./test-utils";
+import globals from "globals";
 
 function createLinter() {
-  const linter = new Linter();
-
-  linter.defineParser("astro-eslint-parser", parser as any);
-
+  const linter = new Linter({ configType: "flat" });
   return linter;
 }
 
@@ -50,14 +48,14 @@ describe("astro-eslint-parser with ESLint rules", () => {
           const messages = linter.verify(
             input,
             {
-              parser: "astro-eslint-parser",
-              parserOptions: getBasicParserOptions(inputFileName),
+              files: ["**"],
+              languageOptions: {
+                parser,
+                parserOptions: getBasicParserOptions(inputFileName),
+                globals: { ...globals.browser },
+              },
               rules: {
                 [rule]: "error",
-              },
-              env: {
-                browser: true,
-                es2021: true,
               },
             },
             inputFileName,
@@ -77,7 +75,9 @@ describe("astro-eslint-parser with ESLint rules", () => {
               null,
               2,
             );
-            const output = fs.readFileSync(outputFileName, "utf8");
+            const output = fs.existsSync(outputFileName)
+              ? fs.readFileSync(outputFileName, "utf8")
+              : "";
             assert.strictEqual(messagesJson, output);
           }
         });

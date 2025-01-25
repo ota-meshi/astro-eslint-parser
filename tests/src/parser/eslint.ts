@@ -1,13 +1,12 @@
+import type { Rule } from "eslint";
 import { Linter } from "eslint";
 import assert from "assert";
 import * as parser from "../../../src/index";
 import { getBasicParserOptions } from "./test-utils";
+import globals from "globals";
 
 function createLinter() {
-  const linter = new Linter();
-
-  linter.defineParser("astro-eslint-parser", parser as any);
-
+  const linter = new Linter({ configType: "flat" });
   return linter;
 }
 
@@ -20,7 +19,7 @@ describe("eslint custom parser", () => {
     const code = `<h1>Hello!</h1>`;
 
     const linter = createLinter();
-    linter.defineRule("test", {
+    const testRule: Rule.RuleModule = {
       create(context) {
         return {
           JSXElement(node: any) {
@@ -31,11 +30,17 @@ describe("eslint custom parser", () => {
           },
         };
       },
-    });
+    };
     const messages = linter.verify(code, {
-      parser: "astro-eslint-parser",
+      files: ["**"],
+      plugins: {
+        test: { rules: { test: testRule } },
+      },
+      languageOptions: {
+        parser,
+      },
       rules: {
-        test: "error",
+        "test/test": "error",
       },
     });
 
@@ -88,10 +93,14 @@ describe("eslint custom parser", () => {
       it(code, () => {
         const linter = createLinter();
         const result = linter.verifyAndFix(code, {
-          parser: "astro-eslint-parser",
-          parserOptions: {
-            ...getBasicParserOptions(),
-            parser: "espree",
+          files: ["**"],
+          languageOptions: {
+            parser,
+            parserOptions: {
+              ...getBasicParserOptions(),
+              parser: "espree",
+              globals: { ...globals.browser },
+            },
           },
           rules: {
             "no-unused-labels": "error",
@@ -100,10 +109,6 @@ describe("eslint custom parser", () => {
             "no-unused-vars": "error",
             "no-unused-expressions": "error",
             "space-infix-ops": "error",
-          },
-          env: {
-            browser: true,
-            es2021: true,
           },
         });
 

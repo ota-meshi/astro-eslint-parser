@@ -21,7 +21,7 @@ import { traverseNodes } from "../../../src";
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
   filePath = "<input>",
-): Linter.BaseConfig["parserOptions"] {
+): Linter.ParserOptions {
   let parser = "@typescript-eslint/parser";
 
   if (path.basename(filePath).startsWith("js-")) {

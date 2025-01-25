@@ -1,22 +1,22 @@
 /* eslint @eslint-community/eslint-comments/require-description: 0, @typescript-eslint/explicit-module-boundary-types: 0 */
 import type { Linter } from "eslint";
+import * as parser from "../../../../src";
 import { getBasicParserOptions } from "../../../src/parser/test-utils";
-// @ts-expect-error -- test
 import { rules } from "eslint-plugin-simple-import-sort";
-export function setupLinter(linter: Linter) {
-  linter.defineRule("simple-import-sort/imports", rules.imports as never);
-}
+import globals from "globals";
 
-export function getConfig() {
+export function getConfig(): Linter.Config {
   return {
-    parser: "astro-eslint-parser",
-    parserOptions: getBasicParserOptions(),
+    plugins: {
+      "simple-import-sort": { rules },
+    },
+    languageOptions: {
+      parser,
+      parserOptions: getBasicParserOptions(),
+      globals: { ...globals.browser },
+    },
     rules: {
       "simple-import-sort/imports": "error",
-    },
-    env: {
-      browser: true,
-      es2021: true,
     },
   };
 }
