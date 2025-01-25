@@ -1,5 +1,3 @@
-/* eslint require-jsdoc:0 -- shim */
-
 export default { sync };
 
 export function sync(s) {

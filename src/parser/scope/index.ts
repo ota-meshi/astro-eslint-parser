@@ -50,21 +50,21 @@ export function removeAllScopeAndVariableAndReference(
         return;
       }
       if (node.type === "Identifier" || node.type === "JSXIdentifier") {
-        let scope = getInnermostScopeFromNode(info.scopeManager, node);
+        let targetScope = getInnermostScopeFromNode(info.scopeManager, node);
         while (
-          scope &&
-          scope.block.type !== "Program" &&
-          target.range[0] <= scope.block.range[0] &&
-          scope.block.range[1] <= target.range[1]
+          targetScope &&
+          targetScope.block.type !== "Program" &&
+          target.range[0] <= targetScope.block.range[0] &&
+          targetScope.block.range[1] <= target.range[1]
         ) {
-          scope = scope.upper!;
+          targetScope = targetScope.upper!;
         }
-        if (removeTargetScopes.has(scope)) {
+        if (removeTargetScopes.has(targetScope)) {
           return;
         }
 
-        removeIdentifierVariable(node, scope);
-        removeIdentifierReference(node, scope);
+        removeIdentifierVariable(node, targetScope);
+        removeIdentifierReference(node, targetScope);
       }
     },
     leaveNode() {

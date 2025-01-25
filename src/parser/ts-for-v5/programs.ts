@@ -78,7 +78,7 @@ export class TSService {
     type CreateProgram = typescript.CreateProgram<typescript.BuilderProgram>;
 
     const createAbstractBuilder = (
-      ...args: Parameters<CreateProgram>
+      ...buildArgs: Parameters<CreateProgram>
     ): ReturnType<CreateProgram> => {
       const [
         rootNames,
@@ -87,7 +87,7 @@ export class TSService {
         oldProgram,
         configFileParsingDiagnostics,
         projectReferences,
-      ] = args;
+      ] = buildArgs;
 
       const host: typescript.CompilerHost = argHost!;
       if (!this.patchedHostSet.has(host)) {
@@ -131,14 +131,14 @@ export class TSService {
         };
         host.getSourceFileByPath = (
           fileName,
-          path,
+          filePath,
           languageVersionOrOptions,
           ...args
         ) => {
           const originalSourceFile = original.getSourceFileByPath.call(
             host,
             fileName,
-            path,
+            filePath,
             languageVersionOrOptions,
             ...args,
           );

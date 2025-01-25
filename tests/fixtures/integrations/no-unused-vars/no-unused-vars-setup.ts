@@ -1,4 +1,4 @@
-/* eslint eslint-comments/require-description: 0, @typescript-eslint/explicit-module-boundary-types: 0 */
+/* eslint @eslint-community/eslint-comments/require-description: 0, @typescript-eslint/explicit-module-boundary-types: 0 */
 import { getBasicParserOptions } from "../../../src/parser/test-utils";
 
 export function getConfig() {

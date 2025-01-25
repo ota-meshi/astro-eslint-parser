@@ -120,7 +120,7 @@ for (const { input, inputFileName, outputFileName } of listupFixtures(
   }
 }
 
-// eslint-disable-next-line require-jsdoc -- X
+// eslint-disable-next-line jsdoc/require-jsdoc -- X
 function createLinter() {
   const linter = new Linter();
 
