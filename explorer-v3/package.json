@@ -20,7 +20,7 @@
     "eslint-plugin-react": "^7.29.4",
     "monaco-editor": "^0.52.0",
     "pako": "^2.0.4",
-    "svelte": "^4.0.0",
+    "svelte": "^5.0.0",
     "webpack": "^5.72.1",
     "webpack-cli": "^6.0.0",
     "wrapper-webpack-plugin": "^2.1.0",
