@@ -27,8 +27,6 @@ export default async function ({ github, context, output }) {
 
   const botCommentIdentifier = "<!-- posted by pkg.pr.new-comment.mjs -->";
 
-  const pkgUrl = `https://pkg.pr.new/${context.repo.owner}/${context.repo.repo}@${pullRequestNumber ?? sha}`;
-
   const onlineUrl = new URL(
     "https://eslint-online-playground.netlify.app/#eslint-plugin-astro",
   );
@@ -42,7 +40,7 @@ export default async function ({ github, context, output }) {
 ## Install Locally
 
 \`\`\`
-npm i ${pkgUrl}
+npm i ${packages.map((p) => p.url).join(" ")}
 \`\`\`
 
 ## Try it Online
