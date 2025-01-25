@@ -57,6 +57,13 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
 
   if (pullRequestNumber) {
     await createOrUpdateComment(pullRequestNumber);
+  } else {
+    console.log(
+      "No open pull request found for this push. Logging publish information to console:",
+    );
+    console.log(`\n${"=".repeat(50)}`);
+    console.log(body);
+    console.log(`\n${"=".repeat(50)}`);
   }
 
   async function getPullRequestNumber() {
@@ -75,10 +82,6 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
       if (pullRequests.data.length > 0) {
         return pullRequests.data[0].number;
       }
-      console.log(
-        "No open pull request found for this push. Logging publish information to console:",
-      );
-      logPublishInfo();
     }
     return null;
   }
@@ -117,15 +120,5 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
         body,
       });
     }
-  }
-
-  function logPublishInfo() {
-    console.log(`\n${"=".repeat(50)}`);
-    console.log("Publish Information");
-    console.log("=".repeat(50));
-    console.log("\nPublished Packages:");
-    console.log(output.packages.map((p) => `- ${p.name}: ${p.url}`).join("\n"));
-    console.log(`\nCommit URL: ${commitUrl}`);
-    console.log(`\n${"=".repeat(50)}`);
   }
 }
