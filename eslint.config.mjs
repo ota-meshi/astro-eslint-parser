@@ -130,6 +130,12 @@ export default [
       "n/no-missing-require": "off",
     },
   },
+  {
+    files: ["explorer-v3/**/*.cjs"],
+    languageOptions: {
+      sourceType: "script",
+    },
+  },
   ...astro.configs["flat/all"].map((config) => ({
     ...config,
     files: ["explorer-v3/**/*.astro"],
