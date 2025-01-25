@@ -126,6 +126,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Katex",
+                "range": [
+                  101,
+                  106
+                ],
+                "loc": {
+                  "start": {
+                    "line": 4,
+                    "column": 46
+                  },
+                  "end": {
+                    "line": 4,
+                    "column": 51
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Katex",
+                "range": [
+                  11,
+                  16
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 12
+                  }
+                }
+              }
             }
           ]
         }
@@ -147,6 +187,46 @@
               "end": {
                 "line": 4,
                 "column": 6
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Katex",
+            "range": [
+              11,
+              16
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 7
+              },
+              "end": {
+                "line": 2,
+                "column": 12
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Katex",
+            "range": [
+              101,
+              106
+            ],
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 46
+              },
+              "end": {
+                "line": 4,
+                "column": 51
               }
             }
           },

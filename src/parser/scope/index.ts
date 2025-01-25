@@ -40,16 +40,16 @@ export function removeAllScopeAndVariableAndReference(
     scopeManager: ScopeManager;
   },
 ): void {
-  const targetScopes = new Set<Scope>();
+  const removeTargetScopes = new Set<Scope>();
   traverseNodes(target, {
     visitorKeys: info.visitorKeys,
     enterNode(node) {
       const scope = info.scopeManager.acquire(node);
       if (scope) {
-        targetScopes.add(scope);
+        removeTargetScopes.add(scope);
         return;
       }
-      if (node.type === "Identifier") {
+      if (node.type === "Identifier" || node.type === "JSXIdentifier") {
         let scope = getInnermostScopeFromNode(info.scopeManager, node);
         while (
           scope &&
@@ -59,7 +59,7 @@ export function removeAllScopeAndVariableAndReference(
         ) {
           scope = scope.upper!;
         }
-        if (targetScopes.has(scope)) {
+        if (removeTargetScopes.has(scope)) {
           return;
         }
 
@@ -72,7 +72,7 @@ export function removeAllScopeAndVariableAndReference(
     },
   });
 
-  for (const scope of targetScopes) {
+  for (const scope of removeTargetScopes) {
     removeScope(info.scopeManager, scope);
   }
 }
@@ -221,7 +221,7 @@ function removeReference(reference: Reference, baseScope: Scope): void {
 
 /** Remove variable */
 function removeIdentifierVariable(
-  node: TSESTree.Identifier,
+  node: TSESTree.Identifier | TSESTree.JSXIdentifier,
   scope: Scope,
 ): void {
   for (let varIndex = 0; varIndex < scope.variables.length; varIndex++) {
@@ -244,7 +244,7 @@ function removeIdentifierVariable(
         scope.set.delete(name);
       }
     } else {
-      const idIndex = variable.identifiers.indexOf(node);
+      const idIndex = variable.identifiers.indexOf(node as TSESTree.Identifier);
       if (idIndex >= 0) {
         variable.identifiers.splice(idIndex, 1);
       }
@@ -255,7 +255,7 @@ function removeIdentifierVariable(
 
 /** Remove reference */
 function removeIdentifierReference(
-  node: TSESTree.Identifier,
+  node: TSESTree.Identifier | TSESTree.JSXIdentifier,
   scope: Scope,
 ): boolean {
   const reference = scope.references.find((ref) => ref.identifier === node);

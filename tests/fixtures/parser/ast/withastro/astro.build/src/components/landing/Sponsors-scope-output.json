@@ -339,6 +339,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Section",
+                "range": [
+                  2297,
+                  2304
+                ],
+                "loc": {
+                  "start": {
+                    "line": 49,
+                    "column": 2
+                  },
+                  "end": {
+                    "line": 49,
+                    "column": 9
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Section",
+                "range": [
+                  163,
+                  170
+                ],
+                "loc": {
+                  "start": {
+                    "line": 4,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 4,
+                    "column": 14
+                  }
+                }
+              }
             }
           ]
         },
@@ -2796,6 +2836,46 @@
               "end": {
                 "line": 16,
                 "column": 17
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Section",
+            "range": [
+              2297,
+              2304
+            ],
+            "loc": {
+              "start": {
+                "line": 49,
+                "column": 2
+              },
+              "end": {
+                "line": 49,
+                "column": 9
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Section",
+            "range": [
+              163,
+              170
+            ],
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 7
+              },
+              "end": {
+                "line": 4,
+                "column": 14
               }
             }
           }
@@ -8377,6 +8457,46 @@
                       }
                     }
                   }
+                },
+                {
+                  "identifier": {
+                    "type": "JSXIdentifier",
+                    "name": "Tag",
+                    "range": [
+                      2154,
+                      2157
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 42,
+                        "column": 26
+                      },
+                      "end": {
+                        "line": 42,
+                        "column": 29
+                      }
+                    }
+                  },
+                  "from": "function",
+                  "init": null,
+                  "resolved": {
+                    "type": "Identifier",
+                    "name": "Tag",
+                    "range": [
+                      1645,
+                      1648
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 34,
+                        "column": 22
+                      },
+                      "end": {
+                        "line": 34,
+                        "column": 25
+                      }
+                    }
+                  }
                 }
               ]
             },
@@ -9242,6 +9362,46 @@
                   "end": {
                     "line": 33,
                     "column": 33
+                  }
+                }
+              }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Tag",
+                "range": [
+                  2154,
+                  2157
+                ],
+                "loc": {
+                  "start": {
+                    "line": 42,
+                    "column": 26
+                  },
+                  "end": {
+                    "line": 42,
+                    "column": 29
+                  }
+                }
+              },
+              "from": "function",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Tag",
+                "range": [
+                  1645,
+                  1648
+                ],
+                "loc": {
+                  "start": {
+                    "line": 34,
+                    "column": 22
+                  },
+                  "end": {
+                    "line": 34,
+                    "column": 25
                   }
                 }
               }

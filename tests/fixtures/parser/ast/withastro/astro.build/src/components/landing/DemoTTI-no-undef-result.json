@@ -8,7 +8,19 @@
   {
     "ruleId": "no-undef",
     "code": "Fragment",
+    "line": 17,
+    "column": 7
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
     "line": 18,
     "column": 6
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Fragment",
+    "line": 29,
+    "column": 7
   }
 ]
