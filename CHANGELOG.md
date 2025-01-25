@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.2.1
+
+### Patch Changes
+
+- [#361](https://github.com/ota-meshi/astro-eslint-parser/pull/361) [`ddc8031`](https://github.com/ota-meshi/astro-eslint-parser/commit/ddc8031461f4a9a68e244c71fec7f44a6e68eea5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: replace `globby` with `fast-glob`
+
 ## 1.2.0
 
 ### Minor Changes
