@@ -14,7 +14,7 @@ import globals from "globals";
 const FIXTURE_ROOT = path.resolve(__dirname, "../fixtures/integrations");
 
 function createLinter() {
-  const linter = new Linter();
+  const linter = new Linter({ configType: "flat" });
   return linter;
 }
 

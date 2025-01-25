@@ -117,7 +117,7 @@ export default [
     },
   },
   {
-    files: ["explorer-v3/**/*.{js,mjs,svelte,astro}"],
+    files: ["explorer-v3/**/*.{js,mjs,cjs,svelte,astro}"],
     languageOptions: {
       sourceType: "module",
       globals: { ...globals.browser },
