@@ -117,7 +117,7 @@ export default [
     },
   },
   {
-    files: ["explorer-v3/**/*.{js,svelte,astro}"],
+    files: ["explorer-v3/**/*.{js,mjs,svelte,astro}"],
     languageOptions: {
       sourceType: "module",
       globals: { ...globals.browser },
@@ -127,6 +127,7 @@ export default [
       "n/file-extension-in-import": "off",
       "n/no-extraneous-import": "off",
       "n/no-missing-import": "off",
+      "n/no-missing-require": "off",
     },
   },
   ...astro.configs["flat/all"].map((config) => ({
