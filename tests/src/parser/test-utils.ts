@@ -13,8 +13,10 @@ import type {
   Variable,
   Definition,
 } from "@typescript-eslint/scope-manager";
-import type { AstroNode } from "../../../src/ast";
+import type ts from "typescript";
+import type { AstroNode, AstroProgram } from "../../../src/ast";
 import { TS_GLOBALS } from "./ts-vars";
+import { traverseNodes } from "../../../src";
 
 const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
@@ -383,4 +385,85 @@ function normalizeObject(value: any) {
       return a < b ? -1 : a > b ? 1 : 0;
     }),
   );
+}
+
+export function buildTypes(
+  input: string,
+  result: {
+    ast: AstroProgram;
+    services: Record<string, any>;
+    visitorKeys: { [type: string]: string[] };
+  },
+): string {
+  const scriptLineRange: [number, number][] = [];
+  for (const body of result.ast.body) {
+    if (body.type !== "AstroFragment") {
+      scriptLineRange.push([body.loc.start.line - 1, body.loc.end.line - 1]);
+    }
+  }
+
+  const tsNodeMap: ReadonlyMap<any, ts.Node> =
+    result.services.esTreeNodeToTSNodeMap;
+  const checker: ts.TypeChecker =
+    result.services.program && result.services.program.getTypeChecker();
+
+  const checked = new Set();
+
+  const lines = input.split(/\r?\n/);
+  const types: string[][] = [];
+
+  function addType(node: TSESTree.Expression) {
+    const tsNode = tsNodeMap.get(node);
+    if (!tsNode) {
+      throw new Error(
+        `Expression node does not exist in esTreeNodeToTSNodeMap. ${JSON.stringify(
+          {
+            type: node.type,
+            loc: node.loc,
+          },
+        )}`,
+      );
+    }
+    const type = checker.getTypeAtLocation(tsNode);
+    const typeText = checker.typeToString(type);
+    const lineTypes = (types[node.loc.start.line - 1] ??= []);
+    if (node.type === "Identifier") {
+      lineTypes.push(`${node.name}: ${typeText}`);
+    } else {
+      lineTypes.push(`${input.slice(...node.range)}: ${typeText}`);
+    }
+  }
+
+  traverseNodes(result.ast, {
+    visitorKeys: result.visitorKeys,
+    enterNode(node, parent) {
+      if (checked.has(parent)) {
+        checked.add(node);
+        return;
+      }
+
+      if (
+        node.type === "CallExpression" ||
+        node.type === "Identifier" ||
+        node.type === "MemberExpression"
+      ) {
+        addType(node);
+        checked.add(node);
+      }
+    },
+    leaveNode() {
+      // noop
+    },
+  });
+  return lines
+    .map((l, i) => {
+      if (!types[i]) {
+        return l;
+      }
+      if (scriptLineRange.some(([s, e]) => s <= i && i <= e)) {
+        return `${l} // ${types[i].join(", ")}`;
+      }
+      return `${l} <!-- ${types[i].join(", ")} -->`;
+    })
+    .join("\n");
 }

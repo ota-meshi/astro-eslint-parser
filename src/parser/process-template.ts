@@ -24,6 +24,7 @@ import type {
   JSXElement,
 } from "../ast";
 import type { AttributeNode } from "@astrojs/compiler/types";
+import { removeAllScopeAndVariableAndReference } from "./scope";
 
 /**
  * Process the template to generate a ScriptContext.
@@ -416,6 +417,10 @@ export function processTemplate(
                   scriptNode.type === AST_NODE_TYPES.JSXClosingElement &&
                   parent.type === AST_NODE_TYPES.JSXElement
                 ) {
+                  removeAllScopeAndVariableAndReference(scriptNode, {
+                    visitorKeys: context.result.visitorKeys,
+                    scopeManager: context.result.scopeManager!,
+                  });
                   parent.closingElement = null;
                   return true;
                 }

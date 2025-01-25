@@ -57,6 +57,29 @@
             "type": "JSXIdentifier",
             "name": "Fragment",
             "range": [
+              670,
+              678
+            ],
+            "loc": {
+              "start": {
+                "line": 23,
+                "column": 10
+              },
+              "end": {
+                "line": 23,
+                "column": 18
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
               690,
               698
             ],
@@ -68,6 +91,29 @@
               "end": {
                 "line": 25,
                 "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              852,
+              860
+            ],
+            "loc": {
+              "start": {
+                "line": 28,
+                "column": 10
+              },
+              "end": {
+                "line": 28,
+                "column": 18
               }
             }
           },
@@ -103,6 +149,29 @@
             "type": "JSXIdentifier",
             "name": "Fragment",
             "range": [
+              670,
+              678
+            ],
+            "loc": {
+              "start": {
+                "line": 23,
+                "column": 10
+              },
+              "end": {
+                "line": 23,
+                "column": 18
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
               690,
               698
             ],
@@ -114,6 +183,29 @@
               "end": {
                 "line": 25,
                 "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              852,
+              860
+            ],
+            "loc": {
+              "start": {
+                "line": 28,
+                "column": 10
+              },
+              "end": {
+                "line": 28,
+                "column": 18
               }
             }
           },
@@ -298,6 +390,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Sprite",
+                "range": [
+                  1410,
+                  1416
+                ],
+                "loc": {
+                  "start": {
+                    "line": 52,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 52,
+                    "column": 12
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Sprite",
+                "range": [
+                  13,
+                  19
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 9
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 15
+                  }
+                }
+              }
             }
           ]
         },
@@ -398,6 +530,46 @@
                   "end": {
                     "line": 19,
                     "column": 13
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "BaseHead",
+                "range": [
+                  48,
+                  56
+                ],
+                "loc": {
+                  "start": {
+                    "line": 3,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 3,
+                    "column": 15
+                  }
+                }
+              }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "BaseHead",
+                "range": [
+                  868,
+                  876
+                ],
+                "loc": {
+                  "start": {
+                    "line": 29,
+                    "column": 6
+                  },
+                  "end": {
+                    "line": 29,
+                    "column": 14
                   }
                 }
               },
@@ -1664,6 +1836,46 @@
                   "end": {
                     "line": 44,
                     "column": 16
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Wrapper",
+                "range": [
+                  360,
+                  367
+                ],
+                "loc": {
+                  "start": {
+                    "line": 14,
+                    "column": 17
+                  },
+                  "end": {
+                    "line": 14,
+                    "column": 24
+                  }
+                }
+              }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Wrapper",
+                "range": [
+                  1363,
+                  1370
+                ],
+                "loc": {
+                  "start": {
+                    "line": 49,
+                    "column": 10
+                  },
+                  "end": {
+                    "line": 49,
+                    "column": 17
                   }
                 }
               },
@@ -3720,6 +3932,29 @@
             "type": "JSXIdentifier",
             "name": "Fragment",
             "range": [
+              670,
+              678
+            ],
+            "loc": {
+              "start": {
+                "line": 23,
+                "column": 10
+              },
+              "end": {
+                "line": 23,
+                "column": 18
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
               690,
               698
             ],
@@ -3737,6 +3972,69 @@
           "from": "module",
           "init": null,
           "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              852,
+              860
+            ],
+            "loc": {
+              "start": {
+                "line": 28,
+                "column": 10
+              },
+              "end": {
+                "line": 28,
+                "column": 18
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "BaseHead",
+            "range": [
+              868,
+              876
+            ],
+            "loc": {
+              "start": {
+                "line": 29,
+                "column": 6
+              },
+              "end": {
+                "line": 29,
+                "column": 14
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "BaseHead",
+            "range": [
+              48,
+              56
+            ],
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 7
+              },
+              "end": {
+                "line": 3,
+                "column": 15
+              }
+            }
+          }
         },
         {
           "identifier": {
@@ -3934,6 +4232,86 @@
               "end": {
                 "line": 14,
                 "column": 52
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Wrapper",
+            "range": [
+              1363,
+              1370
+            ],
+            "loc": {
+              "start": {
+                "line": 49,
+                "column": 10
+              },
+              "end": {
+                "line": 49,
+                "column": 17
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Wrapper",
+            "range": [
+              360,
+              367
+            ],
+            "loc": {
+              "start": {
+                "line": 14,
+                "column": 17
+              },
+              "end": {
+                "line": 14,
+                "column": 24
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Sprite",
+            "range": [
+              1410,
+              1416
+            ],
+            "loc": {
+              "start": {
+                "line": 52,
+                "column": 6
+              },
+              "end": {
+                "line": 52,
+                "column": 12
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Sprite",
+            "range": [
+              13,
+              19
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 9
+              },
+              "end": {
+                "line": 2,
+                "column": 15
               }
             }
           }

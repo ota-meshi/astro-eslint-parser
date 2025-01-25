@@ -4,5 +4,11 @@
     "code": "Wrapper",
     "line": 1,
     "column": 2
+  },
+  {
+    "ruleId": "no-undef",
+    "code": "Wrapper",
+    "line": 5,
+    "column": 3
   }
 ]

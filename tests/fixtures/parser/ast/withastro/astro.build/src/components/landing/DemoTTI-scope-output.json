@@ -126,6 +126,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Illustration",
+                "range": [
+                  905,
+                  917
+                ],
+                "loc": {
+                  "start": {
+                    "line": 30,
+                    "column": 2
+                  },
+                  "end": {
+                    "line": 30,
+                    "column": 14
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Illustration",
+                "range": [
+                  11,
+                  23
+                ],
+                "loc": {
+                  "start": {
+                    "line": 2,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 2,
+                    "column": 19
+                  }
+                }
+              }
             }
           ]
         },
@@ -402,6 +442,29 @@
             "type": "JSXIdentifier",
             "name": "Fragment",
             "range": [
+              519,
+              527
+            ],
+            "loc": {
+              "start": {
+                "line": 17,
+                "column": 6
+              },
+              "end": {
+                "line": 17,
+                "column": 14
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
               534,
               542
             ],
@@ -459,6 +522,69 @@
               }
             }
           }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              893,
+              901
+            ],
+            "loc": {
+              "start": {
+                "line": 29,
+                "column": 6
+              },
+              "end": {
+                "line": 29,
+                "column": 14
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Illustration",
+            "range": [
+              905,
+              917
+            ],
+            "loc": {
+              "start": {
+                "line": 30,
+                "column": 2
+              },
+              "end": {
+                "line": 30,
+                "column": 14
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Illustration",
+            "range": [
+              11,
+              23
+            ],
+            "loc": {
+              "start": {
+                "line": 2,
+                "column": 7
+              },
+              "end": {
+                "line": 2,
+                "column": 19
+              }
+            }
+          }
         }
       ],
       "childScopes": [],
@@ -491,6 +617,29 @@
             "type": "JSXIdentifier",
             "name": "Fragment",
             "range": [
+              519,
+              527
+            ],
+            "loc": {
+              "start": {
+                "line": 17,
+                "column": 6
+              },
+              "end": {
+                "line": 17,
+                "column": 14
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
               534,
               542
             ],
@@ -502,6 +651,29 @@
               "end": {
                 "line": 18,
                 "column": 13
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": null
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Fragment",
+            "range": [
+              893,
+              901
+            ],
+            "loc": {
+              "start": {
+                "line": 29,
+                "column": 6
+              },
+              "end": {
+                "line": 29,
+                "column": 14
               }
             }
           },
@@ -541,6 +713,29 @@
         "type": "JSXIdentifier",
         "name": "Fragment",
         "range": [
+          519,
+          527
+        ],
+        "loc": {
+          "start": {
+            "line": 17,
+            "column": 6
+          },
+          "end": {
+            "line": 17,
+            "column": 14
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    },
+    {
+      "identifier": {
+        "type": "JSXIdentifier",
+        "name": "Fragment",
+        "range": [
           534,
           542
         ],
@@ -552,6 +747,29 @@
           "end": {
             "line": 18,
             "column": 13
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    },
+    {
+      "identifier": {
+        "type": "JSXIdentifier",
+        "name": "Fragment",
+        "range": [
+          893,
+          901
+        ],
+        "loc": {
+          "start": {
+            "line": 29,
+            "column": 6
+          },
+          "end": {
+            "line": 29,
+            "column": 14
           }
         }
       },

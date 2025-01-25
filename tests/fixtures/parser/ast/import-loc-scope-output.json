@@ -249,6 +249,46 @@
                   }
                 }
               }
+            },
+            {
+              "identifier": {
+                "type": "JSXIdentifier",
+                "name": "Layout",
+                "range": [
+                  190,
+                  196
+                ],
+                "loc": {
+                  "start": {
+                    "line": 9,
+                    "column": 2
+                  },
+                  "end": {
+                    "line": 9,
+                    "column": 8
+                  }
+                }
+              },
+              "from": "module",
+              "init": null,
+              "resolved": {
+                "type": "Identifier",
+                "name": "Layout",
+                "range": [
+                  119,
+                  125
+                ],
+                "loc": {
+                  "start": {
+                    "line": 4,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 4,
+                    "column": 13
+                  }
+                }
+              }
             }
           ]
         }
@@ -330,6 +370,46 @@
               "end": {
                 "line": 3,
                 "column": 11
+              }
+            }
+          }
+        },
+        {
+          "identifier": {
+            "type": "JSXIdentifier",
+            "name": "Layout",
+            "range": [
+              190,
+              196
+            ],
+            "loc": {
+              "start": {
+                "line": 9,
+                "column": 2
+              },
+              "end": {
+                "line": 9,
+                "column": 8
+              }
+            }
+          },
+          "from": "module",
+          "init": null,
+          "resolved": {
+            "type": "Identifier",
+            "name": "Layout",
+            "range": [
+              119,
+              125
+            ],
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 7
+              },
+              "end": {
+                "line": 4,
+                "column": 13
               }
             }
           }
