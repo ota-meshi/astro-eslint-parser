@@ -6,32 +6,37 @@
   This file is used to post pull request comments on how to use the package published with `npx pkg-pr-new publish`.
   */
 export default async function ({ github, context, output }) {
-  const packages = output.packages
-    .map((p) => `- ${p.name}: ${p.url}`)
-    .join("\n");
-  const templates = output.templates
-    .map((t) => `- [${t.name}](${t.url})`)
-    .join("\n");
-
   const sha =
     context.event_name === "pull_request"
       ? context.payload.pull_request.head.sha
       : context.payload.after;
+  const pullRequestNumber = await getPullRequestNumber();
+
+  const packages = output.packages.map((p) => {
+    const normalizedUrl =
+      pullRequestNumber && p.url.endsWith(sha)
+        ? `${p.url.slice(0, -sha.length)}${pullRequestNumber}`
+        : p.url;
+    return {
+      name: p.name,
+      url: normalizedUrl,
+    };
+  });
 
   const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
 
   const botCommentIdentifier = "<!-- posted by pkg.pr.new-comment.mjs -->";
 
-  const pullRequestNumber = await getPullRequestNumber();
   const pkgUrl = `https://pkg.pr.new/${context.repo.owner}/${context.repo.repo}@${pullRequestNumber ?? sha}`;
 
   const onlineUrl = new URL(
     "https://eslint-online-playground.netlify.app/#eslint-plugin-astro",
   );
-  onlineUrl.searchParams.set(
-    "overrideDeps",
-    JSON.stringify({ "astro-eslint-parser": pkgUrl }),
-  );
+  const overrideDeps = {};
+  for (const p of packages) {
+    overrideDeps[p.name] = p.url;
+  }
+  onlineUrl.searchParams.set("overrideDeps", JSON.stringify(overrideDeps));
   const body = `${botCommentIdentifier}
 
 ## Install Locally
@@ -42,17 +47,13 @@ npm i ${pkgUrl}
 
 ## Try it Online
 
-<${onlineUrl}>
+[ESLint Online Playground](${onlineUrl})
 
 ## Publish Information
 
 ### Published Packages:
 
-${packages}
-
-### Templates:
-
-${templates}
+${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
 
 [View Commit](${commitUrl})`;
 
@@ -125,9 +126,7 @@ ${templates}
     console.log("Publish Information");
     console.log("=".repeat(50));
     console.log("\nPublished Packages:");
-    console.log(packages);
-    console.log("\nTemplates:");
-    console.log(templates);
+    console.log(packages.map((p) => `- ${p.name}: ${p.url}`).join("\n"));
     console.log(`\nCommit URL: ${commitUrl}`);
     console.log(`\n${"=".repeat(50)}`);
   }
