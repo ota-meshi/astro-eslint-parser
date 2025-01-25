@@ -6,6 +6,8 @@
   This file is used to post pull request comments on how to use the package published with `npx pkg-pr-new publish`.
   */
 export default async function ({ github, context, output }) {
+  console.log("pkg-pr-new publish output:", JSON.stringify(output));
+
   const sha =
     context.event_name === "pull_request"
       ? context.payload.pull_request.head.sha
@@ -37,19 +39,17 @@ export default async function ({ github, context, output }) {
   onlineUrl.searchParams.set("overrideDeps", JSON.stringify(overrideDeps));
   const body = `${botCommentIdentifier}
 
-## Install Locally
+## Install This PR Locally
 
 \`\`\`
 npm i ${packages.map((p) => p.url).join(" ")}
 \`\`\`
 
-## Try it Online
+## Try This PR Online
 
 [ESLint Online Playground](${onlineUrl})
 
-## Publish Information
-
-### Published Packages:
+## Published Packages:
 
 ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
 
