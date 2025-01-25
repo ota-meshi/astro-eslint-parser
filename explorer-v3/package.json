@@ -15,6 +15,7 @@
     "@astrojs/svelte": "^7.0.4",
     "astro": "^5.1.9",
     "astro-eslint-parser": "file:..",
+    "entities": "^6.0.0",
     "eslint": "^9.19.0",
     "monaco-editor": "^0.52.0",
     "pako": "^2.0.4",
