@@ -39,17 +39,17 @@ export default async function ({ github, context, output }) {
   onlineUrl.searchParams.set("overrideDeps", JSON.stringify(overrideDeps));
   const body = `${botCommentIdentifier}
 
-## Install This PR Locally
+## Try the Instant Preview in Online Playground
+
+[ESLint Online Playground](${onlineUrl})
+
+## Install the Instant Preview to Your Local
 
 \`\`\`
 npm i ${packages.map((p) => p.url).join(" ")}
 \`\`\`
 
-## Try This PR Online
-
-[ESLint Online Playground](${onlineUrl})
-
-## Published Packages:
+## Published Instant Preview Packages:
 
 ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
 
