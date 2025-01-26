@@ -9,7 +9,7 @@ export default async function ({ github, context, output }) {
   console.log("pkg-pr-new publish output:", JSON.stringify(output));
 
   const sha =
-    context.event_name === "pull_request"
+    context.eventName === "pull_request"
       ? context.payload.pull_request.head.sha
       : context.payload.after;
   const commitUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`;
