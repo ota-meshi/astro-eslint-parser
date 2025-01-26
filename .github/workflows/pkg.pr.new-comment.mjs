@@ -1,11 +1,8 @@
-/* eslint 
-  camelcase: 0,
-  no-console: 0,
-  jsdoc/require-jsdoc: 0
-  ---
-  This file is used to post pull request comments on how to use the package published with `npx pkg-pr-new publish`.
-  */
+/**
+ * Used in `/.github/workflows/pkg.pr.new.yml`
+ */
 export default async function ({ github, context, output }) {
+  // eslint-disable-next-line no-console -- For debugging on github actions.
   console.log("pkg-pr-new publish output:", JSON.stringify(output));
 
   const sha =
@@ -17,10 +14,13 @@ export default async function ({ github, context, output }) {
   const pullRequestNumber = await getPullRequestNumber();
 
   const packages = output.packages.map((p) => {
-    const normalizedUrl =
-      pullRequestNumber && p.url.endsWith(sha)
-        ? `${p.url.slice(0, -sha.length)}${pullRequestNumber}`
-        : p.url;
+    let normalizedUrl = p.url;
+    if (pullRequestNumber && p.url.endsWith(sha)) {
+      normalizedUrl = `${p.url.slice(0, -sha.length)}${pullRequestNumber}`;
+    }
+    const repoPath = `/${context.repo.owner}/${context.repo.repo}/`;
+    normalizedUrl = normalizedUrl.replace(repoPath, "/");
+
     return {
       name: p.name,
       url: normalizedUrl,
@@ -58,14 +58,19 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
   if (pullRequestNumber) {
     await createOrUpdateComment(pullRequestNumber);
   } else {
+    /* eslint-disable no-console -- For debugging on github actions. */
     console.log(
       "No open pull request found for this push. Logging publish information to console:",
     );
     console.log(`\n${"=".repeat(50)}`);
     console.log(body);
     console.log(`\n${"=".repeat(50)}`);
+    /* eslint-enable no-console -- For debugging on github actions. */
   }
 
+  /**
+   * Get the pull request number from the context.
+   */
   async function getPullRequestNumber() {
     if (context.eventName === "pull_request") {
       if (context.issue.number) {
@@ -86,11 +91,15 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
     return null;
   }
 
+  /**
+   * Find the bot comment in the pull request.
+   */
   async function findBotComment(issueNumber) {
     if (!issueNumber) return null;
     const comments = await github.rest.issues.listComments({
       owner: context.repo.owner,
       repo: context.repo.repo,
+      // eslint-disable-next-line camelcase -- The ID defined in the GitHub API.
       issue_number: issueNumber,
     });
     return comments.data.find((comment) =>
@@ -98,22 +107,22 @@ ${packages.map((p) => `- ${p.name}: ${p.url}`).join("\n")}
     );
   }
 
+  /**
+   * Create or update the bot comment in the pull request.
+   */
   async function createOrUpdateComment(issueNumber) {
-    if (!issueNumber) {
-      console.log("No issue number provided. Cannot post or update comment.");
-      return;
-    }
-
     const existingComment = await findBotComment(issueNumber);
     if (existingComment) {
       await github.rest.issues.updateComment({
         owner: context.repo.owner,
         repo: context.repo.repo,
+        // eslint-disable-next-line camelcase -- The ID defined in the GitHub API.
         comment_id: existingComment.id,
         body,
       });
     } else {
       await github.rest.issues.createComment({
+        // eslint-disable-next-line camelcase -- The ID defined in the GitHub API.
         issue_number: issueNumber,
         owner: context.repo.owner,
         repo: context.repo.repo,
