@@ -1,0 +1,15 @@
+{
+  "type": "global",
+  "variables": [],
+  "references": [],
+  "childScopes": [
+    {
+      "type": "module",
+      "variables": [],
+      "references": [],
+      "childScopes": [],
+      "through": []
+    }
+  ],
+  "through": []
+}

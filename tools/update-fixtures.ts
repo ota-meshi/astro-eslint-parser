@@ -80,6 +80,7 @@ for (const {
     const messages = linter.verify(
       input,
       {
+        files: ["**"],
         languageOptions: {
           ecmaVersion: "latest",
           sourceType: "module",
