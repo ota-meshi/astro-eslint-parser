@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.2.2
+
+### Patch Changes
+
+- [#369](https://github.com/ota-meshi/astro-eslint-parser/pull/369) [`dd8d3ef`](https://github.com/ota-meshi/astro-eslint-parser/commit/dd8d3eff49ee87c238b3621102b83a33d3fc143c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fix parsing error for `&amp;`
+
 ## 1.2.1
 
 ### Patch Changes
