@@ -438,7 +438,20 @@ function getTokenInfo(
     let searchOffset = 0;
     while (searchOffset < search.length) {
       const searchChar = search[searchOffset];
+
       if (ctx.code[codeOffset] === searchChar) {
+        // If the search character is '&',
+        // processing each character will result in the first character being matched with `&amp;`,
+        // and `amp;` will not be searchable, so `&amp;` is verified first.
+        if (searchChar === "&") {
+          const entityCandidate = ctx.code.slice(codeOffset, codeOffset + 5);
+          if (entityCandidate === "&amp;" || entityCandidate === "&AMP;") {
+            codeOffset += 5;
+            searchOffset++;
+            continue;
+          }
+        }
+
         codeOffset++;
         searchOffset++;
         continue;

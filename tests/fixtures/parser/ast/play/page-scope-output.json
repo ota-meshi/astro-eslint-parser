@@ -1353,29 +1353,5 @@
       ]
     }
   ],
-  "through": [
-    {
-      "identifier": {
-        "type": "Identifier",
-        "name": "Date",
-        "range": [
-          349,
-          353
-        ],
-        "loc": {
-          "start": {
-            "line": 12,
-            "column": 26
-          },
-          "end": {
-            "line": 12,
-            "column": 30
-          }
-        }
-      },
-      "from": "module",
-      "init": null,
-      "resolved": null
-    }
-  ]
+  "through": []
 }
