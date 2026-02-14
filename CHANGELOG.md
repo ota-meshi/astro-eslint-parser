@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.3.0
+
+### Minor Changes
+
+- [#395](https://github.com/ota-meshi/astro-eslint-parser/pull/395) [`5a0afb3`](https://github.com/ota-meshi/astro-eslint-parser/commit/5a0afb3d4a524dcdcd9c31f1efda6ca16ae0e6e8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: improve compatibility with eslint v10
+
 ## 1.2.2
 
 ### Patch Changes
