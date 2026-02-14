@@ -62,8 +62,10 @@ export interface AstroShorthandAttribute extends Omit<JSXAttribute, "type"> {
   value: JSXExpressionContainer;
 }
 /** Node of Astro template-literal attribute */
-export interface AstroTemplateLiteralAttribute
-  extends Omit<JSXAttribute, "type"> {
+export interface AstroTemplateLiteralAttribute extends Omit<
+  JSXAttribute,
+  "type"
+> {
   type: "AstroTemplateLiteralAttribute";
   value: JSXExpressionContainer & {
     expression: ES.TemplateLiteral;

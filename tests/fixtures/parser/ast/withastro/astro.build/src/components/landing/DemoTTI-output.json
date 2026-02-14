@@ -3602,7 +3602,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         206,
@@ -3908,7 +3908,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         292,
@@ -4034,7 +4034,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         337,
@@ -4970,7 +4970,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         570,
@@ -5276,7 +5276,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         655,
@@ -5402,7 +5402,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         712,

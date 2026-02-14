@@ -4211,7 +4211,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         1056,

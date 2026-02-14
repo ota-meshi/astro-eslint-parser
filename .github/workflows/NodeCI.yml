@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -32,6 +37,26 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Install Packages
+      run: npm install -f
+    - name: Test
+      run: npm test
+  test-for-eslint-v10:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    # Install ESLint v10, but a normal installation will fail due to incompatible dependencies.
+    # Therefore, we will need to write the dependencies directly in package.json and install it again.
+    - name: Rewrite package.json
+      run: |
+        npm pkg set devDependencies.eslint=^10
     - name: Install Packages
       run: npm install -f
     - name: Test

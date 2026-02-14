@@ -4761,7 +4761,7 @@
       }
     },
     {
-      "type": "Identifier",
+      "type": "JSXIdentifier",
       "value": "type",
       "range": [
         651,
@@ -6597,7 +6597,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         1367,

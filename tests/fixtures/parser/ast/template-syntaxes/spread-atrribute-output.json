@@ -412,7 +412,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "Identifier",
       "value": "class",
       "range": [
         18,
