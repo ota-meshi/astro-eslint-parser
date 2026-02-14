@@ -8,23 +8,18 @@ import type { ESLintExtendedProgram } from "../types";
 import { tsPatch } from "./ts-patch";
 import { isEnhancedParserObject } from "../context/resolve-parser/parser-object";
 import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/types";
-import type {
-  ScopeManager as TSESLintScopeManager,
-  Scope,
-} from "@typescript-eslint/scope-manager";
+import type { ScopeManager as TSESLintScopeManager } from "@typescript-eslint/scope-manager";
 import {
   analyze as analyzeForTypeScript,
   Reference,
 } from "@typescript-eslint/scope-manager";
 import type { AnalysisOptions } from "eslint-scope";
-import {
-  // @ts-expect-error -- Missing type
-  Referencer as BaseReferencer,
-  ScopeManager,
-} from "eslint-scope";
 import { KEYS } from "../visitor-keys";
 import { getKeys } from "../traverse";
 import { READ_FLAG, REFERENCE_TYPE_VALUE_FLAG } from "./scope";
+import { getEslintScope } from "./eslint-scope";
+
+const eslintScope = getEslintScope();
 /**
  * Parse for script
  */
@@ -136,22 +131,7 @@ ${code}`,
   }
 }
 
-declare class BaseReferencer {
-  public constructor(options: AnalysisOptions, scopeManager: ScopeManager);
-
-  protected currentScope(): Scope;
-
-  protected currentScope(throwOnNull: true): Scope | null;
-
-  public visit(node: TSESTree.Node | null | undefined): void;
-
-  protected visitChildren<T extends TSESTree.Node>(
-    node: T | null | undefined,
-    excludeArr?: (keyof T)[],
-  ): void;
-}
-
-class Referencer extends BaseReferencer {
+class Referencer extends eslintScope.Referencer {
   protected JSXAttribute(node: TSESTree.JSXAttribute) {
     this.visit(node.value);
   }
@@ -229,7 +209,7 @@ function analyzeForEcmaScript(
     },
     providedOptions,
   );
-  const scopeManager = new ScopeManager(
+  const scopeManager = new eslintScope.ScopeManager(
     // @ts-expect-error -- No typings
     options,
   );
