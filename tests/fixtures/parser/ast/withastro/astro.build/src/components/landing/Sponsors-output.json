@@ -10355,7 +10355,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         781,
@@ -10679,7 +10679,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         840,
@@ -10805,7 +10805,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         877,
@@ -11129,7 +11129,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         938,
@@ -12731,7 +12731,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         1243,
@@ -14387,7 +14387,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         1554,
@@ -15359,7 +15359,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         1845,
@@ -16871,7 +16871,7 @@
       }
     },
     {
-      "type": "Keyword",
+      "type": "JSXIdentifier",
       "value": "class",
       "range": [
         2246,
