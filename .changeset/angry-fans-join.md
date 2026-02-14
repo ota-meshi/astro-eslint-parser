@@ -2,4 +2,4 @@
 "astro-eslint-parser": minor
 ---
 
-feat: add support for eslint v10
+feat: improve compatibility with eslint v10

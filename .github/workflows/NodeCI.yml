@@ -51,6 +51,7 @@ jobs:
       run: npm install -f
     - name: Install eslint v10
       run: |+
+        npm uninstall @eslint-community/eslint-plugin-eslint-comments -f
         npm i -D eslint@10 -f
     - name: Test
       run: npm test
