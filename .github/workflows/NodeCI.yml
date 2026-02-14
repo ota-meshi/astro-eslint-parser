@@ -52,12 +52,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+    # Install ESLint v10, but a normal installation will fail due to incompatible dependencies.
+    # Therefore, we will need to write the dependencies directly in package.json and install it again.
+    - name: Rewrite package.json
+      run: |
+        npm pkg set devDependencies.eslint=^10
     - name: Install Packages
       run: npm install -f
-    - name: Uninstall packages incompatible with eslint v10
-      run: npm uninstall @eslint-community/eslint-plugin-eslint-comments -f
-    - name: Install eslint v10
-      run: npm i -D eslint@10 -f
     - name: Test
       run: npm test
   test-for-eslint-v8:
