@@ -47,12 +47,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Install Packages
+      run: npm install -f
     - name: Install eslint v10
       run: |+
         npm i -D eslint@10 -f
-        npx rimraf node_modules
-    - name: Install Packages
-      run: npm install -f
     - name: Test
       run: npm test
   test-for-eslint-v8:
