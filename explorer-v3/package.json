@@ -17,7 +17,7 @@
     "astro-eslint-parser": "file:..",
     "entities": "^6.0.0",
     "eslint": "^9.19.0",
-    "monaco-editor": "^0.52.0",
+    "monaco-editor": "^0.55.0",
     "pako": "^2.0.4",
     "svelte": "^5.19.3",
     "webpack": "^5.72.1",
