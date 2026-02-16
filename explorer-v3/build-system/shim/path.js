@@ -6,10 +6,11 @@ export default {
   dirname,
   normalize,
   sep,
+  resolve,
 };
 
 export function extname(p) {
-  return /\.[^.]*$/.exec(p)?.[0];
+  return /\.[^.]*$/.exec(p)?.[0] ?? "";
 }
 
 export function isAbsolute() {
@@ -22,5 +23,8 @@ export function dirname(p) {
   return p.split("/").slice(0, -1).join("/");
 }
 export function normalize(p) {
+  return p;
+}
+export function resolve(p) {
   return p;
 }
