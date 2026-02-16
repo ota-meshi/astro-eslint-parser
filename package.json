@@ -21,11 +21,11 @@
     "cover": "nyc --reporter=lcov npm run test",
     "debug": "npm run mocha -- \"tests/src/**/*.ts\" --reporter dot --timeout 60000",
     "preversion": "npm run lint && npm test",
-    "update-fixtures": "env-cmd -e debug npm run ts -- ./tools/update-fixtures.ts",
+    "update-fixtures": "env-cmd -e debug -- npm run ts -- ./tools/update-fixtures.ts",
     "debug-parser": "npm run ts -- ./tools/parser-test.ts",
     "eslint-playground": "eslint tests/fixtures --ext .astro --config .eslintrc-for-playground.js --format codeframe",
     "benchmark": "npm run ts -- benchmark/index.ts",
-    "ts": "env-cmd -e basic node -r esbuild-register",
+    "ts": "env-cmd -e basic -- node -r esbuild-register",
     "mocha": "npm run ts -- ./node_modules/mocha/bin/mocha.js",
     "prerelease": "npm run clean && npm run build",
     "release": "changeset publish"
