@@ -55,7 +55,7 @@
     "debug": "^4.3.4",
     "entities": "^7.0.0",
     "eslint-scope": "^8.0.1",
-    "eslint-visitor-keys": "^4.0.0",
+    "eslint-visitor-keys": "^5.0.0",
     "espree": "^10.0.0",
     "fast-glob": "^3.3.3",
     "is-glob": "^4.0.3",
