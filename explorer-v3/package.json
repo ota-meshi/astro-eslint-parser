@@ -12,8 +12,8 @@
   },
   "devDependencies": {
     "@astrojs/compiler": "^2.10.3",
-    "@astrojs/svelte": "^7.0.4",
-    "astro": "^5.1.9",
+    "@astrojs/svelte": "^8.0.0",
+    "astro": "^6.0.0",
     "astro-eslint-parser": "file:..",
     "entities": "^7.0.0",
     "eslint": "^9.19.0",
