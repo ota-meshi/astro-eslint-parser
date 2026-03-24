@@ -55,7 +55,7 @@ export function parse(code: string, ctx: Context): ParseResult {
  */
 function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
   const htmlEnd = ctx.code.indexOf("</html");
-  if (htmlEnd == null) {
+  if (htmlEnd < 0) {
     return;
   }
   // `@astrojs/compiler` may report `position.offset` as UTF-8 byte offsets.
