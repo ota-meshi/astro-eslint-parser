@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.3.1
+
+### Patch Changes
+
+- [#421](https://github.com/ota-meshi/astro-eslint-parser/pull/421) [`0ffb8d1`](https://github.com/ota-meshi/astro-eslint-parser/commit/0ffb8d137e749394836473e55317c251bfa7c05a) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: handle multibyte offsets when adjusting nodes after `</html>`
+
 ## 1.3.0
 
 ### Minor Changes
