@@ -18,6 +18,7 @@ import {
 } from "../../astro";
 import type { Context } from "../../context";
 import { ParseError } from "../../errors";
+import { sortedLastIndex } from "../../util";
 
 /**
  * Parse code by `@astrojs/compiler`
@@ -57,19 +58,115 @@ function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
   if (htmlEnd == null) {
     return;
   }
+  // `@astrojs/compiler` may report `position.offset` as UTF-8 byte offsets.
+  // By contrast, `ctx.code.indexOf()` and every offset we compute from the
+  // JavaScript source string are UTF-16 code-unit offsets.
+  //
+  // That mismatch only matters here because `adjustHTML()` compares compiler
+  // child positions against `</body>` / `</html>` offsets derived from
+  // `ctx.code`. If multibyte characters appear before those nodes, comparing
+  // the raw values makes nodes inside `<body>` look as if they were already
+  // after `</body>` or `</html>`, which then moves them to the wrong parent.
+  //
+  // Keep the fix local to this adjustment logic: we only need a comparable
+  // offset when deciding whether the compiler attached a node under `<body>`,
+  // `<html>`, or the root by mistake.
+  const isOffsetAfter = buildComparableOffsetComparator(ctx.code);
   const hasTokenAfter = Boolean(ctx.code.slice(htmlEnd + 7).trim());
   const children = [...htmlElement.children];
   for (const child of children) {
     const offset = child.position?.start.offset;
     if (hasTokenAfter && offset != null) {
-      if (htmlEnd <= offset) {
+      if (isOffsetAfter(offset, htmlEnd)) {
         htmlElement.children.splice(htmlElement.children.indexOf(child), 1);
         ast.children.push(child);
       }
     }
     if (child.type === "element" && child.name === "body") {
-      adjustHTMLBody(ast, htmlElement, htmlEnd, hasTokenAfter, child, ctx);
+      adjustHTMLBody(
+        ast,
+        htmlElement,
+        htmlEnd,
+        hasTokenAfter,
+        child,
+        ctx,
+        isOffsetAfter,
+      );
     }
+  }
+
+  /**
+   * Build a comparator used only for matching compiler offsets against
+   * positions derived from `ctx.code`.
+   *
+   * The raw offset check is important for laziness: if the compiler offset is
+   * already before the threshold, remapping cannot make it jump forward past
+   * that threshold, so we can reject it without any byte/code-unit work.
+   */
+  function buildComparableOffsetComparator(code: string) {
+    let remapOffset: ((offset: number) => number) | undefined;
+    const comparableOffsetCache = new Map<number, number>();
+
+    return (offset: number, threshold: number) => {
+      if (threshold > offset) {
+        return false;
+      }
+      let comparableOffset = comparableOffsetCache.get(offset);
+      if (comparableOffset == null) {
+        // Delay building the remapper until the first comparison that cannot
+        // be rejected by raw offsets alone.
+        remapOffset ||= buildComparableOffsetRemapper(code);
+        comparableOffset = remapOffset(offset);
+        comparableOffsetCache.set(offset, comparableOffset);
+      }
+      return threshold <= comparableOffset;
+    };
+  }
+
+  /**
+   * Build remapper used only for comparing compiler offsets with `ctx.code`.
+   */
+  function buildComparableOffsetRemapper(code: string) {
+    // Fast path: ASCII text has identical byte/code-unit offsets.
+    if (Buffer.byteLength(code, "utf8") === code.length) {
+      return (offset: number) => offset;
+    }
+
+    const byteOffsets = [0];
+    const codeUnitOffsets = [0];
+
+    for (let index = 0, byteOffset = 0; index < code.length; ) {
+      const codePoint = code.codePointAt(index)!;
+      index += codePoint > 0xffff ? 2 : 1;
+      byteOffset += getUTF8ByteLength(codePoint);
+      byteOffsets.push(byteOffset);
+      codeUnitOffsets.push(index);
+    }
+
+    return (offset: number) => {
+      // Find the nearest code-unit boundary that corresponds to the compiler's
+      // byte offset. We only use this for ordering comparisons, so remapping
+      // the start offset to its matching string position is sufficient.
+      const index =
+        sortedLastIndex(byteOffsets, (target) => target - offset) - 1;
+      return codeUnitOffsets[Math.max(index, 0)];
+    };
+  }
+
+  /**
+   * Get UTF-8 byte length for code point.
+   */
+  function getUTF8ByteLength(codePoint: number): number {
+    if (codePoint <= 0x7f) {
+      return 1;
+    }
+    if (codePoint <= 0x7ff) {
+      return 2;
+    }
+    if (codePoint <= 0xffff) {
+      return 3;
+    }
+    return 4;
   }
 }
 
@@ -83,6 +180,7 @@ function adjustHTMLBody(
   hasTokenAfterHtmlEnd: boolean,
   bodyElement: ElementNode,
   ctx: Context,
+  isOffsetAfter: (offset: number, threshold: number) => boolean,
 ) {
   const bodyEnd = ctx.code.indexOf("</body");
   if (bodyEnd == null) {
@@ -95,15 +193,13 @@ function adjustHTMLBody(
   const children = [...bodyElement.children];
   for (const child of children) {
     const offset = child.position?.start.offset;
-    if (offset != null) {
-      if (bodyEnd <= offset) {
-        if (hasTokenAfterHtmlEnd && htmlEnd <= offset) {
-          bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
-          ast.children.push(child);
-        } else if (hasTokenAfter) {
-          bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
-          htmlElement.children.push(child);
-        }
+    if (offset != null && isOffsetAfter(offset, bodyEnd)) {
+      if (hasTokenAfterHtmlEnd && isOffsetAfter(offset, htmlEnd)) {
+        bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
+        ast.children.push(child);
+      } else if (hasTokenAfter) {
+        bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
+        htmlElement.children.push(child);
       }
     }
   }
