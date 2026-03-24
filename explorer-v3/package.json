@@ -11,7 +11,7 @@
     "pre-build": "cd build-system/pre-build && webpack"
   },
   "devDependencies": {
-    "@astrojs/compiler": "^2.10.3",
+    "@astrojs/compiler": "^3.0.0",
     "@astrojs/svelte": "^8.0.0",
     "astro": "^6.0.0",
     "astro-eslint-parser": "file:..",
