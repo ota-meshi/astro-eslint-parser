@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.4.0
+
+### Minor Changes
+
+- [#416](https://github.com/ota-meshi/astro-eslint-parser/pull/416) [`8df97eb`](https://github.com/ota-meshi/astro-eslint-parser/commit/8df97eb298d9ca56683fc1409e608d56564188e4) Thanks [@renovate](https://github.com/apps/renovate)! - fix: add support for `@astrojs/compiler` v3
+
 ## 1.3.2
 
 ### Patch Changes
