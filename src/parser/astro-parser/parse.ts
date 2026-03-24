@@ -127,20 +127,38 @@ function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
    * Build remapper used only for comparing compiler offsets with `ctx.code`.
    */
   function buildComparableOffsetRemapper(code: string) {
-    // Fast path: ASCII text has identical byte/code-unit offsets.
-    if (Buffer.byteLength(code, "utf8") === code.length) {
-      return (offset: number) => offset;
-    }
-
-    const byteOffsets = [0];
-    const codeUnitOffsets = [0];
+    let byteOffsets: number[] | undefined,
+      codeUnitOffsets: number[] | undefined;
 
     for (let index = 0, byteOffset = 0; index < code.length; ) {
       const codePoint = code.codePointAt(index)!;
-      index += codePoint > 0xffff ? 2 : 1;
-      byteOffset += getUTF8ByteLength(codePoint);
-      byteOffsets.push(byteOffset);
-      codeUnitOffsets.push(index);
+      const codeUnitLength = codePoint > 0xffff ? 2 : 1;
+      const nextIndex = index + codeUnitLength;
+      const nextByteOffset = byteOffset + getUTF8ByteLength(codePoint);
+
+      if (byteOffsets) {
+        byteOffsets.push(nextByteOffset);
+        codeUnitOffsets!.push(nextIndex);
+      } else if (codePoint > 0x7f) {
+        // Lazily allocate the remap tables only when byte/code-unit offsets
+        // diverge, while still avoiding a dedicated ASCII-only pre-scan.
+        byteOffsets = [0];
+        codeUnitOffsets = [0];
+        for (let asciiOffset = 1; asciiOffset <= index; asciiOffset++) {
+          byteOffsets.push(asciiOffset);
+          codeUnitOffsets.push(asciiOffset);
+        }
+        byteOffsets.push(nextByteOffset);
+        codeUnitOffsets.push(nextIndex);
+      }
+
+      index = nextIndex;
+      byteOffset = nextByteOffset;
+    }
+
+    // Fast path: ASCII text has identical byte/code-unit offsets.
+    if (!byteOffsets || !codeUnitOffsets) {
+      return (offset: number) => offset;
     }
 
     return (offset: number) => {
