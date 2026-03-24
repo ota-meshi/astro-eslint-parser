@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 1.3.2
+
+### Patch Changes
+
+- [#423](https://github.com/ota-meshi/astro-eslint-parser/pull/423) [`380d312`](https://github.com/ota-meshi/astro-eslint-parser/commit/380d312cce03ede635c1b9c52f1e2b50b7540ec8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: make comparable offset remapping work in browser environments
+
 ## 1.3.1
 
 ### Patch Changes
