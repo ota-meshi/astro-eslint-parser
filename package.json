@@ -32,7 +32,7 @@
     "debug-parser": "npm run ts -- ./tools/parser-test.ts",
     "eslint-playground": "eslint tests/fixtures --ext .astro --config .eslintrc-for-playground.js --format codeframe",
     "benchmark": "npm run ts -- benchmark/index.ts",
-    "ts": "env-cmd -e basic -- node -r esbuild-register",
+    "ts": "env-cmd -e basic -- tsx",
     "mocha": "npm run ts -- ./node_modules/mocha/bin/mocha.js",
     "prerelease": "npm run clean && npm run build",
     "release": "changeset publish"
@@ -117,6 +117,7 @@
     "string-replace-loader": "^3.0.3",
     "svelte": "^5.19.3",
     "tsdown": "^0.22.2",
+    "tsx": "^4.22.4",
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.61.0",
     "typescript-eslint-parser-for-extra-files": "^0.9.0"
