@@ -81,7 +81,7 @@
     "benchmark": "^2.1.4",
     "chai": "^6.0.0",
     "env-cmd": "^11.0.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.28.0",
     "esbuild-register": "^3.3.3",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.0.0",
