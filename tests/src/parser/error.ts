@@ -1,5 +1,6 @@
 import assert from "assert";
 import fs from "fs";
+import { fileURLToPath } from "node:url";
 import { parseForESLint } from "../../../src";
 import {
   getBasicParserOptions,
@@ -9,10 +10,8 @@ import {
 } from "./test-utils";
 import path from "path";
 
-const ERROR_FIXTURE_ROOT = path.resolve(
-  __dirname,
-  "../../fixtures/parser/error",
-);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const ERROR_FIXTURE_ROOT = path.resolve(dirname, "../../fixtures/parser/error");
 
 function parse(code: string, filePath: string) {
   return parseForESLint(code, {

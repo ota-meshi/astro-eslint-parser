@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "node:url";
 import { Linter } from "eslint";
 import * as parser from "../src/index";
 import { parseForESLint } from "../src/index";
@@ -14,8 +15,9 @@ import {
 } from "../tests/src/parser/test-utils";
 import globals from "globals";
 
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERROR_FIXTURE_ROOT = path.resolve(
-  __dirname,
+  dirname,
   "../tests/fixtures/parser/error",
 );
 

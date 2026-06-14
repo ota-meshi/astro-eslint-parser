@@ -1,9 +1,10 @@
-/* global require -- node */
 import path from "path";
 import fs from "fs";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import semver from "semver";
 import type { Linter } from "eslint";
-import * as globals from "globals";
+import globals from "globals";
 import type { TSESTree } from "@typescript-eslint/types";
 import { LinesAndColumns } from "../../../src/context";
 import type {
@@ -18,7 +19,9 @@ import type { AstroNode, AstroProgram } from "../../../src/ast";
 import { TS_GLOBALS } from "./ts-vars";
 import { traverseNodes } from "../../../src";
 
-const AST_FIXTURE_ROOT = path.resolve(__dirname, "../../fixtures/parser/ast");
+const require = createRequire(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const AST_FIXTURE_ROOT = path.resolve(dirname, "../../fixtures/parser/ast");
 export function getBasicParserOptions(
   filePath = "<input>",
 ): Linter.ParserOptions {
@@ -110,7 +113,6 @@ function* listupFixturesImpl(dir: string): IterableIterator<{
           if (obj) {
             if (
               Object.entries(obj).some(([pkgName, pkgVersion]) => {
-                // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- ignore
                 const pkg = require(`${pkgName}/package.json`);
                 return !semver.satisfies(pkg.version, pkgVersion as string);
               })

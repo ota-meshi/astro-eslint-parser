@@ -59,5 +59,29 @@
       ]
     }
   ],
-  "through": []
+  "through": [
+    {
+      "identifier": {
+        "type": "Identifier",
+        "name": "String",
+        "range": [
+          1,
+          7
+        ],
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 1
+          },
+          "end": {
+            "line": 1,
+            "column": 7
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    }
+  ]
 }

@@ -1,14 +1,11 @@
-import { createRequire } from "node:module";
 import tsParser from "@typescript-eslint/parser";
 import astro from "eslint-plugin-astro";
 import svelte from "eslint-plugin-svelte";
 import globals from "globals";
 import myPlugin from "@ota-meshi/eslint-plugin";
+import { require as tsxRequire } from "tsx/cjs/api";
 
-const require = createRequire(import.meta.url);
-const { unregister } = require("esbuild-register/dist/node").register();
-const astroParser = require("./src/index.ts");
-unregister();
+const astroParser = tsxRequire("./src/index.ts", import.meta.url);
 
 export default [
   {

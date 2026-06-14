@@ -1,6 +1,6 @@
-/* global require -- node */
 import assert from "assert";
 import fs from "fs";
+import { createRequire } from "node:module";
 import semver from "semver";
 
 import { traverseNodes } from "../../../src/traverse";
@@ -14,6 +14,8 @@ import {
 } from "./test-utils";
 import type { AstroProgram } from "../../../src/ast";
 import type { TSESTree } from "@typescript-eslint/types";
+
+const require = createRequire(import.meta.url);
 
 function parse(
   code: string,
@@ -58,7 +60,6 @@ describe("Check for AST.", () => {
           if (
             result.services?.program // use ts parser
           ) {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires -- ignore
             const pkg = require("@typescript-eslint/parser/package.json");
             if (!semver.satisfies(pkg.version, "^5.6.0")) {
               // adjust global scope
