@@ -12,16 +12,12 @@ import type {
 import type { VisitorKeys } from "@typescript-eslint/visitor-keys";
 import { traverseNodes } from "../../traverse";
 import { addElementsToSortedArray, addElementToSortedArray } from "../../util";
-import type {
-  ReferenceFlag,
-  ReferenceTypeFlag,
-} from "@typescript-eslint/scope-manager/dist/referencer/Reference";
 
-export const READ_FLAG = 1 as ReferenceFlag;
-const WRITE_FLAG = 2 as ReferenceFlag;
-const READ_WRITE_FLAG = 3 as ReferenceFlag;
-export const REFERENCE_TYPE_VALUE_FLAG = 1 as ReferenceTypeFlag;
-const REFERENCE_TYPE_TYPE_FLAG = 2 as ReferenceTypeFlag;
+export const READ_FLAG = 1;
+const WRITE_FLAG = 2;
+const READ_WRITE_FLAG = 3;
+export const REFERENCE_TYPE_VALUE_FLAG = 1;
+const REFERENCE_TYPE_TYPE_FLAG = 2;
 
 /**
  * Gets the scope for the Program node

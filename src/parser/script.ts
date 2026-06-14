@@ -13,7 +13,7 @@ import {
   analyze as analyzeForTypeScript,
   Reference,
 } from "@typescript-eslint/scope-manager";
-import type { AnalysisOptions } from "eslint-scope";
+import type { AnalyzeOptions } from "eslint-scope";
 import { KEYS } from "../visitor-keys";
 import { getKeys } from "../traverse";
 import { READ_FLAG, REFERENCE_TYPE_VALUE_FLAG } from "./scope";
@@ -67,7 +67,6 @@ function analyzeScope(
       parserOptions.sourceType === "commonjs"
         ? "script"
         : parserOptions.sourceType || "script",
-    // @ts-expect-error -- Type bug?
     childVisitorKeys: result.visitorKeys || KEYS,
     fallback: getKeys,
   });
@@ -195,7 +194,7 @@ class Referencer extends eslintScope.Referencer {
  */
 function analyzeForEcmaScript(
   tree: TSESTree.Program,
-  providedOptions: AnalysisOptions,
+  providedOptions: AnalyzeOptions,
 ): TSESLintScopeManager {
   const options = Object.assign(
     {
@@ -209,10 +208,7 @@ function analyzeForEcmaScript(
     },
     providedOptions,
   );
-  const scopeManager = new eslintScope.ScopeManager(
-    // @ts-expect-error -- No typings
-    options,
-  );
+  const scopeManager = new eslintScope.ScopeManager(options);
   const referencer = new Referencer(options, scopeManager);
 
   referencer.visit(tree);
