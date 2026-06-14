@@ -6,6 +6,11 @@ on:
     branches: [main]
     tags: ["!**"]
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,8 +20,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
+          cache: npm
       - name: Install Packages
-        run: npm install
+        run: npm ci
       - name: Build
         run: npm run build
       - run: npx pkg-pr-new publish --json output.json --comment=off

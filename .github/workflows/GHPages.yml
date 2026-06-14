@@ -28,12 +28,13 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: lts/*
+        cache: npm
     - name: Install And Build
       run: |+
-        npm install -f
+        npm ci
         npm run build
         cd explorer-v3
-        npm install -f
+        npm install
         npm run pre-build
         npm run build
     - name: Setup Pages

@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 # Allow one concurrent deployment
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,8 +22,9 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: lts/*
+        cache: npm
     - name: Install Packages
-      run: npm install
+      run: npm ci
     - name: build
       run: |
         npm run build
@@ -37,34 +41,16 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
+        cache: npm
     - name: Install Packages
-      run: npm install -f
+      run: npm ci
     - name: Test
       run: npm test
-  test-for-eslint-v10:
+  test-for-eslint-compat:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [24.x]
-    steps:
-    - uses: actions/checkout@v6
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-    # Install ESLint v10, but a normal installation will fail due to incompatible dependencies.
-    # Therefore, we will need to write the dependencies directly in package.json and install it again.
-    - name: Rewrite package.json
-      run: |
-        npm pkg set devDependencies.eslint=^10
-    - name: Install Packages
-      run: npm install -f
-    - name: Test
-      run: npm test
-  test-for-eslint-v8:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
+        eslint-version: [8, 9]
         node-version: [22.22.3]
     steps:
     - uses: actions/checkout@v6
@@ -72,12 +58,11 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install eslint v8
-      run: |+
-        npm i -D eslint@8 -f
-        npx rimraf node_modules
+        cache: npm
     - name: Install Packages
-      run: npm install -f
+      run: npm ci
+    - name: Install ESLint v${{ matrix.eslint-version }}
+      run: npm install --force eslint@${{ matrix.eslint-version }}
     - name: Test
       run: npm test
   test-and-coverage:
@@ -87,8 +72,9 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: lts/*
+        cache: npm
     - name: Install Packages
-      run: npm install
+      run: npm ci
     - name: Test
       run: npm run cover
     - name: Coveralls GitHub Action
