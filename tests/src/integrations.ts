@@ -1,7 +1,8 @@
-/* global require -- node */
 import { Linter } from "eslint";
 import assert from "assert";
 import fs from "fs";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import * as parser from "../../src";
 import {
   getBasicParserOptions,
@@ -11,7 +12,9 @@ import {
 import path from "path";
 import globals from "globals";
 
-const FIXTURE_ROOT = path.resolve(__dirname, "../fixtures/integrations");
+const require = createRequire(import.meta.url);
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const FIXTURE_ROOT = path.resolve(dirname, "../fixtures/integrations");
 
 function createLinter() {
   const linter = new Linter({ configType: "flat" });
@@ -29,8 +32,7 @@ describe("Integration tests.", () => {
         "output.astro",
       );
       const setup = fs.existsSync(setupFileName)
-        ? // eslint-disable-next-line @typescript-eslint/no-require-imports -- test
-          require(setupFileName)
+        ? require(setupFileName)
         : null;
       const linter = createLinter();
       const messages = linter.verify(

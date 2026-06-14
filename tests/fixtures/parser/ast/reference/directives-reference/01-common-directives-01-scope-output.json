@@ -59,5 +59,29 @@
       ]
     }
   ],
-  "through": []
+  "through": [
+    {
+      "identifier": {
+        "type": "Identifier",
+        "name": "Set",
+        "range": [
+          85,
+          88
+        ],
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 71
+          },
+          "end": {
+            "line": 2,
+            "column": 74
+          }
+        }
+      },
+      "from": "module",
+      "init": null,
+      "resolved": null
+    }
+  ]
 }

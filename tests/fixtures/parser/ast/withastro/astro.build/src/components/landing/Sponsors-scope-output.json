@@ -9438,5 +9438,29 @@
       ]
     }
   ],
-  "through": []
+  "through": [
+    {
+      "identifier": {
+        "type": "Identifier",
+        "name": "Math",
+        "range": [
+          752,
+          756
+        ],
+        "loc": {
+          "start": {
+            "line": 16,
+            "column": 45
+          },
+          "end": {
+            "line": 16,
+            "column": 49
+          }
+        }
+      },
+      "from": "function",
+      "init": null,
+      "resolved": null
+    }
+  ]
 }

@@ -1,8 +1,10 @@
 import * as Benchmark from "benchmark";
 import fs from "fs";
+import { createRequire } from "node:module";
 import { parseForESLint } from "../src/index";
 import { parseForESLint as parseOld } from "../node_modules/astro-eslint-parser/lib/index.js";
 
+const require = createRequire(import.meta.url);
 const contents = `${fs.readFileSync(
   require.resolve("../tests/fixtures/parser/ast/withastro/astro.build/src/components/landing/Sponsors-input.astro"),
   "utf-8",
