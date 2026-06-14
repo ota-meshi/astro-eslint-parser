@@ -2,8 +2,16 @@
   "name": "astro-eslint-parser",
   "version": "1.4.0",
   "description": "Astro component parser for ESLint",
-  "main": "lib/index.js",
-  "module": "lib/index.mjs",
+  "type": "module",
+  "main": "./lib/index.mjs",
+  "types": "./lib/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.mts",
+      "import": "./lib/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "lib"
   ],
@@ -12,8 +20,7 @@
   },
   "scripts": {
     "prebuild": "npm run -s clean",
-    "build": "npm run build:tsup",
-    "build:tsup": "tsup",
+    "build": "tsdown",
     "clean": "rimraf .nyc_output lib coverage",
     "lint": "eslint .",
     "eslint-fix": "npm run lint -- --fix",
@@ -109,7 +116,7 @@
     "prettier-plugin-svelte": "^3.0.0",
     "string-replace-loader": "^3.0.3",
     "svelte": "^5.19.3",
-    "tsup": "^8.0.0",
+    "tsdown": "^0.22.2",
     "typescript": "~5.9.0",
     "typescript-eslint": "^8.61.0",
     "typescript-eslint-parser-for-extra-files": "^0.9.0"

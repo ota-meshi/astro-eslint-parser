@@ -50,7 +50,7 @@ export default [
     },
   },
   {
-    files: ["*.mjs", "**/*.mjs"],
+    files: ["*.js", "*.mjs", "**/*.mjs"],
     languageOptions: {
       sourceType: "module",
     },
