@@ -1,5 +1,6 @@
 import type { TSESTree } from "@typescript-eslint/types";
 import type { Reference } from "@typescript-eslint/scope-manager";
+import * as eslintScope from "eslint-scope";
 import {
   Reference as ReferenceClass,
   Variable as VariableClass,
@@ -13,10 +14,7 @@ import type { VisitorKeys } from "@typescript-eslint/visitor-keys";
 import { traverseNodes } from "../../traverse";
 import { addElementsToSortedArray, addElementToSortedArray } from "../../util";
 
-export const READ_FLAG = 1;
-const WRITE_FLAG = 2;
-const READ_WRITE_FLAG = 3;
-export const REFERENCE_TYPE_VALUE_FLAG = 1;
+const REFERENCE_TYPE_VALUE_FLAG = 1;
 const REFERENCE_TYPE_TYPE_FLAG = 2;
 
 /**
@@ -87,18 +85,24 @@ export function addVirtualReference(
     forceUsed?: boolean;
   },
 ): Reference {
+  const referenceFlag =
+    status.write && status.read
+      ? eslintScope.Reference.RW
+      : status.write
+        ? eslintScope.Reference.WRITE
+        : eslintScope.Reference.READ;
+  const referenceTypeFlag = status.typeRef
+    ? REFERENCE_TYPE_TYPE_FLAG
+    : REFERENCE_TYPE_VALUE_FLAG;
+
   const reference = new ReferenceClass(
     node,
     scope,
-    status.write && status.read
-      ? READ_WRITE_FLAG
-      : status.write
-        ? WRITE_FLAG
-        : READ_FLAG,
+    referenceFlag,
     undefined, // writeExpr
     undefined, // maybeImplicitGlobal
     undefined, // init
-    status.typeRef ? REFERENCE_TYPE_TYPE_FLAG : REFERENCE_TYPE_VALUE_FLAG,
+    referenceTypeFlag,
   );
   (reference as any).astroVirtualReference = true;
 
