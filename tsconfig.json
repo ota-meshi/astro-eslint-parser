@@ -15,6 +15,7 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "types": ["mocha", "node"],
 
     "paths": {
       // Since multiple type definitions are provided, specify the definition here to avoid an error.
