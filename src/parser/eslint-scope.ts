@@ -8,7 +8,7 @@ import type { TSESTree } from "@typescript-eslint/types";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declare only
 declare class BaseReferencer {
   public constructor(
-    options: eslintScope.AnalysisOptions,
+    options: eslintScope.AnalyzeOptions,
     scopeManager: eslintScope.ScopeManager,
   );
 

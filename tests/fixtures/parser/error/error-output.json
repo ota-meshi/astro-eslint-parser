@@ -1,6 +1,6 @@
 {
-  "index": 10,
+  "index": 13,
   "lineNumber": 3,
-  "message": "Type expected.",
+  "message": "Unexpected token",
   "column": 0
 }

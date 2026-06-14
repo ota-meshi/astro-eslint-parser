@@ -86,27 +86,19 @@ export class LinesAndColumns {
 
   private readonly code: string;
 
-  private readonly normalizedLineFeed: NormalizedLineFeed;
-
   public constructor(origCode: string) {
     const len = origCode.length;
     const lineStartIndices = [0];
-    const crs = [];
-    let normalizedCode = "";
     for (let index = 0; index < len; ) {
       const c = origCode[index++];
       if (c === "\r") {
         const next = origCode[index++] || "";
         if (next === "\n") {
-          normalizedCode += next;
-          crs.push(index - 2);
           lineStartIndices.push(index);
         } else {
-          normalizedCode += `\n${next}`;
           lineStartIndices.push(index - 1);
         }
       } else {
-        normalizedCode += c;
         if (c === "\n") {
           lineStartIndices.push(index);
         }
@@ -115,8 +107,6 @@ export class LinesAndColumns {
 
     this.lineStartIndices = lineStartIndices;
     this.code = origCode;
-    //
-    this.normalizedLineFeed = new NormalizedLineFeed(normalizedCode, crs);
   }
 
   public getLocFromIndex(index: number): { line: number; column: number } {
@@ -140,49 +130,5 @@ export class LinesAndColumns {
       return this.code.length + loc.column;
     }
     return this.code.length + loc.column;
-  }
-
-  public getNormalizedLineFeed(): NormalizedLineFeed {
-    return this.normalizedLineFeed;
-  }
-}
-
-export class NormalizedLineFeed {
-  public readonly code: string;
-
-  private readonly offsets: number[];
-
-  public get needRemap(): boolean {
-    return this.offsets.length > 0;
-  }
-
-  /**
-   * Remap index
-   */
-  public readonly remapIndex: (index: number) => number;
-
-  public constructor(code: string, offsets: number[]) {
-    this.code = code;
-    this.offsets = offsets;
-    if (offsets.length) {
-      const cache: Record<number, number> = {};
-      this.remapIndex = (index: number) => {
-        let result = cache[index];
-        if (result != null) {
-          return result;
-        }
-        result = index;
-        for (const offset of offsets) {
-          if (offset < result) {
-            result++;
-          } else {
-            break;
-          }
-        }
-        return (cache[index] = result);
-      };
-    } else {
-      this.remapIndex = (i) => i;
-    }
   }
 }
