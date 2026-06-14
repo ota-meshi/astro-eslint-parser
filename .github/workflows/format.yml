@@ -3,6 +3,9 @@ name: 👔 Format
 on:
   workflow_dispatch: null
 
+permissions:
+  contents: write
+
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -14,8 +17,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
+          cache: npm
       - name: Install deps
-        run: npm install -f
+        run: npm ci
       - name: build
         run: |
           npm run build
