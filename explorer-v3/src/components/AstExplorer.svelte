@@ -26,14 +26,10 @@ let b = 2;
 
   $: language = filePath?.endsWith(".md") ? "markdown" : "astro";
   if (typeof window !== "undefined")
-    astroEslintParser
-      .setup()
-      .then(async () => {
-        tsParser = await import("@typescript-eslint/parser");
-      })
-      .then(() => {
-        waiting = false;
-      });
+    import("@typescript-eslint/parser").then((parser) => {
+      tsParser = parser;
+      waiting = false;
+    });
 
   $: {
     // eslint-disable-next-line no-unused-expressions -- reactive
