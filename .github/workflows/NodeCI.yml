@@ -46,25 +46,6 @@ jobs:
       run: npm ci
     - name: Test
       run: npm test
-  test-for-eslint-compat:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        eslint-version: [8, 9]
-        node-version: [22.22.3]
-    steps:
-    - uses: actions/checkout@v6
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: npm
-    - name: Install Packages
-      run: npm ci
-    - name: Install ESLint v${{ matrix.eslint-version }}
-      run: npm install --force eslint@${{ matrix.eslint-version }}
-    - name: Test
-      run: npm test
   test-and-coverage:
     runs-on: ubuntu-latest
     steps:

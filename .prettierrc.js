@@ -1,5 +1,3 @@
-"use strict";
-
-module.exports = {
+export default {
   plugins: ["prettier-plugin-astro", "prettier-plugin-svelte"],
 };

@@ -3,6 +3,7 @@ import path from "path";
 import type { BasicParserObject } from "./parser-object";
 
 let espreeCache: BasicParserObject | null = null;
+const require = createRequire(import.meta.url);
 
 /** Checks if given path is linter path */
 function isLinterPath(p: string): boolean {
@@ -30,7 +31,6 @@ export function getEspree(): BasicParserObject {
       }
     }
     if (!espreeCache) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
       espreeCache = require("espree");
     }
   }

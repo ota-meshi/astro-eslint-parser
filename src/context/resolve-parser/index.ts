@@ -1,7 +1,10 @@
+import { createRequire } from "module";
 import type { UserOptionParser } from "../parser-options";
 import { getEspree } from "./espree";
 import type { ParserObject } from "./parser-object";
 import { isParserObject } from "./parser-object";
+
+const require = createRequire(import.meta.url);
 
 /** Get parser for script lang */
 export function getParserForLang(
@@ -32,7 +35,6 @@ export function getParser(
     return parserValue;
   }
   if (parserValue !== "espree") {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports -- ignore
     return require(parserValue);
   }
   return getEspree();
