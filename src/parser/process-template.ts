@@ -12,7 +12,7 @@ import type {
   JSXSpreadAttributeNode,
   LiteralNode,
   JSXExpressionContainerNode,
-} from "./astro-parser/types";
+} from "../astro/types";
 import { AST_TOKEN_TYPES, AST_NODE_TYPES } from "@typescript-eslint/types";
 import type { TSESTree } from "@typescript-eslint/types";
 import type { Context } from "../context";
@@ -30,11 +30,10 @@ import type {
 import { removeAllScopeAndVariableAndReference } from "./scope";
 import {
   isJSXElementOrFragment,
-  isNode,
   isShorthandAttribute,
   isSyntheticFragment,
-} from "./astro-parser/node";
-import { getKeys } from "../traverse";
+} from "../astro/node";
+import { walk } from "../astro/walker";
 
 type AnalyzedAttributeData =
   | AnalyzedSpreadAttributeData
@@ -829,40 +828,16 @@ function walkExpression(
   leave: (node: AstroFrontmatterNode | TemplateNode) => void,
 ) {
   const walked = new Set<UnknownNode>();
-  const buffer: UnknownNode[] = [node];
-  while (buffer.length > 0) {
-    const current = buffer.pop()!;
-    if (walked.has(current)) {
-      continue;
+  walk(node, (child, _parents, ctx) => {
+    if (walked.has(child)) {
+      return;
     }
-    walked.add(current);
-
-    if (isWalkableNode(current)) {
-      // If the node is a walkable template node,
-      // walk it with the same walker as the main traversal
-      // so that all template-shaped nodes inside it are also passed through the enter/leave hooks.
-      walkChild(current, enter, leave);
-    } else {
-      const keys = getKeys(current);
-      const children: UnknownNode[] = [];
-      for (const key of keys) {
-        const value: unknown = (current as any)[key];
-        if (Array.isArray(value)) {
-          for (const element of value) {
-            if (isNode(element)) {
-              children.push(element);
-            }
-          }
-        } else if (isNode(value)) {
-          children.push(value);
-        }
-      }
-
-      // Add child nodes to the buffer.
-      // A stack (LIFO) is used because child nodes need to be processed before the next sibling nodes.
-      buffer.push(...children.sort((a, b) => b.start - a.start));
+    walked.add(child);
+    if (isWalkableNode(child)) {
+      walkChild(child, enter, leave);
+      ctx.skipChildren();
     }
-  }
+  });
 }
 
 /**

@@ -1,4 +1,4 @@
-import type { ParseResult } from "./astro-parser/types";
+import type { ParseResult } from "../astro/types";
 import { Context } from "../context";
 import { ParseError } from "../errors";
 import { parse as parseAstro } from "./astro-parser/parse";

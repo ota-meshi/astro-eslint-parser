@@ -1,4 +1,4 @@
-import type { ParseResult } from "./types";
+import type { ParseResult } from "../../astro/types";
 import type { Context } from "../../context";
 import { parse as parseAstro } from "@astrojs/compiler-rs";
 import { ParseError } from "../../errors";
