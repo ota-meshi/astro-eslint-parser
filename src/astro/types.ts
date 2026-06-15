@@ -40,6 +40,11 @@ export type AstroFrontmatterNode = LocatedNode & {
   program: ProgramNode;
 };
 
+export type AstroScriptNode = LocatedNode & {
+  type: "AstroScript";
+  program: ProgramNode;
+};
+
 export type ProgramNode = LocatedNode & {
   type: "Program";
   body: UnknownNode[];
@@ -68,7 +73,7 @@ export type JSXElementNode = LocatedNode & {
   type: "JSXElement";
   openingElement: JSXOpeningElementNode;
   closingElement: JSXClosingElementNode | null;
-  children: TemplateNode[];
+  children: (TemplateNode | AstroScriptNode)[];
 };
 
 export type JSXOpeningElementNode = LocatedNode & {
