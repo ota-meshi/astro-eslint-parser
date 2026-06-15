@@ -810,6 +810,7 @@ function walkChild(
   enter(node);
   if (isJSXElementOrFragment(node)) {
     for (const child of node.children) {
+      if (child.type === "AstroScript") continue;
       walkChild(child, enter, leave);
     }
   } else if (node.type === "JSXExpressionContainer") {
