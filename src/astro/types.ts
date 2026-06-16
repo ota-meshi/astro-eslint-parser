@@ -1,19 +1,8 @@
-export type DiagnosticSeverity = "error" | "warning" | "information" | "hint";
+import type * as compilerBinding from "@astrojs/compiler-binding";
 
-export type DiagnosticLabel = {
-  text: string | null;
-  start: number;
-  end: number;
-  line: number;
-  column: number;
-};
-
-export type DiagnosticMessage = {
-  severity: DiagnosticSeverity;
-  text: string;
-  hint?: string;
-  labels?: DiagnosticLabel[];
-};
+export type DiagnosticSeverity = compilerBinding.DiagnosticMessage["severity"];
+export type DiagnosticLabel = compilerBinding.DiagnosticLabel;
+export type DiagnosticMessage = compilerBinding.DiagnosticMessage;
 
 export type ParseResult = {
   ast: AstroRootNode;
