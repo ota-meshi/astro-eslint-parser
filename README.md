@@ -19,7 +19,6 @@ This parser is in the ***experimental stages*** of development.
 
 At least it works fine with a [withastro/docs](https://github.com/withastro/docs) repository.
 
-[@astrojs/compiler]: https://github.com/withastro/compiler
 
 ## :checkered_flag: Motivation
 
@@ -39,23 +38,27 @@ ESLint plugin for Astro component.
 npm install --save-dev eslint astro-eslint-parser
 ```
 
+This package is ESM-only. Use `import` to load it from JavaScript config files.
+CommonJS `require("astro-eslint-parser")` is not supported.
+
 ## 📖 Usage
 
 **First, we recommend using [eslint-plugin-astro] rather than just the parser.**  
-The following usage it are for introducing only the parser. This is not useful for most people. It can be useful if you create your own plugin.
+The following examples are for introducing only the parser. This is not useful for most people. It can be useful if you create your own plugin.
 
-1. Write `overrides[*].parser` option into your `.eslintrc.*` file.
+1. Configure `languageOptions.parser` for `.astro` files in your `eslint.config.*` file.
 
-    ```json
-    {
-        "extends": "eslint:recommended",
-        "overrides": [
-            {
-                "files": ["*.astro"],
-                "parser": "astro-eslint-parser"
-            }
-        ]
-    }
+    ```js
+    import * as astroParser from "astro-eslint-parser"
+
+    export default [
+        {
+            files: ["**/*.astro"],
+            languageOptions: {
+                parser: astroParser,
+            },
+        },
+    ]
     ```
 
 2. If you have specified the extension in the CLI, add `.astro` as well.
@@ -68,24 +71,39 @@ The following usage it are for introducing only the parser. This is not useful f
 
 The commit diff [here](https://github.com/withastro/astro.build/compare/main...ota-meshi:eslint) is an example of introducing this parser to the `astro.build` repository.
 
+### Public API
+
+Import this package from the package root:
+
+```js
+import * as astroParser from "astro-eslint-parser"
+```
+
 ## 🔧 Options
 
 `parserOptions` has the same properties as what [espree](https://github.com/eslint/espree#usage), the default parser of ESLint, is supporting.
 For example:
 
-```json
-{
-    "parser": "astro-eslint-parser",
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 2021,
-        "ecmaFeatures": {
-            "globalReturn": false,
-            "impliedStrict": false,
-            "jsx": false
-        }
-    }
-}
+```js
+import * as astroParser from "astro-eslint-parser"
+
+export default [
+    {
+        files: ["**/*.astro"],
+        languageOptions: {
+            parser: astroParser,
+            parserOptions: {
+                sourceType: "module",
+                ecmaVersion: 2021,
+                ecmaFeatures: {
+                    globalReturn: false,
+                    impliedStrict: false,
+                    jsx: false,
+                },
+            },
+        },
+    },
+]
 ```
 
 ### parserOptions.parser
@@ -94,52 +112,63 @@ You can use `parserOptions.parser` property to specify a custom parser to parse 
 Other properties than parser would be given to the specified parser.
 For example:
 
-```json
-{
-    "parser": "astro-eslint-parser",
-    "parserOptions": {
-        "parser": "@typescript-eslint/parser"
-    }
-}
+```js
+import * as astroParser from "astro-eslint-parser"
+
+export default [
+    {
+        files: ["**/*.astro"],
+        languageOptions: {
+            parser: astroParser,
+            parserOptions: {
+                parser: "@typescript-eslint/parser",
+            },
+        },
+    },
+]
 ```
 
 For example, if you are using the `"@typescript-eslint/parser"`, and if you want to use TypeScript in `.astro`, you need to add more `parserOptions` configuration.
 
 ```js
-module.exports = {
-  // ...
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    // ...
-    project: "path/to/your/tsconfig.json",
-    extraFileExtensions: [".astro"], // This is a required setting in `@typescript-eslint/parser` v5.
-  },
-  overrides: [
+import tsParser from "@typescript-eslint/parser"
+import * as astroParser from "astro-eslint-parser"
+
+export default [
     {
-      files: ["*.astro"],
-      parser: "astro-eslint-parser",
-      // Parse the script in `.astro` as TypeScript by adding the following configuration.
-      parserOptions: {
-        parser: "@typescript-eslint/parser",
-      },
+        files: ["**/*.astro"],
+        languageOptions: {
+            parser: astroParser,
+            parserOptions: {
+                parser: tsParser,
+                project: "path/to/your/tsconfig.json",
+                extraFileExtensions: [".astro"],
+            },
+        },
     },
-    // ...
-  ],
-  // ...
-}
+]
 ```
 
-When using JavaScript configuration (`.eslintrc.js`), you can also give the parser object directly.
+You can also give different parsers for different languages.
 
 ```js
-const tsParser = require("@typescript-eslint/parser")
+import tsParser from "@typescript-eslint/parser"
+import * as astroParser from "astro-eslint-parser"
 
-module.exports = {
-    parser: "astro-eslint-parser",
-    parserOptions: {
-        parser: tsParser,
+export default [
+    {
+        files: ["**/*.astro"],
+        languageOptions: {
+            parser: astroParser,
+            parserOptions: {
+                parser: {
+                    ts: tsParser,
+                    js: "espree",
+                },
+            },
+        },
     },
-}
+]
 ```
 
 ## :computer: Editor Integrations
