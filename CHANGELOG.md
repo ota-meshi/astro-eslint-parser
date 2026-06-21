@@ -1,5 +1,17 @@
 # astro-eslint-parser
 
+## 2.0.0
+
+### Major Changes
+
+- [#436](https://github.com/ota-meshi/astro-eslint-parser/pull/436) [`9c9f8d5`](https://github.com/ota-meshi/astro-eslint-parser/commit/9c9f8d5b0ecd59d7a44e69b7faea71af1835ca60) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Drop support for old Node.js versions. `astro-eslint-parser` now supports Node.js `^22.22.3 || ^24.16.0 || >=26.3.0`.
+
+- [#438](https://github.com/ota-meshi/astro-eslint-parser/pull/438) [`e843234`](https://github.com/ota-meshi/astro-eslint-parser/commit/e8432344eb339deb173321f9fccc09413f252241) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Update the parser's ESLint integration dependencies for ESLint 10, including `espree@11`, `eslint-scope@9`, and `eslint-visitor-keys@5`.
+
+- [#441](https://github.com/ota-meshi/astro-eslint-parser/pull/441) [`48ebdd1`](https://github.com/ota-meshi/astro-eslint-parser/commit/48ebdd1c4a81ae872ae9a7808fe23d17a18e3303) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Switch the package to ESM-only output and replace the build pipeline with tsdown.
+
+- [#442](https://github.com/ota-meshi/astro-eslint-parser/pull/442) [`ce311c5`](https://github.com/ota-meshi/astro-eslint-parser/commit/ce311c59d60aa3e65b54e06c585c7fb8a3e70748) Thanks [@renovate](https://github.com/apps/renovate)! - feat: update dependencies
+
 ## 1.4.0
 
 ### Minor Changes
