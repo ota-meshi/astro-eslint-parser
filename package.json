@@ -83,7 +83,7 @@
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
     "@typescript-eslint/typescript-estree": "^8.61.0",
-    "astro": "^6.0.0",
+    "astro": "^7.0.0",
     "astro-eslint-parser": ">=0.1.0",
     "benchmark": "^2.1.4",
     "chai": "^6.0.0",
