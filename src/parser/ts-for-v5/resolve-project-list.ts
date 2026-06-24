@@ -3,8 +3,7 @@
  * Code updated to exclude caching.
  */
 
-import { globSync } from "tinyglobby";
-import isGlob from "is-glob";
+import { globSync, isDynamicPattern as isGlob } from "tinyglobby";
 import * as path from "path";
 import { createRequire } from "module";
 
