@@ -1,5 +1,13 @@
 # astro-eslint-parser
 
+## 2.1.0
+
+### Minor Changes
+
+- [#448](https://github.com/ota-meshi/astro-eslint-parser/pull/448) [`245f053`](https://github.com/ota-meshi/astro-eslint-parser/commit/245f0536b7907906408d97d7b33a1d7fb014dd44) Thanks [@kytta](https://github.com/kytta)! - Replace fast-glob and is-glob with tinyglobby.
+
+  This improves performance and reduces the number of transitive dependencies by 17.
+
 ## 2.0.0
 
 ### Major Changes
