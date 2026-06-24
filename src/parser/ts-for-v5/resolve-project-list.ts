@@ -41,15 +41,7 @@ export function resolveProjectList(
 
   const projectFolderIgnoreList = (
     options.projectFolderIgnoreList ?? ["**/node_modules/**"]
-  )
-    .reduce<string[]>((acc, folder) => {
-      if (typeof folder === "string") {
-        acc.push(folder);
-      }
-      return acc;
-    }, [])
-    // prefix with a ! for not match glob
-    .map((folder) => (folder.startsWith("!") ? folder : `!${folder}`));
+  ).filter((folder) => typeof folder === "string");
 
   // Transform glob patterns into paths
   const nonGlobProjects = sanitizedProjects.filter(
@@ -62,9 +54,10 @@ export function resolveProjectList(
       .concat(
         globProjects.length === 0
           ? []
-          : globSync([...globProjects, ...projectFolderIgnoreList], {
+          : globSync(globProjects, {
               cwd: options.tsconfigRootDir,
               expandDirectories: false,
+              ignore: projectFolderIgnoreList,
             }),
       )
       .map((project) =>
