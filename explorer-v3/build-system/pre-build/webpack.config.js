@@ -19,6 +19,7 @@ const alias = {
   util: resolve("../shim/util.js"),
   typescript: resolve("../shim/typescript.js"),
   "fast-glob": resolve("../shim/fast-glob.js"),
+  tinyglobby: resolve("../shim/tinyglobby.js"),
 };
 
 function getBase(name) {
