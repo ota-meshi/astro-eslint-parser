@@ -3,16 +3,13 @@
  * Code updated to exclude caching.
  */
 
-import fastGlob from "fast-glob";
-import isGlob from "is-glob";
+import { globSync, isDynamicPattern as isGlob } from "tinyglobby";
 import * as path from "path";
 import { createRequire } from "module";
 
 import type { ParserOptions } from "@typescript-eslint/types";
 import type { TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import type { TS } from "../../types";
-
-const { sync: globSync } = fastGlob;
 
 /**
  * Normalizes, sanitizes, resolves and filters the provided project paths
@@ -43,15 +40,7 @@ export function resolveProjectList(
 
   const projectFolderIgnoreList = (
     options.projectFolderIgnoreList ?? ["**/node_modules/**"]
-  )
-    .reduce<string[]>((acc, folder) => {
-      if (typeof folder === "string") {
-        acc.push(folder);
-      }
-      return acc;
-    }, [])
-    // prefix with a ! for not match glob
-    .map((folder) => (folder.startsWith("!") ? folder : `!${folder}`));
+  ).filter((folder) => typeof folder === "string");
 
   // Transform glob patterns into paths
   const nonGlobProjects = sanitizedProjects.filter(
@@ -64,8 +53,10 @@ export function resolveProjectList(
       .concat(
         globProjects.length === 0
           ? []
-          : globSync([...globProjects, ...projectFolderIgnoreList], {
+          : globSync(globProjects, {
               cwd: options.tsconfigRootDir,
+              expandDirectories: false,
+              ignore: projectFolderIgnoreList,
             }),
       )
       .map((project) =>
