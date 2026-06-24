@@ -64,7 +64,6 @@
     "eslint-scope": "^9.1.2",
     "eslint-visitor-keys": "^5.0.1",
     "espree": "^11.2.0",
-    "is-glob": "^4.0.3",
     "semver": "^7.3.8",
     "tinyglobby": "^0.2.17"
   },
