@@ -3,7 +3,7 @@
  * Code updated to exclude caching.
  */
 
-import fastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 import isGlob from "is-glob";
 import * as path from "path";
 import { createRequire } from "module";
@@ -11,8 +11,6 @@ import { createRequire } from "module";
 import type { ParserOptions } from "@typescript-eslint/types";
 import type { TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import type { TS } from "../../types";
-
-const { sync: globSync } = fastGlob;
 
 /**
  * Normalizes, sanitizes, resolves and filters the provided project paths
@@ -66,6 +64,7 @@ export function resolveProjectList(
           ? []
           : globSync([...globProjects, ...projectFolderIgnoreList], {
               cwd: options.tsconfigRootDir,
+              expandDirectories: false,
             }),
       )
       .map((project) =>
