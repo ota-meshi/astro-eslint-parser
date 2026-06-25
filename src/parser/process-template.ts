@@ -212,14 +212,14 @@ export function processTemplate(
               analyzed.kind === "expression" ||
               analyzed.kind === "template-literal"
             ) {
-              const attrName = getAttributeName(analyzed);
+              const attrName = getJsxName(analyzed.node.name);
               const needPunctuatorsProcess =
                 tagType === "component"
                   ? /[.:@]/u.test(attrName)
                   : /[.@]/u.test(attrName) || attrName.startsWith(":");
 
               if (needPunctuatorsProcess) {
-                processAttributePunctuators(analyzed);
+                processAttributePunctuators(analyzed.node);
               }
             }
             if (analyzed.kind === "literal-value") {
@@ -260,7 +260,7 @@ export function processTemplate(
                 );
               }
             } else if (analyzed.kind === "shorthand") {
-              const attrName = getAttributeName(analyzed);
+              const attrName = getJsxName(analyzed.node.name);
               const start = getShorthandAttributeOpeningBraceOffset(
                 analyzed.node,
               );
@@ -331,7 +331,7 @@ export function processTemplate(
             node.openingElement.attributes.some((attr) => {
               const analyzed = analyzeAttribute(attr);
               if (analyzed.kind === "spread") return false;
-              return getAttributeName(analyzed) === "is:raw";
+              return getJsxName(analyzed.node.name) === "is:raw";
             })
           ) {
             const text = getRawTextContent(node);
@@ -604,7 +604,7 @@ export function processTemplate(
         node: attr as JSXAttributeNode & { value: null },
       };
     }
-    if (isShorthandAttribute(attr)) {
+    if (isShorthandAttribute(attr, code)) {
       return {
         kind: "shorthand",
         node: attr,
@@ -657,15 +657,9 @@ export function processTemplate(
   /**
    * Process for attribute punctuators
    */
-  function processAttributePunctuators(
-    attr:
-      | AnalyzedEmptyAttributeData
-      | AnalyzedLiteralValueAttributeData
-      | AnalyzedTemplateLiteralAttributeData
-      | AnalyzedExpressionAttributeData,
-  ) {
-    const name = getAttributeName(attr);
-    const start = attr.node.name.start;
+  function processAttributePunctuators(attr: JSXAttributeNode) {
+    const name = getJsxName(attr.name);
+    const start = attr.name.start;
     let targetIndex = start;
     let colonOffset: number | undefined;
     for (let index = 0; index < name.length; index++) {
@@ -901,19 +895,4 @@ function calcContentEndOffset(node: JSXElementNode): number {
     return lastChild.end;
   }
   return node.openingElement.end;
-}
-
-/** Get an Astro attribute name. */
-function getAttributeName(
-  attr:
-    | AnalyzedEmptyAttributeData
-    | AnalyzedShorthandAttributeData
-    | AnalyzedLiteralValueAttributeData
-    | AnalyzedTemplateLiteralAttributeData
-    | AnalyzedExpressionAttributeData,
-): string {
-  if (attr.kind === "shorthand") {
-    return getJsxName(attr.node.name).replace(/\}$/u, "");
-  }
-  return getJsxName(attr.node.name);
 }
