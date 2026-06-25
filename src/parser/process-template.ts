@@ -1,16 +1,20 @@
-import type { ParseResult } from "@astrojs/compiler";
+import type {
+  AstroRootNode,
+  AttributeNode,
+  JSXElementNode,
+  JSXNameNode,
+  LocatedNode,
+  TemplateNode,
+  ParseResult,
+  AstroFrontmatterNode,
+  UnknownNode,
+  JSXAttributeNode,
+  JSXSpreadAttributeNode,
+  LiteralNode,
+  JSXExpressionContainerNode,
+} from "../astro/types";
 import { AST_TOKEN_TYPES, AST_NODE_TYPES } from "@typescript-eslint/types";
 import type { TSESTree } from "@typescript-eslint/types";
-import {
-  calcAttributeEndOffset,
-  calcAttributeValueStartOffset,
-  getSelfClosingTag,
-  isTag,
-  walkElements,
-  getEndTag,
-  calcContentEndOffset,
-  getEndOffset,
-} from "../astro";
 import type { Context } from "../context";
 import { VirtualScriptContext } from "../context/script";
 import type {
@@ -23,8 +27,45 @@ import type {
   AstroTemplateLiteralAttribute,
   JSXElement,
 } from "../ast";
-import type { AttributeNode } from "@astrojs/compiler/types";
 import { removeAllScopeAndVariableAndReference } from "./scope";
+import {
+  isJSXElementOrFragment,
+  isShorthandAttribute,
+  isSyntheticFragment,
+} from "../astro/node";
+import { walk } from "../astro/walker";
+
+type AnalyzedAttributeData =
+  | AnalyzedSpreadAttributeData
+  | AnalyzedEmptyAttributeData
+  | AnalyzedShorthandAttributeData
+  | AnalyzedLiteralValueAttributeData
+  | AnalyzedTemplateLiteralAttributeData
+  | AnalyzedExpressionAttributeData;
+type AnalyzedSpreadAttributeData = {
+  kind: "spread";
+  node: JSXSpreadAttributeNode;
+};
+type AnalyzedEmptyAttributeData = {
+  kind: "empty";
+  node: JSXAttributeNode & { value: null };
+};
+type AnalyzedShorthandAttributeData = {
+  kind: "shorthand";
+  node: JSXAttributeNode & { value: JSXExpressionContainerNode };
+};
+type AnalyzedLiteralValueAttributeData = {
+  kind: "literal-value";
+  node: JSXAttributeNode & { value: LiteralNode };
+};
+type AnalyzedTemplateLiteralAttributeData = {
+  kind: "template-literal";
+  node: JSXAttributeNode & { value: JSXExpressionContainerNode };
+};
+type AnalyzedExpressionAttributeData = {
+  kind: "expression";
+  node: JSXAttributeNode & { value: JSXExpressionContainerNode };
+};
 
 /**
  * Process the template to generate a ScriptContext.
@@ -37,6 +78,7 @@ export function processTemplate(
   const usedUniqueIds = new Set<string>();
 
   const script = new VirtualScriptContext(ctx);
+  const code = ctx.code;
 
   let fragmentOpened = false;
 
@@ -66,24 +108,31 @@ export function processTemplate(
 
   walkElements(
     resultTemplate.ast,
-    ctx.code,
-    // eslint-disable-next-line complexity -- X(
-    (node, [parent]) => {
-      if (node.type === "frontmatter") {
-        const start = node.position!.start.offset;
+    // eslint-disable-next-line complexity -- Template generation handles several Astro node forms.
+    (node) => {
+      if (node.type === "AstroFrontmatter") {
         if (fragmentOpened) {
           script.appendVirtualScript("</>;");
           fragmentOpened = false;
         }
+        let start = node.start;
+
+        // Skip until a front matter fence is found.
+        // If there is whitespace before the fence,
+        // the Node's start method will return the first whitespace, so this needs to be adjusted.
+        while (code[start] !== "-") {
+          start++;
+        }
+
         script.appendOriginal(start);
         script.skipOriginalOffset(3);
-        const end = getEndOffset(node, ctx);
+        const end = node.end;
         const scriptStart = start + 3;
         let scriptEnd = end - 3;
         let endChar: string;
         while (
           scriptStart < scriptEnd - 1 &&
-          (endChar = ctx.code[scriptEnd - 1]) &&
+          (endChar = code[scriptEnd - 1]) &&
           !endChar.trim()
         ) {
           scriptEnd--;
@@ -109,209 +158,217 @@ export function processTemplate(
         );
 
         script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
-          node.position!.start.offset,
-          node.position!.start.offset + 3,
+          start,
+          start + 3,
         ]);
         script.restoreContext.addToken(AST_TOKEN_TYPES.Punctuator, [
           end - 3,
           end,
         ]);
-      } else if (isTag(node)) {
-        // Process for multiple tag
-        if (parent.type === "expression") {
-          const siblings = parent.children.filter(
-            (n) => n.type !== "text" || n.value.trim(),
-          );
-          const index = siblings.indexOf(node);
-          const before = siblings[index - 1];
-          if (!before || !isTag(before)) {
-            const after = siblings[index + 1];
-            if (after && (isTag(after) || after.type === "comment")) {
-              const start = node.position!.start.offset;
+      } else if (isJSXElementOrFragment(node)) {
+        const start = node.start;
+        script.appendOriginal(start);
+        if (!fragmentOpened) {
+          openRootFragment(start);
+        }
+
+        if (node.type === "JSXFragment") {
+          if (isSyntheticFragment(node)) {
+            const start = node.start;
+            script.appendOriginal(start);
+            script.appendVirtualScript("<>");
+            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
+              if (
+                scriptNode.range[0] === start &&
+                scriptNode.type === AST_NODE_TYPES.JSXFragment
+              ) {
+                delete (scriptNode as any).openingFragment;
+                delete (scriptNode as any).closingFragment;
+                const fragmentNode = scriptNode as unknown as AstroFragment;
+                fragmentNode.type = "AstroFragment";
+                const last =
+                  fragmentNode.children[fragmentNode.children.length - 1];
+                if (last && fragmentNode.range[1] < last.range[1]) {
+                  fragmentNode.range[1] = last.range[1];
+                  fragmentNode.loc.end = ctx.getLocFromIndex(
+                    fragmentNode.range[1],
+                  );
+                }
+                return true;
+              }
+              return false;
+            });
+          }
+        } else {
+          const tagType = getTagType(node);
+
+          // Process for attributes
+          for (const attr of node.openingElement.attributes) {
+            const analyzed = analyzeAttribute(attr);
+
+            if (
+              analyzed.kind === "literal-value" ||
+              analyzed.kind === "empty" ||
+              analyzed.kind === "expression" ||
+              analyzed.kind === "template-literal"
+            ) {
+              const attrName = getJsxName(analyzed.node.name);
+              const needPunctuatorsProcess =
+                tagType === "component"
+                  ? /[.:@]/u.test(attrName)
+                  : /[.@]/u.test(attrName) || attrName.startsWith(":");
+
+              if (needPunctuatorsProcess) {
+                processAttributePunctuators(analyzed.node);
+              }
+            }
+            if (analyzed.kind === "literal-value") {
+              const raw = code.slice(
+                analyzed.node.value.start,
+                analyzed.node.value.end,
+              );
+              if (raw && !raw.startsWith('"') && !raw.startsWith("'")) {
+                // If the literal value is not quoted in the source,
+                // quote it in the virtual script so that it can be parsed as a valid attribute.
+                const attrStart = analyzed.node.start;
+                const valueStart = analyzed.node.value.start;
+                const attrEnd = analyzed.node.end;
+                script.appendOriginal(valueStart);
+                script.appendVirtualScript('"');
+                script.appendOriginal(attrEnd);
+                script.appendVirtualScript('"');
+
+                script.restoreContext.addRestoreNodeProcess(
+                  (scriptNode, context) => {
+                    if (
+                      scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                      scriptNode.range[0] === attrStart
+                    ) {
+                      const attrNode = scriptNode;
+                      if (
+                        attrNode.value?.type === "Literal" &&
+                        typeof attrNode.value.value === "string"
+                      ) {
+                        const raw = code.slice(valueStart, attrEnd);
+                        attrNode.value.raw = raw;
+                        context.findToken(valueStart)!.value = raw;
+                        return true;
+                      }
+                    }
+                    return false;
+                  },
+                );
+              }
+            } else if (analyzed.kind === "shorthand") {
+              const attrName = getJsxName(analyzed.node.name);
+              const start = getShorthandAttributeOpeningBraceOffset(
+                analyzed.node,
+              );
               script.appendOriginal(start);
-              script.appendVirtualScript("<>");
+              const jsxName = /[\s"'[\]{}]/u.test(attrName)
+                ? generateUniqueId(attrName)
+                : attrName;
+              script.appendVirtualScript(`${jsxName}=`);
+
               script.restoreContext.addRestoreNodeProcess((scriptNode) => {
                 if (
-                  scriptNode.range[0] === start &&
-                  scriptNode.type === AST_NODE_TYPES.JSXFragment
+                  scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                  scriptNode.range[0] === start
                 ) {
-                  delete (scriptNode as any).openingFragment;
-                  delete (scriptNode as any).closingFragment;
-                  const fragmentNode = scriptNode as unknown as AstroFragment;
-                  fragmentNode.type = "AstroFragment";
-                  const last =
-                    fragmentNode.children[fragmentNode.children.length - 1];
-                  if (fragmentNode.range[1] < last.range[1]) {
-                    fragmentNode.range[1] = last.range[1];
-                    fragmentNode.loc.end = ctx.getLocFromIndex(
-                      fragmentNode.range[1],
-                    );
+                  const attrNode =
+                    scriptNode as unknown as AstroShorthandAttribute;
+                  attrNode.type = "AstroShorthandAttribute";
+
+                  const locs = ctx.getLocations(
+                    ...attrNode.value.expression.range,
+                  );
+                  if (jsxName !== attrName) {
+                    attrNode.name.name = attrName;
                   }
+                  attrNode.name.range = locs.range;
+                  attrNode.name.loc = locs.loc;
+                  return true;
+                }
+                return false;
+              });
+            } else if (analyzed.kind === "template-literal") {
+              const attrStart = analyzed.node.start;
+              const valueStart = analyzed.node.value.start;
+              const attrEnd = analyzed.node.end;
+              script.appendOriginal(valueStart);
+              script.appendVirtualScript("{");
+              script.appendOriginal(attrEnd);
+              script.appendVirtualScript("}");
+
+              script.restoreContext.addRestoreNodeProcess((scriptNode) => {
+                if (
+                  scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
+                  scriptNode.range[0] === attrStart
+                ) {
+                  const attrNode =
+                    scriptNode as unknown as AstroTemplateLiteralAttribute;
+                  attrNode.type = "AstroTemplateLiteralAttribute";
                   return true;
                 }
                 return false;
               });
             }
           }
-        }
 
-        const start = node.position!.start.offset;
-        script.appendOriginal(start);
-        if (!fragmentOpened) {
-          openRootFragment(start);
-        }
+          // Process for start tag close
+          const closing = getSelfClosingTag(node);
+          if (closing && closing.end === ">") {
+            script.appendOriginal(closing.offset - 1);
+            script.appendVirtualScript("/");
+          }
 
-        // Process for attributes
-        for (const attr of node.attributes) {
+          const tagName = getJsxName(node.openingElement.name);
+
+          // Process for raw text
           if (
-            attr.kind === "quoted" ||
-            attr.kind === "empty" ||
-            attr.kind === "expression" ||
-            attr.kind === "template-literal"
+            tagName === "script" ||
+            tagName === "style" ||
+            node.openingElement.attributes.some((attr) => {
+              const analyzed = analyzeAttribute(attr);
+              if (analyzed.kind === "spread") return false;
+              return getJsxName(analyzed.node.name) === "is:raw";
+            })
           ) {
-            const needPunctuatorsProcess =
-              node.type === "component" || node.type === "fragment"
-                ? /[.:@]/u.test(attr.name)
-                : /[.@]/u.test(attr.name) || attr.name.startsWith(":");
+            const text = getRawTextContent(node);
+            if (text && text.value) {
+              const styleNodeStart = node.start;
+              script.appendOriginal(text.start);
+              script.skipOriginalOffset(text.value.length);
 
-            if (needPunctuatorsProcess) {
-              processAttributePunctuators(attr);
-            }
-          }
-          if (attr.kind === "quoted") {
-            if (
-              attr.raw &&
-              !attr.raw.startsWith('"') &&
-              !attr.raw.startsWith("'")
-            ) {
-              const attrStart = attr.position!.start.offset;
-              const start = calcAttributeValueStartOffset(attr, ctx);
-              const end = calcAttributeEndOffset(attr, ctx);
-              script.appendOriginal(start);
-              script.appendVirtualScript('"');
-              script.appendOriginal(end);
-              script.appendVirtualScript('"');
-
-              script.restoreContext.addRestoreNodeProcess(
-                (scriptNode, context) => {
-                  if (
-                    scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                    scriptNode.range[0] === attrStart
-                  ) {
-                    const attrNode = scriptNode;
-                    if (
-                      attrNode.value?.type === "Literal" &&
-                      typeof attrNode.value.value === "string"
-                    ) {
-                      const raw = ctx.code.slice(start, end);
-                      attrNode.value.raw = raw;
-                      context.findToken(start)!.value = raw;
-                      return true;
-                    }
-                  }
-                  return false;
-                },
-              );
-            }
-          } else if (attr.kind === "shorthand") {
-            const start = attr.position!.start.offset;
-            script.appendOriginal(start);
-            const jsxName = /[\s"'[\]{}]/u.test(attr.name)
-              ? generateUniqueId(attr.name)
-              : attr.name;
-            script.appendVirtualScript(`${jsxName}=`);
-
-            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
-              if (
-                scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                scriptNode.range[0] === start
-              ) {
-                const attrNode =
-                  scriptNode as unknown as AstroShorthandAttribute;
-                attrNode.type = "AstroShorthandAttribute";
-
-                const locs = ctx.getLocations(
-                  ...attrNode.value.expression.range,
-                );
-                if (jsxName !== attr.name) {
-                  attrNode.name.name = attr.name;
+              script.restoreContext.addRestoreNodeProcess((scriptNode) => {
+                if (
+                  scriptNode.type === AST_NODE_TYPES.JSXElement &&
+                  scriptNode.range[0] === styleNodeStart
+                ) {
+                  const textNode: AstroRawText = {
+                    type: "AstroRawText",
+                    value: text.value,
+                    raw: text.value,
+                    parent: scriptNode as JSXElement,
+                    ...ctx.getLocations(text.start, text.end),
+                  };
+                  scriptNode.children = [
+                    textNode as unknown as TSESTree.JSXText,
+                  ];
+                  return true;
                 }
-                attrNode.name.range = locs.range;
-                attrNode.name.loc = locs.loc;
-                return true;
-              }
-              return false;
-            });
-          } else if (attr.kind === "template-literal") {
-            const attrStart = attr.position!.start.offset;
-            const start = calcAttributeValueStartOffset(attr, ctx);
-            const end = calcAttributeEndOffset(attr, ctx);
-            script.appendOriginal(start);
-            script.appendVirtualScript("{");
-            script.appendOriginal(end);
-            script.appendVirtualScript("}");
-
-            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
-              if (
-                scriptNode.type === AST_NODE_TYPES.JSXAttribute &&
-                scriptNode.range[0] === attrStart
-              ) {
-                const attrNode =
-                  scriptNode as unknown as AstroTemplateLiteralAttribute;
-                attrNode.type = "AstroTemplateLiteralAttribute";
-                return true;
-              }
-              return false;
-            });
+                return false;
+              });
+              script.restoreContext.addToken(AST_TOKEN_TYPES.JSXText, [
+                text.start,
+                text.end,
+              ]);
+            }
           }
         }
-
-        // Process for start tag close
-        const closing = getSelfClosingTag(node, ctx);
-        if (closing && closing.end === ">") {
-          script.appendOriginal(closing.offset - 1);
-          script.appendVirtualScript("/");
-        }
-
-        // Process for raw text
-        if (
-          node.name === "script" ||
-          node.name === "style" ||
-          node.attributes.some((attr) => attr.name === "is:raw")
-        ) {
-          const text = node.children[0];
-          if (text && text.type === "text") {
-            const styleNodeStart = node.position!.start.offset;
-            const start = text.position!.start.offset;
-            script.appendOriginal(start);
-            script.skipOriginalOffset(text.value.length);
-
-            script.restoreContext.addRestoreNodeProcess((scriptNode) => {
-              if (
-                scriptNode.type === AST_NODE_TYPES.JSXElement &&
-                scriptNode.range[0] === styleNodeStart
-              ) {
-                const textNode: AstroRawText = {
-                  type: "AstroRawText",
-                  value: text.value,
-                  raw: text.value,
-                  parent: scriptNode as JSXElement,
-                  ...ctx.getLocations(start, start + text.value.length),
-                };
-                scriptNode.children = [textNode as unknown as TSESTree.JSXText];
-                return true;
-              }
-              return false;
-            });
-            script.restoreContext.addToken(AST_TOKEN_TYPES.JSXText, [
-              start,
-              start + text.value.length,
-            ]);
-          }
-        }
-      } else if (node.type === "comment") {
-        const start = node.position!.start.offset;
-        const end = getEndOffset(node, ctx);
+      } else if (node.type === "AstroComment") {
+        const start = node.start;
+        const end = node.end;
         const length = end - start;
         script.appendOriginal(start);
         if (!fragmentOpened) {
@@ -351,9 +408,9 @@ export function processTemplate(
           start,
           start + length,
         ]);
-      } else if (node.type === "doctype") {
-        const start = node.position!.start.offset;
-        const end = getEndOffset(node, ctx);
+      } else if (node.type === "AstroDoctype") {
+        const start = node.start;
+        const end = node.end;
         const length = end - start;
         script.appendOriginal(start);
         if (!fragmentOpened) {
@@ -393,85 +450,220 @@ export function processTemplate(
           end,
         ]);
       } else {
-        const start = node.position!.start.offset;
+        const start = node.start;
         script.appendOriginal(start);
         if (!fragmentOpened) {
           openRootFragment(start);
         }
       }
     },
-    (node, [parent]) => {
-      if (isTag(node)) {
-        const closing = getSelfClosingTag(node, ctx);
-        if (!closing) {
-          const end = getEndTag(node, ctx);
-          if (!end) {
-            const offset = calcContentEndOffset(node, ctx);
-            script.appendOriginal(offset);
-            script.appendVirtualScript(`</${node.name}>`);
-            script.restoreContext.addRestoreNodeProcess(
-              (scriptNode, context) => {
-                const parent = context.getParent(scriptNode)!;
-                if (
-                  scriptNode.range[0] === offset &&
-                  scriptNode.type === AST_NODE_TYPES.JSXClosingElement &&
-                  parent.type === AST_NODE_TYPES.JSXElement
-                ) {
-                  removeAllScopeAndVariableAndReference(scriptNode, {
-                    visitorKeys: context.result.visitorKeys,
-                    scopeManager: context.result.scopeManager!,
-                  });
-                  parent.closingElement = null;
-                  return true;
-                }
-                return false;
-              },
-            );
-          }
+    (node) => {
+      if (node.type === "JSXElement") {
+        const closing = getSelfClosingTag(node);
+        if (!closing && node.closingElement == null) {
+          const offset = calcContentEndOffset(node);
+          script.appendOriginal(offset);
+          script.appendVirtualScript(
+            `</${getJsxName(node.openingElement.name)}>`,
+          );
+          script.restoreContext.addRestoreNodeProcess((scriptNode, context) => {
+            const parent = context.getParent(scriptNode)!;
+            if (
+              scriptNode.range[0] === offset &&
+              scriptNode.type === AST_NODE_TYPES.JSXClosingElement &&
+              parent.type === AST_NODE_TYPES.JSXElement
+            ) {
+              removeAllScopeAndVariableAndReference(scriptNode, {
+                visitorKeys: context.result.visitorKeys,
+                scopeManager: context.result.scopeManager!,
+              });
+              parent.closingElement = null;
+              return true;
+            }
+            return false;
+          });
         }
       }
-      // Process for multiple tag
-      if (
-        (isTag(node) || node.type === "comment") &&
-        parent.type === "expression"
-      ) {
-        const siblings = parent.children.filter(
-          (n) => n.type !== "text" || n.value.trim(),
-        );
-        const index = siblings.indexOf(node);
-        const after = siblings[index + 1];
-        if (!after || (!isTag(after) && after.type !== "comment")) {
-          const before = siblings[index - 1];
-          if (before && (isTag(before) || before.type === "comment")) {
-            const end = getEndOffset(node, ctx);
-            script.appendOriginal(end);
-            script.appendVirtualScript("</>");
-          }
-        }
+
+      if (node.type === "JSXFragment" && isSyntheticFragment(node)) {
+        script.appendOriginal(node.end);
+        script.appendVirtualScript("</>");
       }
     },
   );
   if (fragmentOpened) {
-    const last =
-      resultTemplate.ast.children[resultTemplate.ast.children.length - 1];
-    const end = getEndOffset(last, ctx);
-    script.appendOriginal(end);
+    const last = findLastJSXNode(resultTemplate.ast);
+    if (last) {
+      script.appendOriginal(last.end);
+    }
     script.appendVirtualScript("</>;");
   }
 
-  script.appendOriginal(ctx.code.length);
+  script.appendOriginal(code.length);
 
   return script;
 
   /**
+   * Walk template nodes in source order from the compiler AST.
+   *
+   * The traversal starts with `AstroRoot`. Root-only source ranges such as
+   * frontmatter fences are handled in the root branch so they do not become
+   * node-shaped intermediate children.
+   */
+  function walkElements(
+    parent: AstroRootNode,
+    enter: (node: AstroFrontmatterNode | TemplateNode) => void,
+    leave: (node: AstroFrontmatterNode | TemplateNode) => void,
+  ): void {
+    const nodes: (TemplateNode | AstroFrontmatterNode)[] = [...parent.body];
+
+    const frontmatter = parent.frontmatter;
+    if (frontmatter && !isEmptyFrontmatter(frontmatter)) {
+      // Walk children in source order, inserting the frontmatter node when we reach its position.
+      let insertIndex = nodes.findIndex(
+        (child) => frontmatter.start <= child.start,
+      );
+
+      if (insertIndex < 0) {
+        insertIndex = nodes.length;
+      }
+      // Remove whitespace-only text nodes before the frontmatter node.
+      while (insertIndex > 0 && isWhitespaceJSXText(nodes[insertIndex - 1])) {
+        nodes.splice(insertIndex - 1, 1);
+        insertIndex--;
+      }
+      // Remove whitespace-only text nodes after the frontmatter node.
+      while (
+        insertIndex < nodes.length &&
+        isWhitespaceJSXText(nodes[insertIndex])
+      ) {
+        nodes.splice(insertIndex, 1);
+      }
+      nodes.splice(insertIndex, 0, frontmatter);
+    }
+
+    // Remove whitespace-only text nodes at the start of the root.
+    while (nodes.length > 0 && isWhitespaceJSXText(nodes[0])) {
+      nodes.shift();
+    }
+    // Remove whitespace-only text nodes at the end of the root.
+    while (nodes.length > 0 && isWhitespaceJSXText(nodes[nodes.length - 1])) {
+      nodes.pop();
+    }
+
+    for (const child of nodes) {
+      walkChild(child, enter, leave);
+    }
+  }
+
+  /** Get raw text content for script, style, and raw nodes. */
+  function getRawTextContent(
+    node: JSXElementNode,
+  ): { start: number; end: number; value: string } | null {
+    if (node.closingElement == null) {
+      return null;
+    }
+    const start = node.openingElement.end;
+    const end = node.closingElement.start;
+    if (start >= end) {
+      return null;
+    }
+    return {
+      start,
+      end,
+      value: code.slice(start, end),
+    };
+  }
+
+  /** Get self-closing tag metadata. */
+  function getSelfClosingTag(node: JSXElementNode): null | {
+    offset: number;
+    end: "/>" | ">";
+  } {
+    if (!node.openingElement?.selfClosing || node.closingElement) {
+      return null;
+    }
+    const offset = node.openingElement.end;
+    return {
+      offset,
+      end: code.startsWith("/>", offset - 2) ? "/>" : ">",
+    };
+  }
+
+  /** Get the Astro attribute kind represented by a compiler node. */
+  function analyzeAttribute(attr: AttributeNode): AnalyzedAttributeData {
+    if (attr.type === "JSXSpreadAttribute") {
+      return {
+        kind: "spread",
+        node: attr,
+      };
+    }
+    if (!attr.value) {
+      return {
+        kind: "empty",
+        node: attr as JSXAttributeNode & { value: null },
+      };
+    }
+    if (isShorthandAttribute(attr, code)) {
+      return {
+        kind: "shorthand",
+        node: attr,
+      };
+    }
+    if (attr.value.type === "Literal") {
+      return {
+        kind: "literal-value",
+        node: attr as JSXAttributeNode & { value: LiteralNode },
+      };
+    }
+    if (
+      attr.value.type === "JSXExpressionContainer" &&
+      code[attr.value.start] === "`"
+    ) {
+      return {
+        kind: "template-literal",
+        node: attr as JSXAttributeNode & { value: JSXExpressionContainerNode },
+      };
+    }
+    return {
+      kind: "expression",
+      node: attr as JSXAttributeNode & { value: JSXExpressionContainerNode },
+    };
+  }
+
+  /**
+   * Get the source offset of the opening `{` for an Astro shorthand attribute.
+   *
+   * The compiler represents `<img {src}>` as a JSXAttribute that starts at
+   * `src`, while the end offset still includes `}`. The virtual JSX needs to
+   * insert `src=` before the original `{src}`, so shorthand processing must use
+   * the brace offset instead of `attr.start`.
+   */
+  function getShorthandAttributeOpeningBraceOffset(
+    attr: JSXAttributeNode,
+  ): number {
+    return code[attr.start - 1] === "{" ? attr.start - 1 : attr.start;
+  }
+
+  /** Check whether a node is whitespace-only text. */
+  function isWhitespaceJSXText(
+    node: TemplateNode | AstroFrontmatterNode,
+  ): boolean {
+    return (
+      node.type === "JSXText" && code.slice(node.start, node.end).trim() === ""
+    );
+  }
+
+  /**
    * Process for attribute punctuators
    */
-  function processAttributePunctuators(attr: AttributeNode) {
-    const start = attr.position!.start.offset;
+  function processAttributePunctuators(attr: JSXAttributeNode) {
+    const name = getJsxName(attr.name);
+    const start = attr.name.start;
     let targetIndex = start;
     let colonOffset: number | undefined;
-    for (let index = 0; index < attr.name.length; index++) {
-      const char = attr.name[index];
+    for (let index = 0; index < name.length; index++) {
+      const char = name[index];
       if (char !== ":" && char !== "." && char !== "@") {
         continue;
       }
@@ -499,12 +691,12 @@ export function processTemplate(
       ]);
       script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
         punctuatorIndex + 1,
-        start + attr.name.length,
+        start + name.length,
       ]);
     } else {
       script.restoreContext.addToken(AST_TOKEN_TYPES.JSXIdentifier, [
         start,
-        start + attr.name.length,
+        start + name.length,
       ]);
     }
     script.restoreContext.addRestoreNodeProcess((scriptNode, context) => {
@@ -518,19 +710,21 @@ export function processTemplate(
           nameNode.type = AST_NODE_TYPES.JSXNamespacedName;
           nameNode.namespace = {
             type: AST_NODE_TYPES.JSXIdentifier,
-            name: attr.name.slice(0, colonOffset),
+            name: name.slice(0, colonOffset),
             ...ctx.getLocations(
               baseNameNode.range[0],
               baseNameNode.range[0] + colonOffset,
             ),
+            parent: undefined as never,
           };
           nameNode.name = {
             type: AST_NODE_TYPES.JSXIdentifier,
-            name: attr.name.slice(colonOffset + 1),
+            name: name.slice(colonOffset + 1),
             ...ctx.getLocations(
               baseNameNode.range[0] + colonOffset + 1,
               baseNameNode.range[1],
             ),
+            parent: undefined as never,
           };
           scriptNode.name = nameNode;
           nameNode.namespace.parent = nameNode;
@@ -538,15 +732,15 @@ export function processTemplate(
         } else {
           if (baseNameNode.type === AST_NODE_TYPES.JSXIdentifier) {
             const nameNode = baseNameNode;
-            nameNode.name = attr.name;
+            nameNode.name = name;
             scriptNode.name = nameNode;
           } else {
             const nameNode = baseNameNode;
-            nameNode.namespace.name = attr.name.slice(
+            nameNode.namespace.name = name.slice(
               baseNameNode.namespace.range[0] - start,
               baseNameNode.namespace.range[1] - start,
             );
-            nameNode.name.name = attr.name.slice(
+            nameNode.name.name = name.slice(
               baseNameNode.name.range[0] - start,
               baseNameNode.name.range[1] - start,
             );
@@ -571,10 +765,134 @@ export function processTemplate(
    */
   function generateUniqueId(base: string) {
     let candidate = `$_${base.replace(/\W/g, "_")}${uniqueIdSeq++}`;
-    while (usedUniqueIds.has(candidate) || ctx.code.includes(candidate)) {
+    while (usedUniqueIds.has(candidate) || code.includes(candidate)) {
       candidate = `$_${base.replace(/\W/g, "_")}${uniqueIdSeq++}`;
     }
     usedUniqueIds.add(candidate);
     return candidate;
   }
+
+  /**
+   * Find the last JSXNode.
+   * Basically, it returns the last element of AstroRootNode.body.
+   * However, if the last element is a JSXTextNode, and its text is whitespace,
+   * and all preceding elements are AstroCommentNode, it returns the last AstroCommentNode.
+   */
+  function findLastJSXNode(ast: AstroRootNode): LocatedNode | null {
+    const body = ast.body;
+    if (body.length === 0) {
+      return null;
+    }
+    const lastNode = body[body.length - 1];
+    if (
+      isWhitespaceJSXText(lastNode) &&
+      body.length >= 2 &&
+      body.slice(0, -1).every((node) => node.type === "AstroComment")
+    ) {
+      return body[body.length - 2];
+    }
+    return lastNode;
+  }
+}
+
+/** Walk one compiler child node. */
+function walkChild(
+  node: AstroFrontmatterNode | TemplateNode,
+  enter: (node: AstroFrontmatterNode | TemplateNode) => void,
+  leave: (node: AstroFrontmatterNode | TemplateNode) => void,
+) {
+  enter(node);
+  if (isJSXElementOrFragment(node)) {
+    for (const child of node.children) {
+      if (child.type === "AstroScript") continue;
+      walkChild(child, enter, leave);
+    }
+  } else if (node.type === "JSXExpressionContainer") {
+    // The compiler AST keeps template nodes that appear inside `{...}` under
+    // the ESTree expression subtree, so pass only template-shaped descendants
+    // through the same enter/leave hooks.
+    walkExpression(node.expression, enter, leave);
+  }
+  leave(node);
+}
+
+/** Walk one compiler expression node. */
+function walkExpression(
+  node: UnknownNode,
+  enter: (node: AstroFrontmatterNode | TemplateNode) => void,
+  leave: (node: AstroFrontmatterNode | TemplateNode) => void,
+) {
+  const walked = new Set<UnknownNode>();
+  walk(node, (child, _parents, ctx) => {
+    if (walked.has(child)) {
+      return;
+    }
+    walked.add(child);
+    if (isWalkableNode(child)) {
+      walkChild(child, enter, leave);
+      ctx.skipChildren();
+    }
+  });
+}
+
+/**
+ * Check whether the given node is a walkable template node that should be passed through the enter/leave hooks.
+ */
+function isWalkableNode(
+  node: UnknownNode,
+): node is AstroFrontmatterNode | TemplateNode {
+  return (
+    isJSXElementOrFragment(node) ||
+    node.type === "AstroComment" ||
+    node.type === "AstroDoctype" ||
+    node.type === "JSXExpressionContainer" ||
+    node.type === "JSXText"
+  );
+}
+
+/**
+ * Check whether the frontmatter is empty (i.e. contains no characters).
+ * In this case, the frontmatter node is still generated by the compiler,
+ * but it has no source range. We can identify such empty frontmatter by checking if the start and end offsets are the same.
+ */
+function isEmptyFrontmatter(node: AstroFrontmatterNode): boolean {
+  return node.start === node.end;
+}
+
+/** Convert a compiler JSX name node to source text. */
+function getJsxName(nameNode: JSXNameNode): string {
+  if (nameNode.type === "JSXIdentifier") {
+    return nameNode.name;
+  }
+  if (nameNode.type === "JSXMemberExpression") {
+    return `${getJsxName(nameNode.object)}.${getJsxName(nameNode.property)}`;
+  }
+  if (nameNode.type === "JSXNamespacedName") {
+    return `${getJsxName(nameNode.namespace)}:${getJsxName(nameNode.name)}`;
+  }
+  return "";
+}
+
+/** Get the Astro tag category for a traversal node. */
+function getTagType(
+  node: JSXElementNode,
+): "element" | "component" | "custom-element" {
+  const name = getJsxName(node.openingElement.name);
+  if (/^[A-Z]/u.test(name) || name.includes(".")) {
+    return "component";
+  }
+  if (name.includes("-")) {
+    return "custom-element";
+  }
+  return "element";
+}
+
+/** Calculate where an element without a closing tag should end. */
+function calcContentEndOffset(node: JSXElementNode): number {
+  const children = node.children;
+  const lastChild = children[children.length - 1];
+  if (lastChild) {
+    return lastChild.end;
+  }
+  return node.openingElement.end;
 }

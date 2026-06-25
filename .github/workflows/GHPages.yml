@@ -29,13 +29,14 @@ jobs:
       with:
         node-version: lts/*
         cache: npm
-    - name: Install And Build
-      run: |+
+    - name: Build parser
+      run: |
         npm ci
         npm run build
-        cd explorer-v3
+    - name: Build explorer
+      working-directory: explorer-v3
+      run: |
         npm install
-        npm run pre-build
         npm run build
     - name: Setup Pages
       uses: actions/configure-pages@v6

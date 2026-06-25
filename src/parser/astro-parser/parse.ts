@@ -1,412 +1,162 @@
-import type {
-  AttributeNode,
-  ParentNode,
-  TagLikeNode,
-  ElementNode,
-  RootNode,
-  ParseResult,
-} from "./types";
-// @ts-expect-error -- Type bug?
-import * as service from "astrojs-compiler-sync";
-import {
-  calcAttributeEndOffset,
-  calcCommentEndOffset,
-  getSelfClosingTag,
-  calcStartTagEndOffset,
-  skipSpaces,
-  walk,
-} from "../../astro";
+import type { ParseResult } from "../../astro/types";
 import type { Context } from "../../context";
+import { parse as parseAstro } from "@astrojs/compiler-rs";
 import { ParseError } from "../../errors";
-import { sortedLastIndex } from "../../util";
 
 /**
- * Parse code by `@astrojs/compiler`
+ * Parse code by `@astrojs/compiler-rs`.
+ *
+ * The compiler returns locations in its own offset format. Normalize them here
+ * before any later parser phase reads the AST, so the rest of the parser can
+ * treat every `start`/`end` and diagnostic label as ESLint-compatible source
+ * indexes.
  */
 export function parse(code: string, ctx: Context): ParseResult {
-  const result = service.parse(code, { position: true });
+  // @astrojs/compiler-rs currently types `ast` as `Record<string, any>`,
+  // although the synchronous parser returns an AstroRoot tree. Keep the
+  // assertion at this boundary so the rest of the parser can use the detailed
+  // compiler node types from `types.ts`.
+  const result = parseAstro(code) as ParseResult;
+  normalizeLocations(result, code, ctx);
 
-  for (const { code, text, location, severity } of result.diagnostics || []) {
-    if (severity === 1 /* Error */) {
-      ctx.originalAST = result.ast;
-      throw new ParseError(`${text} [${code}]`, location, ctx);
+  for (const diagnostic of result.diagnostics || []) {
+    if (diagnostic.severity !== "error") {
+      continue;
     }
-  }
-  if (!result.ast.children) {
-    // If the source code is empty, the children property may not be available.
-    result.ast.children = [];
-  }
-
-  const htmlElement = result.ast.children.find(
-    (n): n is ElementNode => n.type === "element" && n.name === "html",
-  );
-  if (!(result as any)._adjusted) {
-    if (htmlElement) {
-      adjustHTML(result.ast, htmlElement, ctx);
-    }
-    fixLocations(result.ast, ctx);
-    (result as any)._adjusted = true;
+    ctx.originalAST = result.ast;
+    const location = diagnostic.labels?.[0]?.start ?? 0;
+    throw new ParseError(diagnostic.text, location, ctx);
   }
   return result;
 }
 
 /**
- * Adjust <html> element node
+ * Normalize compiler byte offsets to JavaScript string indices.
+ *
+ * `@astrojs/compiler-rs` reports `start`/`end` as UTF-8 byte offsets. ESLint
+ * `range`, `Context`, and JavaScript string slicing all use UTF-16 code-unit
+ * indexes. Those values are the same for ASCII, but diverge as soon as a
+ * multibyte character appears before or inside a node. For example, the raw
+ * compiler offset after `"あ"` is 3, while the JavaScript index is 1.
+ *
+ * Keep this conversion in the parse phase so downstream code does not need to
+ * know which compiler produced the AST or remember to remap every lookup.
  */
-function adjustHTML(ast: RootNode, htmlElement: ElementNode, ctx: Context) {
-  const htmlEnd = ctx.code.indexOf("</html");
-  if (htmlEnd < 0) {
-    return;
-  }
-  // `@astrojs/compiler` may report `position.offset` as UTF-8 byte offsets.
-  // By contrast, `ctx.code.indexOf()` and every offset we compute from the
-  // JavaScript source string are UTF-16 code-unit offsets.
-  //
-  // That mismatch only matters here because `adjustHTML()` compares compiler
-  // child positions against `</body>` / `</html>` offsets derived from
-  // `ctx.code`. If multibyte characters appear before those nodes, comparing
-  // the raw values makes nodes inside `<body>` look as if they were already
-  // after `</body>` or `</html>`, which then moves them to the wrong parent.
-  //
-  // Keep the fix local to this adjustment logic: we only need a comparable
-  // offset when deciding whether the compiler attached a node under `<body>`,
-  // `<html>`, or the root by mistake.
-  const isOffsetAfter = buildComparableOffsetComparator(ctx.code);
-  const hasTokenAfter = Boolean(ctx.code.slice(htmlEnd + 7).trim());
-  const children = [...htmlElement.children];
-  for (const child of children) {
-    const offset = child.position?.start.offset;
-    if (hasTokenAfter && offset != null) {
-      if (isOffsetAfter(offset, htmlEnd)) {
-        htmlElement.children.splice(htmlElement.children.indexOf(child), 1);
-        ast.children.push(child);
-      }
-    }
-    if (child.type === "element" && child.name === "body") {
-      adjustHTMLBody(
-        ast,
-        htmlElement,
-        htmlEnd,
-        hasTokenAfter,
-        child,
-        ctx,
-        isOffsetAfter,
-      );
-    }
-  }
-
-  /**
-   * Build a comparator used only for matching compiler offsets against
-   * positions derived from `ctx.code`.
-   *
-   * The raw offset check is important for laziness: if the compiler offset is
-   * already before the threshold, remapping cannot make it jump forward past
-   * that threshold, so we can reject it without any byte/code-unit work.
-   */
-  function buildComparableOffsetComparator(code: string) {
-    let remapOffset: ((offset: number) => number) | undefined;
-    const comparableOffsetCache = new Map<number, number>();
-
-    return (offset: number, threshold: number) => {
-      if (threshold > offset) {
-        return false;
-      }
-      let comparableOffset = comparableOffsetCache.get(offset);
-      if (comparableOffset == null) {
-        // Delay building the remapper until the first comparison that cannot
-        // be rejected by raw offsets alone.
-        remapOffset ||= buildComparableOffsetRemapper(code);
-        comparableOffset = remapOffset(offset);
-        comparableOffsetCache.set(offset, comparableOffset);
-      }
-      return threshold <= comparableOffset;
-    };
-  }
-
-  /**
-   * Build remapper used only for comparing compiler offsets with `ctx.code`.
-   */
-  function buildComparableOffsetRemapper(code: string) {
-    let byteOffsets: number[] | undefined,
-      codeUnitOffsets: number[] | undefined;
-
-    for (let index = 0, byteOffset = 0; index < code.length; ) {
-      const codePoint = code.codePointAt(index)!;
-      const codeUnitLength = codePoint > 0xffff ? 2 : 1;
-      const nextIndex = index + codeUnitLength;
-      const nextByteOffset = byteOffset + getUTF8ByteLength(codePoint);
-
-      if (byteOffsets) {
-        byteOffsets.push(nextByteOffset);
-        codeUnitOffsets!.push(nextIndex);
-      } else if (codePoint > 0x7f) {
-        // Lazily allocate the remap tables only when byte/code-unit offsets
-        // diverge, while still avoiding a dedicated ASCII-only pre-scan.
-        byteOffsets = [0];
-        codeUnitOffsets = [0];
-        for (let asciiOffset = 1; asciiOffset <= index; asciiOffset++) {
-          byteOffsets.push(asciiOffset);
-          codeUnitOffsets.push(asciiOffset);
-        }
-        byteOffsets.push(nextByteOffset);
-        codeUnitOffsets.push(nextIndex);
-      }
-
-      index = nextIndex;
-      byteOffset = nextByteOffset;
-    }
-
-    // Fast path: ASCII text has identical byte/code-unit offsets.
-    if (!byteOffsets || !codeUnitOffsets) {
-      return (offset: number) => offset;
-    }
-
-    return (offset: number) => {
-      // Find the nearest code-unit boundary that corresponds to the compiler's
-      // byte offset. We only use this for ordering comparisons, so remapping
-      // the start offset to its matching string position is sufficient.
-      const index =
-        sortedLastIndex(byteOffsets, (target) => target - offset) - 1;
-      return codeUnitOffsets[Math.max(index, 0)];
-    };
-  }
-
-  /**
-   * Get UTF-8 byte length for code point.
-   */
-  function getUTF8ByteLength(codePoint: number): number {
-    if (codePoint <= 0x7f) {
-      return 1;
-    }
-    if (codePoint <= 0x7ff) {
-      return 2;
-    }
-    if (codePoint <= 0xffff) {
-      return 3;
-    }
-    return 4;
-  }
-}
-
-/**
- * Adjust <body> element node
- */
-function adjustHTMLBody(
-  ast: RootNode,
-  htmlElement: ElementNode,
-  htmlEnd: number,
-  hasTokenAfterHtmlEnd: boolean,
-  bodyElement: ElementNode,
+function normalizeLocations(
+  result: ParseResult,
+  code: string,
   ctx: Context,
-  isOffsetAfter: (offset: number, threshold: number) => boolean,
-) {
-  const bodyEnd = ctx.code.indexOf("</body");
-  if (bodyEnd == null) {
-    return;
-  }
-  const hasTokenAfter = Boolean(ctx.code.slice(bodyEnd + 7, htmlEnd).trim());
-  if (!hasTokenAfter && !hasTokenAfterHtmlEnd) {
-    return;
-  }
-  const children = [...bodyElement.children];
-  for (const child of children) {
-    const offset = child.position?.start.offset;
-    if (offset != null && isOffsetAfter(offset, bodyEnd)) {
-      if (hasTokenAfterHtmlEnd && isOffsetAfter(offset, htmlEnd)) {
-        bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
-        ast.children.push(child);
-      } else if (hasTokenAfter) {
-        bodyElement.children.splice(bodyElement.children.indexOf(child), 1);
-        htmlElement.children.push(child);
-      }
+): void {
+  const byteOffsetToIndex = buildByteOffsetToIndexMap(code);
+  remapNodeLocations(result.ast, byteOffsetToIndex);
+  for (const diagnostic of result.diagnostics || []) {
+    for (const label of diagnostic.labels || []) {
+      label.start = byteOffsetToIndex(label.start);
+      label.end = byteOffsetToIndex(label.end);
+      // Compiler diagnostics expose line/column too, but the column follows
+      // the compiler's character counting. Recompute it from the normalized
+      // index so errors and AST ranges use the same coordinate system.
+      const loc = ctx.getLocFromIndex(label.start);
+      label.line = loc.line;
+      label.column = loc.column;
     }
   }
 }
 
 /**
- * Fix locations
+ * Remap start/end properties on a compiler AST subtree.
+ *
+ * The compiler AST contains ESTree-compatible JavaScript nodes nested inside
+ * Astro nodes. Walking generically keeps the location fix independent from the
+ * exact node shape and prevents future compiler node additions from bypassing
+ * the normalization.
  */
-function fixLocations(node: ParentNode, ctx: Context): void {
-  // FIXME: Adjust because the parser does not return the correct location.
-  let start = 0;
-  walk(
-    node,
-    ctx.code,
-    // eslint-disable-next-line complexity -- X(
-    (node, [parent]) => {
-      if (node.type === "frontmatter") {
-        start = node.position!.start.offset = tokenIndex(ctx, "---", start);
-        if (!node.position!.end) {
-          node.position!.end = {} as any;
-        }
-        start = node.position!.end!.offset =
-          tokenIndex(ctx, "---", start + 3 + node.value.length) + 3;
-      } else if (
-        node.type === "fragment" ||
-        node.type === "element" ||
-        node.type === "component" ||
-        node.type === "custom-element"
-      ) {
-        if (!node.position) {
-          node.position = { start: {}, end: {} } as any;
-        }
-        start = node.position!.start.offset = tokenIndex(ctx, "<", start);
-        start += 1;
-        start += node.name.length;
-        if (!node.attributes.length) {
-          start = calcStartTagEndOffset(node, ctx);
-        }
-      } else if (node.type === "attribute") {
-        fixLocationForAttr(node, ctx, start);
-        start = calcAttributeEndOffset(node, ctx);
-        if (node.position!.end) {
-          node.position!.end.offset = start;
-        }
-      } else if (node.type === "comment") {
-        node.position!.start.offset = tokenIndex(ctx, "<!--", start);
-        start = calcCommentEndOffset(node, ctx);
-        if (node.position!.end) {
-          node.position!.end.offset = start;
-        }
-      } else if (node.type === "text") {
-        if (
-          parent.type === "element" &&
-          (parent.name === "script" || parent.name === "style")
-        ) {
-          node.position!.start.offset = start;
-          start = ctx.code.indexOf(`</${parent.name}`, start);
-          if (start < 0) {
-            start = ctx.code.length;
-          }
-        } else {
-          const index = tokenIndexSafe(ctx.code, node.value, start);
-          if (index != null) {
-            start = node.position!.start.offset = index;
-            start += node.value.length;
-          } else {
-            // FIXME: Some white space may be removed.
-            node.position!.start.offset = start;
-            const value = node.value.replace(/\s+/gu, "");
-            for (const char of value) {
-              const index = tokenIndex(ctx, char, start);
-              start = index + 1;
-            }
-            start = skipSpaces(ctx.code, start);
+function remapNodeLocations(
+  value: unknown,
+  byteOffsetToIndex: (offset: number) => number,
+  seen = new Set<object>(),
+): void {
+  if (!value || typeof value !== "object") {
+    return;
+  }
+  if (seen.has(value)) {
+    return;
+  }
+  seen.add(value);
 
-            node.value = ctx.code.slice(node.position!.start.offset, start);
-          }
-        }
-        if (node.position!.end) {
-          node.position!.end.offset = start;
-        }
-      } else if (node.type === "expression") {
-        start = node.position!.start.offset = tokenIndex(ctx, "{", start);
-        start += 1;
-      } else if (node.type === "doctype") {
-        if (!node.position) {
-          node.position = { start: {}, end: {} } as any;
-        }
-        if (!node.position!.end) {
-          node.position!.end = {} as any;
-        }
-        start = node.position!.start.offset = tokenIndex(ctx, "<!", start);
-        start += 2;
-        start = node.position!.end!.offset = ctx.code.indexOf(">", start) + 1;
-      } else if (node.type === "root") {
-        // noop
+  if (Array.isArray(value)) {
+    for (const child of value) {
+      remapNodeLocations(child, byteOffsetToIndex, seen);
+    }
+    return;
+  }
+
+  const node = value as Record<string, unknown>;
+  if (typeof node.start === "number") {
+    node.start = byteOffsetToIndex(node.start);
+  }
+  if (typeof node.end === "number") {
+    node.end = byteOffsetToIndex(node.end);
+  }
+
+  for (const child of Object.values(node)) {
+    remapNodeLocations(child, byteOffsetToIndex, seen);
+  }
+}
+
+/**
+ * Build a mapper from compiler byte offsets to JavaScript string indices.
+ *
+ * The table records both coordinates at each source character boundary. The
+ * returned function can then translate any compiler offset with a binary
+ * search. If the offset falls between boundaries, it returns the previous
+ * JavaScript index; this keeps error locations stable even if the compiler
+ * points into a multibyte character boundary.
+ */
+function buildByteOffsetToIndexMap(source: string): (offset: number) => number {
+  const byteOffsets: number[] = [0];
+  const codeUnitOffsets: number[] = [0];
+  let byteOffset = 0;
+
+  for (let index = 0; index < source.length; ) {
+    const codePoint = source.codePointAt(index)!;
+    const codeUnitLength = codePoint > 0xffff ? 2 : 1;
+    const nextIndex = index + codeUnitLength;
+    byteOffset += getUTF8ByteLength(codePoint);
+    byteOffsets.push(byteOffset);
+    codeUnitOffsets.push(nextIndex);
+    index = nextIndex;
+  }
+
+  return (offset: number) => {
+    let low = 0;
+    let high = byteOffsets.length - 1;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      const value = byteOffsets[mid];
+      if (value === offset) {
+        return codeUnitOffsets[mid];
       }
-    },
-    (node, [parent]) => {
-      if (node.type === "attribute") {
-        const attributes = (parent as TagLikeNode).attributes;
-        if (attributes[attributes.length - 1] === node) {
-          start = calcStartTagEndOffset(parent as TagLikeNode, ctx);
-        }
-      } else if (node.type === "expression") {
-        start = tokenIndex(ctx, "}", start) + 1;
-      } else if (
-        node.type === "fragment" ||
-        node.type === "element" ||
-        node.type === "component" ||
-        node.type === "custom-element"
-      ) {
-        if (!getSelfClosingTag(node, ctx)) {
-          const closeTagStart = tokenIndexSafe(
-            ctx.code,
-            `</${node.name}`,
-            start,
-          );
-          if (closeTagStart != null) {
-            start = closeTagStart + 2 + node.name.length;
-            start = tokenIndex(ctx, ">", start) + 1;
-          }
-        }
+      if (value < offset) {
+        low = mid + 1;
       } else {
-        return;
+        high = mid - 1;
       }
-      if (node.position!.end) {
-        node.position!.end.offset = start;
-      }
-    },
-  );
+    }
+    return codeUnitOffsets[Math.max(high, 0)] ?? 0;
+  };
 }
 
-/**
- * Fix locations
- */
-function fixLocationForAttr(node: AttributeNode, ctx: Context, start: number) {
-  if (node.kind === "empty") {
-    node.position!.start.offset = tokenIndex(ctx, node.name, start);
-  } else if (node.kind === "quoted") {
-    node.position!.start.offset = tokenIndex(ctx, node.name, start);
-  } else if (node.kind === "expression") {
-    node.position!.start.offset = tokenIndex(ctx, node.name, start);
-  } else if (node.kind === "shorthand") {
-    node.position!.start.offset = tokenIndex(ctx, "{", start);
-  } else if (node.kind === "spread") {
-    node.position!.start.offset = tokenIndex(ctx, "{", start);
-  } else if (node.kind === "template-literal") {
-    node.position!.start.offset = tokenIndex(ctx, node.name, start);
-  } else {
-    throw new ParseError(
-      `Unknown attr kind: ${node.kind}`,
-      node.position!.start.offset,
-      ctx,
-    );
+/** Get the UTF-8 byte length for a Unicode code point. */
+function getUTF8ByteLength(codePoint: number): number {
+  if (codePoint <= 0x7f) {
+    return 1;
   }
-}
-
-/**
- * Get token index
- */
-function tokenIndex(ctx: Context, token: string, position: number): number {
-  const index = tokenIndexSafe(ctx.code, token, position);
-  if (index == null) {
-    const start =
-      token.trim() === token ? skipSpaces(ctx.code, position) : position;
-    throw new ParseError(
-      `Unknown token at ${start}, expected: ${JSON.stringify(
-        token,
-      )}, actual: ${JSON.stringify(ctx.code.slice(start, start + 10))}`,
-      start,
-      ctx,
-    );
+  if (codePoint <= 0x7ff) {
+    return 2;
   }
-  return index;
-}
-
-/**
- * Get token index
- */
-function tokenIndexSafe(
-  string: string,
-  token: string,
-  position: number,
-): number | null {
-  const index =
-    token.trim() === token ? skipSpaces(string, position) : position;
-  if (string.startsWith(token, index)) {
-    return index;
+  if (codePoint <= 0xffff) {
+    return 3;
   }
-  return null;
+  return 4;
 }

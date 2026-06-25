@@ -2,7 +2,7 @@ import * as Benchmark from "benchmark";
 import fs from "fs";
 import { createRequire } from "node:module";
 import { parseForESLint } from "../src/index";
-import { parseForESLint as parseOld } from "../node_modules/astro-eslint-parser/lib/index.js";
+import { parseForESLint as parseOld } from "../node_modules/astro-eslint-parser/lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 const contents = `${fs.readFileSync(

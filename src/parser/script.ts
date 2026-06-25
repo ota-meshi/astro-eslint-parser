@@ -7,16 +7,12 @@ import type {
 import type { ESLintExtendedProgram } from "../types";
 import { tsPatch } from "./ts-patch";
 import { isEnhancedParserObject } from "../context/resolve-parser/parser-object";
-import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/types";
+import type { TSESTree } from "@typescript-eslint/types";
 import type { ScopeManager as TSESLintScopeManager } from "@typescript-eslint/scope-manager";
-import {
-  analyze as analyzeForTypeScript,
-  Reference,
-} from "@typescript-eslint/scope-manager";
-import type { AnalysisOptions } from "eslint-scope";
+import { analyze as analyzeForTypeScript } from "@typescript-eslint/scope-manager";
+import type { AnalyzeOptions } from "eslint-scope";
 import { KEYS } from "../visitor-keys";
 import { getKeys } from "../traverse";
-import { READ_FLAG, REFERENCE_TYPE_VALUE_FLAG } from "./scope";
 import { getEslintScope } from "./eslint-scope";
 
 const eslintScope = getEslintScope();
@@ -67,7 +63,6 @@ function analyzeScope(
       parserOptions.sourceType === "commonjs"
         ? "script"
         : parserOptions.sourceType || "script",
-    // @ts-expect-error -- Type bug?
     childVisitorKeys: result.visitorKeys || KEYS,
     fallback: getKeys,
   });
@@ -131,71 +126,12 @@ ${code}`,
   }
 }
 
-class Referencer extends eslintScope.Referencer {
-  protected JSXAttribute(node: TSESTree.JSXAttribute) {
-    this.visit(node.value);
-  }
-
-  protected JSXClosingElement() {
-    // should not visit children
-  }
-
-  protected JSXFragment(node: TSESTree.JSXFragment) {
-    this.visitChildren(node);
-  }
-
-  protected JSXIdentifier(node: TSESTree.JSXIdentifier) {
-    const scope = this.currentScope();
-
-    const ref = new Reference(
-      node,
-      scope,
-      READ_FLAG,
-      undefined,
-      undefined,
-      false,
-      REFERENCE_TYPE_VALUE_FLAG,
-    );
-
-    scope.references.push(ref);
-
-    // @ts-expect-error -- Internal property
-    scope.__left.push(ref);
-  }
-
-  protected JSXMemberExpression(node: TSESTree.JSXMemberExpression) {
-    if (node.object.type !== AST_NODE_TYPES.JSXIdentifier) {
-      this.visit(node.object);
-    } else {
-      if (node.object.name !== "this") {
-        this.visit(node.object);
-      }
-    }
-  }
-
-  protected JSXOpeningElement(node: TSESTree.JSXOpeningElement) {
-    if (node.name.type === AST_NODE_TYPES.JSXIdentifier) {
-      if (
-        node.name.name[0].toUpperCase() === node.name.name[0] ||
-        node.name.name === "this"
-      ) {
-        this.visit(node.name);
-      }
-    } else {
-      this.visit(node.name);
-    }
-    for (const attr of node.attributes) {
-      this.visit(attr);
-    }
-  }
-}
-
 /**
  * Analyzed scopes for JavaScript.
  */
 function analyzeForEcmaScript(
   tree: TSESTree.Program,
-  providedOptions: AnalysisOptions,
+  providedOptions: AnalyzeOptions,
 ): TSESLintScopeManager {
   const options = Object.assign(
     {
@@ -206,16 +142,11 @@ function analyzeForEcmaScript(
       ecmaVersion: 5,
       childVisitorKeys: null,
       fallback: "iteration",
+      jsx: true,
     },
     providedOptions,
   );
-  const scopeManager = new eslintScope.ScopeManager(
-    // @ts-expect-error -- No typings
-    options,
-  );
-  const referencer = new Referencer(options, scopeManager);
-
-  referencer.visit(tree);
+  const scopeManager = eslintScope.analyze(tree as never, options);
 
   return scopeManager as never;
 }

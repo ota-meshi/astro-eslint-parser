@@ -3,7 +3,7 @@ import SnsBar from "./SnsBar.svelte";
 const baseUrl = `${import.meta.env.BASE_URL.replace(/\/$/u, "")}/`;
 const currentPage = new URL(Astro.request.url).pathname;
 
-function isActive(path) {
+function isActive(path: string): boolean {
   return (
     currentPage === path ||
     currentPage === `${baseUrl}${path}` ||
@@ -16,11 +16,6 @@ function isActive(path) {
   <span class="title">astro-eslint-parser</span>
   <a class:list={["menu", { active: isActive(``) }]} href={`${baseUrl}`}
     ><span>AST</span>
-  </a>
-  <a
-    class:list={["menu", { active: isActive(`astrojs-compiler`) }]}
-    href={`${baseUrl}astrojs-compiler/`}
-    ><span>@astrojs/compiler</span>
   </a>
   <div class="debug">
     currentPage: {JSON.stringify(currentPage)}
