@@ -36,25 +36,31 @@ export function isSyntheticFragment(node: JSXFragmentNode): boolean {
 /** Check whether an attribute uses Astro shorthand syntax. */
 export function isShorthandAttribute(
   attr: AttributeNode,
+  code: string,
 ): attr is JSXAttributeNode & {
   value: JSXExpressionContainerNode & {
-    expression: TSESTree.Identifier & LocatedNode;
+    expression: TSESTree.Expression & LocatedNode;
   };
 } {
   if (
     attr.type !== "JSXAttribute" ||
     attr.name.type !== "JSXIdentifier" ||
-    attr.value?.type !== "JSXExpressionContainer" ||
-    !isIdentifier(attr.value.expression)
+    attr.value?.type !== "JSXExpressionContainer"
   ) {
     return false;
   }
 
-  // In Astro's compiler AST, a shorthand attribute is represented as a JSXAttribute
-  // where the value is a JSXExpressionContainer whose expression is an Identifier
-  // with the same name and location as the attribute name.
+  // In Astro's compiler AST, a shorthand attribute is represented as a
+  // JSXAttribute whose name and expression have the same source range. Confirm
+  // that the range text matches the attribute name to avoid relying on the
+  // expression node's shape.
+  const text = isIdentifier(attr.value.expression)
+    ? // In the case of an Identifier, the end position may be off.
+      // Therefore, we are getting the name specially.
+      attr.value.expression.name
+    : code.slice(attr.value.expression.start, attr.value.expression.end);
   return (
-    attr.value.expression.name === attr.name.name &&
+    text === attr.name.name &&
     attr.value.expression.start === attr.name.start &&
     attr.value.expression.end === attr.name.end
   );
