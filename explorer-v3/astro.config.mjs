@@ -78,6 +78,10 @@ export default defineConfig({
         // Parser internals may resolve these packages when TypeScript/project
         // options are present; the explorer does not use filesystem access.
         {
+          find: "tinyglobby",
+          replacement: resolve("./build-system/shim/tinyglobby.js"),
+        },
+        {
           find: "fast-glob",
           replacement: resolve("./build-system/shim/fast-glob.js"),
         },
