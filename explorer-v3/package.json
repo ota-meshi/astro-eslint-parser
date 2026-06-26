@@ -18,7 +18,7 @@
     "entities": "^8.0.0",
     "eslint": "^10.5.0",
     "monaco-editor": "^0.55.0",
-    "pako": "^2.0.4",
+    "pako": "^3.0.0",
     "svelte": "^5.19.3",
     "webpack": "^5.72.1",
     "webpack-cli": "^7.0.0",
