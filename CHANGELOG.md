@@ -1,5 +1,29 @@
 # astro-eslint-parser
 
+## 3.0.0
+
+### Major Changes
+
+- [#435](https://github.com/ota-meshi/astro-eslint-parser/pull/435) [`e4f5c4e`](https://github.com/ota-meshi/astro-eslint-parser/commit/e4f5c4eda10265f9b9e3db49f0d046086560e8b5) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Replace `@astrojs/compiler` with `@astrojs/compiler-rs`.
+
+  This changes the compiler AST returned by the public `parseTemplate()` API and
+  can change generated AST node shapes, source ranges, and parser diagnostics.
+
+  The following `ParseTemplateResult` helpers have been removed:
+  - `getEndOffset`
+  - `calcAttributeValueStartOffset`
+  - `calcAttributeEndOffset`
+
+  Use the new compiler nodes' `start` and `end` offsets where applicable.
+  `getLocFromIndex` and `getIndexFromLoc` remain available for converting between
+  offsets and locations.
+
+  The `walk` helper now visits the new compiler node types and passes a
+  `WalkContext` as the third callback argument. The context provides
+  `skipChildren()` and `break()` controls. Consumers of `parseTemplate()` should
+  update their visitor types and any AST or parser-error snapshots for the new
+  compiler output.
+
 ## 2.1.0
 
 ### Minor Changes
