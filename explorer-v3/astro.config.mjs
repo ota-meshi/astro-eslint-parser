@@ -85,11 +85,10 @@ export default defineConfig({
           find: "fast-glob",
           replacement: resolve("./build-system/shim/fast-glob.js"),
         },
-        // Resolve tslib from the root install because explorer dependencies are
-        // intentionally hoisted for Astro-related packages.
+        // Resolve tslib from the explorer install used by the WASI runtime.
         {
           find: "tslib",
-          replacement: resolve("../node_modules/tslib/tslib.es6.js"),
+          replacement: resolve("./node_modules/tslib/tslib.es6.js"),
         },
         // Avoid bundling Node's resolve package into the browser build.
         {
