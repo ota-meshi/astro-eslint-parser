@@ -10,7 +10,7 @@
     "preview": "astro preview"
   },
   "devDependencies": {
-    "@astrojs/compiler-binding-wasm32-wasi": "0.2.2",
+    "@astrojs/compiler-binding-wasm32-wasi": "^0.3.1",
     "@astrojs/svelte": "^9.0.0",
     "astro": "^7.0.0",
     "astro-eslint-parser": "file:..",
