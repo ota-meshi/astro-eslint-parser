@@ -1,26 +1,14 @@
-import type {
-  ParseResult,
-  AttributeNode,
-  Node,
-  ParentNode,
-} from "../parser/astro-parser/types";
+import type { ParseResult, UnknownNode } from "../astro/types";
+import type { WalkContext } from "../astro/walker";
+import { walk } from "../astro/walker";
 import { parseTemplate as parse } from "../parser/template";
-import {
-  getEndOffset,
-  walk,
-  calcAttributeValueStartOffset,
-  calcAttributeEndOffset,
-} from "../astro";
 
 export interface ParseTemplateResult {
   result: ParseResult;
-  getEndOffset: (node: Node) => number;
-  calcAttributeValueStartOffset: (node: AttributeNode) => number;
-  calcAttributeEndOffset: (node: AttributeNode) => number;
   walk: (
-    parent: ParentNode,
-    enter: (n: Node | AttributeNode, parents: ParentNode[]) => void,
-    leave?: (n: Node | AttributeNode, parents: ParentNode[]) => void,
+    parent: UnknownNode,
+    enter: (n: UnknownNode, parents: UnknownNode[], ctx: WalkContext) => void,
+    leave?: (n: UnknownNode, parents: UnknownNode[], ctx: WalkContext) => void,
   ) => void;
   getLocFromIndex: (index: number) => { line: number; column: number };
   getIndexFromLoc: (loc: { line: number; column: number }) => number;
@@ -33,21 +21,8 @@ export function parseTemplate(code: string): ParseTemplateResult {
   const parsed = parse(code);
   return {
     result: parsed.result,
-    getEndOffset: (node) => getEndOffset(node, parsed.context),
-    calcAttributeValueStartOffset: (node) =>
-      calcAttributeValueStartOffset(node, parsed.context),
-    calcAttributeEndOffset: (node) =>
-      calcAttributeEndOffset(node, parsed.context),
     walk(parent, enter, leave) {
-      walk(
-        parent,
-        code,
-        enter,
-        leave ||
-          (() => {
-            /* noop */
-          }),
-      );
+      walk(parent, enter, leave);
     },
     getLocFromIndex: (index) => parsed.context.getLocFromIndex(index),
     getIndexFromLoc: (loc) => parsed.context.locs.getIndexFromLoc(loc),

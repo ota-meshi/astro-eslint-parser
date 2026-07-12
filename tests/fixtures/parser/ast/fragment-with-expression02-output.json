@@ -83,11 +83,86 @@
           "expression": {
             "type": "ConditionalExpression",
             "alternate": {
-              "type": "AstroHTMLComment",
-              "value": " comment2 ",
+              "type": "AstroFragment",
+              "children": [
+                {
+                  "type": "JSXElement",
+                  "children": [],
+                  "closingElement": null,
+                  "openingElement": {
+                    "type": "JSXOpeningElement",
+                    "name": {
+                      "type": "JSXIdentifier",
+                      "name": "span",
+                      "range": [
+                        69,
+                        73
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 4,
+                          "column": 44
+                        },
+                        "end": {
+                          "line": 4,
+                          "column": 48
+                        }
+                      }
+                    },
+                    "attributes": [],
+                    "selfClosing": true,
+                    "range": [
+                      68,
+                      76
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 4,
+                        "column": 43
+                      },
+                      "end": {
+                        "line": 4,
+                        "column": 51
+                      }
+                    }
+                  },
+                  "range": [
+                    68,
+                    76
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 4,
+                      "column": 43
+                    },
+                    "end": {
+                      "line": 4,
+                      "column": 51
+                    }
+                  }
+                },
+                {
+                  "type": "AstroHTMLComment",
+                  "value": " comment2 ",
+                  "range": [
+                    76,
+                    93
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 4,
+                      "column": 51
+                    },
+                    "end": {
+                      "line": 4,
+                      "column": 68
+                    }
+                  }
+                }
+              ],
               "range": [
                 68,
-                85
+                93
               ],
               "loc": {
                 "start": {
@@ -96,7 +171,7 @@
                 },
                 "end": {
                   "line": 4,
-                  "column": 60
+                  "column": 68
                 }
               }
             },
@@ -267,7 +342,7 @@
             },
             "range": [
               26,
-              85
+              93
             ],
             "loc": {
               "start": {
@@ -276,13 +351,13 @@
               },
               "end": {
                 "line": 4,
-                "column": 60
+                "column": 68
               }
             }
           },
           "range": [
             25,
-            86
+            94
           ],
           "loc": {
             "start": {
@@ -291,7 +366,7 @@
             },
             "end": {
               "line": 4,
-              "column": 61
+              "column": 69
             }
           }
         },
@@ -300,13 +375,13 @@
           "raw": "\n",
           "value": "\n",
           "range": [
-            86,
-            87
+            94,
+            95
           ],
           "loc": {
             "start": {
               "line": 4,
-              "column": 61
+              "column": 69
             },
             "end": {
               "line": 5,
@@ -317,7 +392,7 @@
       ],
       "range": [
         25,
-        87
+        95
       ],
       "loc": {
         "start": {
@@ -713,11 +788,11 @@
       }
     },
     {
-      "type": "HTMLComment",
-      "value": "<!-- comment2 -->",
+      "type": "Punctuator",
+      "value": "<",
       "range": [
         68,
-        85
+        69
       ],
       "loc": {
         "start": {
@@ -726,7 +801,79 @@
         },
         "end": {
           "line": 4,
-          "column": 60
+          "column": 44
+        }
+      }
+    },
+    {
+      "type": "JSXIdentifier",
+      "value": "span",
+      "range": [
+        69,
+        73
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 44
+        },
+        "end": {
+          "line": 4,
+          "column": 48
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": "/",
+      "range": [
+        74,
+        75
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 49
+        },
+        "end": {
+          "line": 4,
+          "column": 50
+        }
+      }
+    },
+    {
+      "type": "Punctuator",
+      "value": ">",
+      "range": [
+        75,
+        76
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 50
+        },
+        "end": {
+          "line": 4,
+          "column": 51
+        }
+      }
+    },
+    {
+      "type": "HTMLComment",
+      "value": "<!-- comment2 -->",
+      "range": [
+        76,
+        93
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 51
+        },
+        "end": {
+          "line": 4,
+          "column": 68
         }
       }
     },
@@ -734,17 +881,17 @@
       "type": "Punctuator",
       "value": "}",
       "range": [
-        85,
-        86
+        93,
+        94
       ],
       "loc": {
         "start": {
           "line": 4,
-          "column": 60
+          "column": 68
         },
         "end": {
           "line": 4,
-          "column": 61
+          "column": 69
         }
       }
     },
@@ -752,13 +899,13 @@
       "type": "JSXText",
       "value": "\n",
       "range": [
-        86,
-        87
+        94,
+        95
       ],
       "loc": {
         "start": {
           "line": 4,
-          "column": 61
+          "column": 69
         },
         "end": {
           "line": 5,
@@ -769,7 +916,7 @@
   ],
   "range": [
     0,
-    87
+    95
   ],
   "loc": {
     "start": {
