@@ -6,10 +6,9 @@ import { ParseError } from "../../errors";
 /**
  * Parse code by `@astrojs/compiler-rs`.
  *
- * The compiler returns locations in its own offset format. Normalize them here
- * before any later parser phase reads the AST, so the rest of the parser can
- * treat every `start`/`end` and diagnostic label as ESLint-compatible source
- * indexes.
+ * The compiler returns AST locations as JavaScript string indexes, but its
+ * diagnostic labels still use byte offsets. Normalize only the diagnostics so
+ * every later parser phase can use ESLint-compatible source indexes.
  */
 export function parse(code: string, ctx: Context): ParseResult {
   // @astrojs/compiler-rs currently types `ast` as `Record<string, any>`,
@@ -17,7 +16,7 @@ export function parse(code: string, ctx: Context): ParseResult {
   // assertion at this boundary so the rest of the parser can use the detailed
   // compiler node types from `types.ts`.
   const result = parseAstro(code) as ParseResult;
-  normalizeLocations(result, code, ctx);
+  normalizeDiagnosticLocations(result, code, ctx);
 
   for (const diagnostic of result.diagnostics || []) {
     if (diagnostic.severity !== "error") {
@@ -31,24 +30,22 @@ export function parse(code: string, ctx: Context): ParseResult {
 }
 
 /**
- * Normalize compiler byte offsets to JavaScript string indices.
+ * Normalize compiler diagnostic byte offsets to JavaScript string indices.
  *
- * `@astrojs/compiler-rs` reports `start`/`end` as UTF-8 byte offsets. ESLint
- * `range`, `Context`, and JavaScript string slicing all use UTF-16 code-unit
- * indexes. Those values are the same for ASCII, but diverge as soon as a
- * multibyte character appears before or inside a node. For example, the raw
- * compiler offset after `"あ"` is 3, while the JavaScript index is 1.
+ * `@astrojs/compiler-rs` reports AST `start`/`end` as UTF-16 code-unit indexes,
+ * but diagnostic labels remain UTF-8 byte offsets. ESLint, `Context`, and
+ * JavaScript string slicing all use UTF-16 code-unit indexes. Those values are
+ * the same for ASCII, but diverge as soon as a multibyte character appears.
  *
- * Keep this conversion in the parse phase so downstream code does not need to
- * know which compiler produced the AST or remember to remap every lookup.
+ * Keep the diagnostic conversion in the parse phase so errors use the same
+ * coordinate system as the AST and source text.
  */
-function normalizeLocations(
+function normalizeDiagnosticLocations(
   result: ParseResult,
   code: string,
   ctx: Context,
 ): void {
   const byteOffsetToIndex = buildByteOffsetToIndexMap(code);
-  remapNodeLocations(result.ast, byteOffsetToIndex);
   for (const diagnostic of result.diagnostics || []) {
     for (const label of diagnostic.labels || []) {
       label.start = byteOffsetToIndex(label.start);
@@ -60,47 +57,6 @@ function normalizeLocations(
       label.line = loc.line;
       label.column = loc.column;
     }
-  }
-}
-
-/**
- * Remap start/end properties on a compiler AST subtree.
- *
- * The compiler AST contains ESTree-compatible JavaScript nodes nested inside
- * Astro nodes. Walking generically keeps the location fix independent from the
- * exact node shape and prevents future compiler node additions from bypassing
- * the normalization.
- */
-function remapNodeLocations(
-  value: unknown,
-  byteOffsetToIndex: (offset: number) => number,
-  seen = new Set<object>(),
-): void {
-  if (!value || typeof value !== "object") {
-    return;
-  }
-  if (seen.has(value)) {
-    return;
-  }
-  seen.add(value);
-
-  if (Array.isArray(value)) {
-    for (const child of value) {
-      remapNodeLocations(child, byteOffsetToIndex, seen);
-    }
-    return;
-  }
-
-  const node = value as Record<string, unknown>;
-  if (typeof node.start === "number") {
-    node.start = byteOffsetToIndex(node.start);
-  }
-  if (typeof node.end === "number") {
-    node.end = byteOffsetToIndex(node.end);
-  }
-
-  for (const child of Object.values(node)) {
-    remapNodeLocations(child, byteOffsetToIndex, seen);
   }
 }
 
