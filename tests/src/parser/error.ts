@@ -44,4 +44,22 @@ describe("Check for Error.", () => {
       });
     });
   }
+
+  it("normalizes only diagnostic offsets for multibyte source", () => {
+    const code = "<p>😀</p><div";
+    assert.throws(
+      () => parse(code, "multibyte-error.astro"),
+      (error: any) => {
+        assert.strictEqual(error.index, code.length);
+        assert.strictEqual(error.lineNumber, 1);
+        assert.strictEqual(error.column, code.length);
+        assert.strictEqual(error.originalAST.end, code.length);
+
+        const text = error.originalAST.body[0].children[0];
+        assert.deepStrictEqual([text.start, text.end], [3, 5]);
+        assert.strictEqual(code.slice(text.start, text.end), "😀");
+        return true;
+      },
+    );
+  });
 });
