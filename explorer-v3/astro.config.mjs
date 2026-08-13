@@ -1,7 +1,9 @@
 import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
 import { resolve } from "path";
-import { version as monacoVersion } from "monaco-editor/package.json";
+import monacoPackage from "./node_modules/monaco-editor/package.json" with { type: "json" };
+
+const { version: monacoVersion } = monacoPackage;
 
 // https://astro.build/config
 export default defineConfig({

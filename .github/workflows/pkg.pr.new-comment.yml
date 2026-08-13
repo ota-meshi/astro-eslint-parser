@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.repository == 'ota-meshi/astro-eslint-parser'
+    if: github.repository == 'ota-meshi/astro-eslint-parser' && github.event.workflow_run.conclusion == 'success'
     name: Update comment
     runs-on: ubuntu-latest
     steps:
