@@ -1,5 +1,11 @@
 # astro-eslint-parser
 
+## 3.2.0
+
+### Minor Changes
+
+- [#477](https://github.com/ota-meshi/astro-eslint-parser/pull/477) [`4960860`](https://github.com/ota-meshi/astro-eslint-parser/commit/4960860dfc22bfb27bfdbb1ac490d9c1c4673eaa) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(deps): support for @astrojs/compiler-rs v0.5.0
+
 ## 3.1.0
 
 ### Minor Changes
