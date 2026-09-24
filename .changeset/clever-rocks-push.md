@@ -2,4 +2,4 @@
 "astro-eslint-parser": minor
 ---
 
-feat(deps): support for @astrojs/compiler-rs v0.5.0 and v0.4.0
+feat(deps): support for @astrojs/compiler-rs v0.5.0
